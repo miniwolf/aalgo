@@ -9,8 +9,11 @@ FNode::FNode(int key, char *payload){
 
 FibonacciHeap* FibonacciHeap::insert(int key, char *payload){
 	FNode *node = new FNode(key, payload);
+
 	node->left = node;
 	node->right = node;
+	node->rank = 0;
+
 	FibonacciHeap *heap = new FibonacciHeap;
 	heap->minRoot = node;
 	return meld(heap);
@@ -47,6 +50,10 @@ FibonacciHeap* FibonacciHeap::meld(FibonacciHeap *otherHeap){
 	}
 
 	return result;
+}
+
+char* FibonacciHeap::findMin(){
+	return minRoot->payload;
 }
 
 
