@@ -16,6 +16,7 @@ FibonacciHeap* FibonacciHeap::insert(int key, char *payload){
 
 	FibonacciHeap *heap = new FibonacciHeap;
 	heap->minRoot = node;
+	heap->size = 1;
 	return meld(heap);
 }
 
@@ -49,12 +50,14 @@ FibonacciHeap* FibonacciHeap::meld(FibonacciHeap *otherHeap){
 		result->minRoot = b	;
 	}
 
+	result->size = size + otherHeap->size;
+
+	delete otherHeap;
+	delete this;
+
 	return result;
 }
 
 char* FibonacciHeap::findMin(){
 	return minRoot->payload;
 }
-
-
-	
