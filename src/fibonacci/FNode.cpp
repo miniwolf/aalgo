@@ -3,6 +3,9 @@
 FNode::FNode(int key, string payload){
 	this->payload = payload;
 	this->key = key;
+	left = this;
+	right = this;
+	rank = 0;
 	marked = false;
 }
 

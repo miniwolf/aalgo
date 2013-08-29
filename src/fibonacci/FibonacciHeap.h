@@ -7,11 +7,10 @@ class FibonacciHeap {
 public:
 	FNode *minRoot;
 	int size;
-	FNode *trees[];
 
 	FibonacciHeap(){};
-	FibonacciHeap* insert(int key, string payload);
-	FibonacciHeap* meld(FibonacciHeap *other);
+	FNode* insert(int key, string payload);
+	void meld(FibonacciHeap *other);
 	string findMin();
 	string deleteMin();	
 };

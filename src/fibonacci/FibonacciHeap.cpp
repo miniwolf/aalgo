@@ -1,54 +1,43 @@
 #include "FibonacciHeap.h"
 
-FibonacciHeap* FibonacciHeap::insert(int key, string payload){
+FNode* FibonacciHeap::insert(int key, string payload){
 	FNode *node = new FNode(key, payload);
 
-	node->left = node;
-	node->right = node;
-	node->rank = 0;
-
-	FibonacciHeap *heap = new FibonacciHeap;
-	heap->minRoot = node;
-	heap->size = 1;
-	return meld(heap);
+	if ( minRoot ){
+		minRoot->insert(node);
+		if ( minRoot->key > key ){
+			minRoot = node;
+		}
+	} else {
+		minRoot = node;
+	}
+	
+	size++;	
+	
+	return node;
 }
 
-FibonacciHeap* FibonacciHeap::meld(FibonacciHeap *otherHeap){
-	FibonacciHeap *result = new FibonacciHeap;
+void FibonacciHeap::meld(FibonacciHeap *otherHeap){
+	if ( !otherHeap) {
+		return;
+	}
 	FNode *minRoot2 = otherHeap->minRoot;
+
+	if ( !minRoot2 ){
+		return;
+	}
 	
-	if ( minRoot2 == NULL ){
-		delete otherHeap;
-		return this;
-	} else if ( minRoot == NULL) {
-		delete this;
-		return otherHeap;
-	}
-
-	FNode *a = minRoot;
-	FNode *b = minRoot2;
-
-	FNode *x = a->right;
-	FNode *y = b->left;
-
-	a->right = b;
-	b->left = a;
-
-	x->left = y;
-	y->right = x;
-
-	if ( a->key <= b->key ) {
-		result->minRoot = a	;
+	if ( minRoot ) {
+		minRoot->insert( minRoot2 );
+		size += otherHeap->size;
+		
+		if ( minRoot->key > minRoot2->key ) {
+			minRoot = minRoot2;
+		}
 	} else {
-		result->minRoot = b	;
+		minRoot = minRoot2;
+		size = otherHeap->size;
 	}
-
-	result->size = size + otherHeap->size;
-
-	delete otherHeap;
-	delete this;
-
-	return result;
 }
 
 string FibonacciHeap::findMin(){
