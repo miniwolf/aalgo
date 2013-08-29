@@ -1,5 +1,7 @@
 #include "FNode.h"
 #include <stdio.h>
+#include <stdlib.h>
+using namespace std;
 
 class FibonacciHeap {
 public:
@@ -8,8 +10,8 @@ public:
 	FNode *trees[];
 
 	FibonacciHeap(){};
-	FibonacciHeap* insert(int key, char *payload);
+	FibonacciHeap* insert(int key, string payload);
 	FibonacciHeap* meld(FibonacciHeap *other);
-	char* findMin();
-	char* deleteMin();	
+	string findMin();
+	string deleteMin();	
 };

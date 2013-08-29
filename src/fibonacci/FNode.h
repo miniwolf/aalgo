@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+using namespace std;
+
 class FNode {
 public:
 	FNode *left;
@@ -6,11 +11,16 @@ public:
 	FNode *child;
 	
 	int rank;
-	int key;
+	int key;	
 
  	bool marked;
 
-	char *payload;
+	string payload;
 
-	FNode(int key, char *payload);
+	FNode(int key, string payload);
+
+	void insert(FNode *node);
+	void remove();
+	void addChild(FNode *node);
+	void removeChild(FNode *node);
 };

@@ -1,10 +1,12 @@
 #include "main.h"
 #include <stdio.h>
+#include <stdlib.h>
+using namespace std;
 
 int main(int argc, char *argv[]){
 	FibonacciHeap *heap = new FibonacciHeap;
 	heap = heap->insert(13,"Dimmer");
 	heap = heap->insert(16,"Hunter");
-	printf("Element One: %s",heap->minRoot->payload);
-	printf("Element Two: %s",heap->minRoot->right->payload);
+	cout << "Element One: " << heap->minRoot->payload << endl;
+	cout << "Element Two: " << heap->minRoot->right->payload << endl;
 }

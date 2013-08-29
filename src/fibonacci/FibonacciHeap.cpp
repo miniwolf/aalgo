@@ -1,6 +1,6 @@
 #include "FibonacciHeap.h"
 
-FibonacciHeap* FibonacciHeap::insert(int key, char *payload){
+FibonacciHeap* FibonacciHeap::insert(int key, string payload){
 	FNode *node = new FNode(key, payload);
 
 	node->left = node;
@@ -51,7 +51,7 @@ FibonacciHeap* FibonacciHeap::meld(FibonacciHeap *otherHeap){
 	return result;
 }
 
-char* FibonacciHeap::findMin(){
+string FibonacciHeap::findMin(){
 	return minRoot->payload;
 }
 
