@@ -4,13 +4,16 @@
 using namespace std;
 
 class FibonacciHeap {
-public:
-	FNode *minRoot;
-	int size;
+ public:
+  FNode *minRoot;
+  int size;
 
-	FibonacciHeap(){};
-	FNode* insert(int key, string payload);
-	void meld(FibonacciHeap *other);
-	string findMin();
-	string deleteMin();	
+  FibonacciHeap(){
+    size = 0;
+  }
+  FNode* insert(int key, string payload);
+  void meld(FibonacciHeap *other);
+  FNode* findMin();
+  FNode* deleteMin();
+
 };

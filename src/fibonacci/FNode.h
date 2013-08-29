@@ -9,9 +9,9 @@ public:
 	FNode *right;
 	FNode *parent;
 	FNode *child;
-	
+
 	int rank;
-	int key;	
+	int key;
 
  	bool marked;
 
