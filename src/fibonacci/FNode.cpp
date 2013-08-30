@@ -62,6 +62,8 @@ void FNode::addChild(FNode *node){
 		child = node;		
 		child->parent = this;
 	}
+	//children should not be marked when added
+	node->marked = false;
 }
 
 void FNode::removeChild(FNode *node){
