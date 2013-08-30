@@ -1,5 +1,6 @@
 #include "FibonacciHeap.h"
 #include <math.h>
+#include <limits.h>
 
 FNode* FibonacciHeap::insert(int key, string payload){
   FNode *node = new FNode(key, payload);
@@ -105,5 +106,56 @@ FNode* FibonacciHeap::deleteMin(){
 
   size --;
   return c;
+}
 
+void FibonacciHeap::insertNode(FNode *node){
+	if ( !minRoot ) {
+		minRoot = node;
+	} else {
+		minRoot->insert(node);
+		if( node->key < minRoot->key ){
+			minRoot = node;
+		}
+	}
+}
+
+void FibonacciHeap::decreaseKey(FNode *node, int newKey){
+	if( newKey >= node->key ) {
+		return; // can only decrease keys, not increase.	
+	}
+
+	node->key = newKey;
+	if ( !node->parent ){
+		// node has no parent, only check the invariant
+		if ( newKey < minRoot->key ){
+			minRoot = node;
+		}
+		return;
+	}
+
+	// node has parent, we need to update when the invariant is violated.
+	if ( newKey < node->parent->key ) {
+		FNode *currentParent = node->parent;
+		FNode *currentNode = node;
+
+		while(true){
+			currentParent->removeChild(currentNode);
+			insertNode(currentNode);
+
+			if (!currentParent->parent){
+				break;
+			} else if ( !currentParent->marked) {
+				currentParent->marked = true;
+				break;
+			} else {
+				currentNode = currentParent;
+				currentParent = currentParent->parent;
+			}
+		}
+	}
+}
+
+void FibonacciHeap::remove(FNode *node){
+	decreaseKey(node,INT_MIN);
+	deleteMin();
 }
