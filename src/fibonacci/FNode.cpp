@@ -80,7 +80,7 @@ void FNode::removeChild(FNode *node){
 	if ( rank > 1 && child == node ){
 		child = child->right;	
 	}
-	node->remove(); 
+	node->remove();
 }
 
 

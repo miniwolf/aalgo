@@ -98,6 +98,7 @@ FNode* FibonacciHeap::deleteMin(){
   c = minRoot->right;
   while(minRoot != c){
     minSeen= !minSeen || minSeen->key > c->key?c:minSeen;
+    c->marked = false;
     c = c->right;
   }
   c = minRoot;
