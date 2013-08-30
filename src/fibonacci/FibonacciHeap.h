@@ -15,5 +15,6 @@ class FibonacciHeap {
   void meld(FibonacciHeap *other);
   FNode* findMin();
   FNode* deleteMin();
-
+  void decreaseKey(FNode *node, int key);
+  void remove(FNode *node);
 };
