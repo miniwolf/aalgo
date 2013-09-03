@@ -66,7 +66,8 @@ FNode* FibonacciHeap::deleteMin(){
 
   // 2. Build proper tree
   int i;
-  FNode* rank[i = int(ceil(log2(size)+1))];
+  i = int(ceil(log2(size) + 1));
+  FNode *rank[i];
   for(int j =0; j<i; j++){
     rank[j] = NULL;
   }
