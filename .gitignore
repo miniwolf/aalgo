@@ -14,3 +14,7 @@
 
 # Compiled executables
 fibheap
+
+src/.cproject
+src/.project
+
