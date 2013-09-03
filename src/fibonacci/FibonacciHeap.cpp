@@ -1,6 +1,9 @@
 #include "FibonacciHeap.h"
 #include <math.h>
 #include <limits.h>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 FNode* FibonacciHeap::insert(int key, string payload){
   FNode *node = new FNode(key, payload);
@@ -47,7 +50,9 @@ FNode* FibonacciHeap::findMin(){
 }
 
 FNode* FibonacciHeap::deleteMin(){
+
   FNode* c = minRoot->child, *d = c;
+
   // 1. Remove children of minRoot
   if(c){
     do {
@@ -63,14 +68,14 @@ FNode* FibonacciHeap::deleteMin(){
     minRoot = NULL;
     return m;
   }
-
   // 2. Build proper tree
   int i;
-  i = int(ceil(log2(size) + 1));
+  i = int(ceil(log2(size) + 2));
   FNode *rank[i];
   for(int j =0; j<i; j++){
     rank[j] = NULL;
   }
+
 
   c = minRoot->right;
   do{
@@ -78,12 +83,12 @@ FNode* FibonacciHeap::deleteMin(){
     while(rank[r]){
       FNode* n = rank[r];
       if(n->key < c->key){
-	c->remove();
-	n->addChild(c);
-	c = n;
+		c->remove();
+		n->addChild(c);
+		c = n;
       } else {
-	n->remove();
-	c->addChild(n);
+		n->remove();
+		c->addChild(n);
       }
       rank[r] = NULL;
       r++;
@@ -94,16 +99,24 @@ FNode* FibonacciHeap::deleteMin(){
 
 
   //3. Find new min
-
-  FNode* minSeen;
+  FNode* minSeen = NULL;
   c = minRoot->right;
   while(minRoot != c){
-    minSeen= !minSeen || minSeen->key > c->key?c:minSeen;
+    //minSeen= !minSeen || minSeen->key > c->key?c:minSeen;
+    if(!minSeen){
+    	minSeen = c;
+    } else {
+    	if ( minSeen->key > c->key){
+    		minSeen = c;
+    	}
+    }
+
     c->marked = false;
     c = c->right;
   }
   c = minRoot;
   minRoot->remove();
+
   minRoot = minSeen;
 
   size --;
@@ -160,4 +173,20 @@ void FibonacciHeap::decreaseKey(FNode *node, int newKey){
 void FibonacciHeap::remove(FNode *node){
 	decreaseKey(node,INT_MIN);
 	deleteMin();
+}
+
+
+void FibonacciHeap::makeplot(string filename){
+	ofstream file;
+	string fname = filename+".gv";
+	file.open(fname.c_str());
+	file << "digraph G {\n";
+	if( minRoot ){
+		minRoot->makePlot(file);
+	}
+	file << "}\n" << endl;
+	file.close();
+	string fname2 = filename;
+	string arg = "dot -Tps " + fname2 + ".gv -o "+fname2+".ps";
+	system(arg.c_str());
 }

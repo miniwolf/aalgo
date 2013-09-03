@@ -1,3 +1,6 @@
+#ifndef FNODE_H_
+#define FNODE_H_
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -23,4 +26,8 @@ public:
 	void remove();
 	void addChild(FNode *node);
 	void removeChild(FNode *node);
+	void subplot(ofstream &file);
+	void makePlot(ofstream &file);
 };
+
+#endif

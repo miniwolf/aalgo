@@ -1,3 +1,6 @@
+#ifndef FIBONACCI_HEAP_H_
+#define FIBONACCI_HEAP_H_
+
 #include "FNode.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +12,8 @@ class FibonacciHeap {
   int size;
 
   FibonacciHeap(){
-    size = 0;
+	minRoot=NULL;
+    size=0;
   }
   FNode* insert(int key, string payload);
   void meld(FibonacciHeap *other);
@@ -17,5 +21,8 @@ class FibonacciHeap {
   FNode* deleteMin();
   void decreaseKey(FNode *node, int key);
   void remove(FNode *node);
-	void insertNode(FNode *node);
+  void insertNode(FNode *node);
+  void makeplot(string filename);
 };
+
+#endif
