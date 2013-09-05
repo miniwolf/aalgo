@@ -30,12 +30,15 @@ bool TestFibHeap::testFib() {
 	heap->makeplot(name0);
 
 	heap->insert(0,"Evil");
-	//heap->insert(10,":E");
-	//heap->insert(testSize-1,":E");
+	int lastSeen = 0;
 	for( int j = 0 ; j < testSize; j++) {
 		string name = "graphs/o" + IntToStr(j);
 		heap->makeplot(name);
-		cout << "Deleted min element: " << heap->deleteMin()->key << endl;
+		FNode* n = heap->deleteMin();
+		if(n->key<lastSeen){
+		  cerr << "ERROR: Did not delete in right order.";
+		}
+		cout << "Deleted min element: " << n->key << endl;
 	}
 
 	return false;

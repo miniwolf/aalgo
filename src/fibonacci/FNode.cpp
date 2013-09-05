@@ -90,7 +90,7 @@ void FNode::removeChild(FNode *node){
 
 void FNode::subplot(ofstream &file){
 	if ( child ){
-		file <<  payload << key  << " -> "  << child->payload << child->key << " [style=dashed,color=red] \n";
+	  file <<  payload << key  << " -> " << child->payload << child->key << " [style=dashed,color=red] \n";
 	}
 
 	if ( parent ){
