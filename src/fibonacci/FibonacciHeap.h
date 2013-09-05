@@ -12,7 +12,7 @@ class FibonacciHeap {
   int size;
 
   FibonacciHeap(){
-	minRoot=NULL;
+    minRoot=NULL;
     size=0;
   }
   FNode* insert(int key, string payload);
