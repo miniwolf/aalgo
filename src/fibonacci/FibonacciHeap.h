@@ -1,28 +1,25 @@
-#ifndef FIBONACCI_HEAP_H_
-#define FIBONACCI_HEAP_H_
+#ifndef FIBONACCI_HEAP_H
+#define FIBONACCI_HEAP_H
 
-#include "FNode.h"
-#include <stdio.h>
-#include <stdlib.h>
-using namespace std;
+#include <stddef.h>
+#include <string>
+
+class FNode;
 
 class FibonacciHeap {
- public:
+public:
   FNode *minRoot;
-  int size;
+  size_t size;
 
-  FibonacciHeap(){
-    minRoot=NULL;
-    size=0;
-  }
-  FNode* insert(int key, string payload);
+  FibonacciHeap() : minRoot(NULL), size(0) { }
+  FNode* insert(FNode* node, size_t nodeSize = 1);
+  FNode* insert(int key, std::string payload);
   void meld(FibonacciHeap *other);
-  FNode* findMin();
+  FNode* findMin() const;
   FNode* deleteMin();
   void decreaseKey(FNode *node, int key);
   void remove(FNode *node);
-  void insertNode(FNode *node);
-  void makeplot(string filename);
+  void makeplot(std::string filename);
 };
 
 #endif

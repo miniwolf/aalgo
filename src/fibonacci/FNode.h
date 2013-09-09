@@ -1,33 +1,29 @@
-#ifndef FNODE_H_
-#define FNODE_H_
+#ifndef FNODE_H
+#define FNODE_H
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-using namespace std;
+#include <string>
 
 class FNode {
 public:
-	FNode *left;
-	FNode *right;
-	FNode *parent;
-	FNode *child;
+  FNode(int key, std::string payload);
+  void insert(FNode *node);
+  void remove();
+  void addChild(FNode *node);
+  void removeChild(FNode *node);
+  void subplot(std::ofstream &file) const;
+  void makePlot(std::ofstream &file) const;
 
-	int rank;
-	int key;
+public:
+  std::string payload;
+  FNode *left;
+  FNode *right;
+  FNode *parent;
+  FNode *child;
+  int rank;
+  int key;
+  bool marked;
 
- 	bool marked;
-
-	string payload;
-
-	FNode(int key, string payload);
-
-	void insert(FNode *node);
-	void remove();
-	void addChild(FNode *node);
-	void removeChild(FNode *node);
-	void subplot(ofstream &file);
-	void makePlot(ofstream &file);
 };
 
 #endif

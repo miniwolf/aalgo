@@ -1,5 +1,7 @@
-#ifndef MAIN_H_
-#define MAIN_H_
+#ifndef MAIN_H
+#define MAIN_H
+
 #include "test/TestFibHeap.h"
 #include "fibonacci/FibonacciHeap.h"
+
 #endif

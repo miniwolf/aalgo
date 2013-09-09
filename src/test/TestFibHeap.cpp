@@ -1,17 +1,20 @@
-#include "TestFibHeap.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
 
+#include "../fibonacci/FNode.h"
+#include "TestFibHeap.h"
+
+using namespace std;
+
 TestFibHeap::TestFibHeap() {
 	srand(45);
 }
 
-
 template <typename ROFL>
 string IntToStr(ROFL tmp){
-    std::ostringstream out;
+    ostringstream out;
     out << tmp;
     return out.str();
 }

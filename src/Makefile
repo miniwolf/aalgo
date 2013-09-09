@@ -16,7 +16,7 @@ $(PROGRAM_NAME): $(OBJS)
 
 .cpp.o:
 	$(CXX) -c $< -o $@
-	
+
 clean:
 	rm -rf .deps
 	rm -f $(OBJS) *.o

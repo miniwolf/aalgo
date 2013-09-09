@@ -1,20 +1,19 @@
-#include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
 
+#include "main.h"
 
-string IntToString(int num)
-{     ostringstream myStream; //creates an ostringstream object
-	  myStream<<num<<flush;
-	  /*outputs the number into the string stream and then flushes
-	  the buffer (makes sure the output is put into the stream)*/
-	  return myStream.str(); //returns the string form of the stringstream object
-}
 using namespace std;
 
-int main(int argc, char *argv[]){
+string IntToString(int num) {
+      ostringstream myStream;
+	  myStream << num << flush;
+	  return myStream.str();
+}
+
+int main(int argc, char *argv[]) {
   /*	FibonacciHeap *heap = new FibonacciHeap;
 	 heap->insert(13,"Dimmer");
 	 heap->insert(16,"Hunter");
