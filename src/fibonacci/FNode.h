@@ -4,21 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "../Node.h"
 using namespace std;
 
-class FNode {
+class FNode : public Node{
 public:
 	FNode *left;
 	FNode *right;
 	FNode *parent;
 	FNode *child;
 
-	int rank;
-	int key;
-
  	bool marked;
 
-	string payload;
+	int rank;
 
 	FNode(int key, string payload);
 

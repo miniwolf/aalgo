@@ -2,7 +2,7 @@ CXX:=g++
 
 PROGRAM_NAME:=fibheap
 
-SOURCES:=$(wildcard ./fibonacci/*.cpp) $(wildcard *.cpp) $(wildcard ./test/*.cpp)
+SOURCES:=$(wildcard *.cpp) $(wildcard ./fibonacci/*.cpp)  $(wildcard ./test/*.cpp)
 OBJS:=$(patsubst %.cpp,%.o,$(SOURCES))
 DEPS:=$(patsubst %.cpp,%.d,$(SOURCES))
 
@@ -16,7 +16,7 @@ $(PROGRAM_NAME): $(OBJS)
 
 .cpp.o:
 	$(CXX) -c $< -o $@
-	
+
 clean:
 	rm -rf .deps
 	rm -f $(OBJS) *.o
