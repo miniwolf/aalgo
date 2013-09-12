@@ -109,17 +109,4 @@ void FNode::subplot(ofstream &file){
 	file << "} \n";
 }
 
-void FNode::makePlot(ofstream &file){
-	subplot(file);
-
-	FNode *temp = right;
-
-	while(!(temp == this)){
-		temp->subplot(file);
-		temp = temp->right;
-	}
-
-}
-
-
 

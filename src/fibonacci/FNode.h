@@ -8,7 +8,7 @@
 using namespace std;
 
 class FNode : public Node{
-public:
+ public:
 	FNode *left;
 	FNode *right;
 	FNode *parent;
@@ -25,7 +25,19 @@ public:
 	void addChild(FNode *node);
 	void removeChild(FNode *node);
 	void subplot(ofstream &file);
-	void makePlot(ofstream &file);
+
+	virtual void makePlot(ofstream &file){
+	  
+	  subplot(file);
+
+	  FNode *temp = right;
+
+	  while(!(temp == this)){
+	    temp->subplot(file);
+	    temp = temp->right;
+	  }
+	  
+	}
 };
 
 #endif

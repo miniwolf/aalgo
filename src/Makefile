@@ -6,18 +6,18 @@ SOURCES:=$(wildcard *.cpp) $(wildcard ./fibonacci/*.cpp) $(wildcard ./binary/*.c
 OBJS:=$(patsubst %.cpp,%.o,$(SOURCES))
 DEPS:=$(patsubst %.cpp,%.d,$(SOURCES))
 
-all: $(PROGRAM_NAME)
+all: clean  $(PROGRAM_NAME)
 
 run: $(PROGRAM_NAME)
 	 ./$(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJS)
-	$(CXX) $(OBJS) -o $@
+	$(CXX) -std=c++11 $(OBJS) -o $@
 
 .cpp.o:
-	$(CXX) -c $< -o $@
+	$(CXX) -std=c++11 -c $< -o $@
 
-clean:
+clean:		
 	rm -rf .deps
 	rm -f $(OBJS) *.o
 	rm -f $(PROGRAM_NAME)

@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <sstream>
 #include <string>
-
+#include "test/TestPerformance.h"
+#include "binary/BinaryHeap.h"
 
 string IntToString(int num)
 {     ostringstream myStream; //creates an ostringstream object
@@ -15,19 +16,22 @@ string IntToString(int num)
 using namespace std;
 
 int main(int argc, char *argv[]){
-  /*	FibonacciHeap *heap = new FibonacciHeap;
-	 heap->insert(13,"Dimmer");
-	 heap->insert(16,"Hunter");
-	cout << "Element One: " << heap->minRoot->payload << endl;
-	cout << "Element Two: " << heap->minRoot->right->payload << endl;
 
-	FibonacciHeap *heap2 = new FibonacciHeap;
-	 heap2->insert(13,"Dimmer");
-	 heap2->insert(16,"Hunter");
-  */
-	 TestFibHeap *test = new TestFibHeap();
-	 test->testFib();
+  Heap* h = new BinaryHeap();
+  h->insert(1, "p");
+  h->insert(2, "p");  
+  h->insert(3, "p");
+  h->insert(4, "p");
+  h->insert(5, "p");  
+  h->insert(6, "p");
+  h->insert(7, "p");
+  h->insert(8, "p");  
+  h->insert(9, "p");
+  h->insert(10, "p");
+  h->insert(11, "p");  
+  h->insert(12, "p");
 
+  h->makePlot("graphs/g0");
 }
 
 
