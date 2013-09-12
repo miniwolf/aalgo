@@ -27,13 +27,13 @@ bool TestFibHeap::testFib() {
 		heap->insert(key, "test");
 	}
 	string name0 = "graphs/oBeforeEvil0";
-	heap->makeplot(name0);
+	heap->makePlot(name0);
 
 	heap->insert(0,"Evil");
 	int lastSeen = 0;
 	for( int j = 0 ; j < testSize; j++) {
 		string name = "graphs/o" + IntToStr(j);
-		heap->makeplot(name);
+		heap->makePlot(name);
 		FNode* n = heap->deleteMin();
 		if(n->key<lastSeen){
 		  cerr << "ERROR: Did not delete in right order.";
