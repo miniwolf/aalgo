@@ -12,7 +12,7 @@ void TestPerformance::testInsert(int num_insertions){
 }
 
 void TestPerformance::testDeleteMin(int num_deletions){
-  for(int i = 0;  i< num_insertions; i++){
+  for(int i = 0;  i< num_deletions; i++){
     mHeap->deleteMin();
   }
   
