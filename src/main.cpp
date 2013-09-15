@@ -6,6 +6,7 @@
 #include "test/TestPerformance.h"
 #include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
+#include "dijkstra/Graph.h"
 
 using namespace std;
 
@@ -23,6 +24,11 @@ int main(int argc, char *argv[]){
 	Vertex* n2 = new Vertex(2);
 
 	n1->addNeighbour(n2,10);
+
+	Graph* g = new Graph();
+	g->addVertex(n1);
+	g->addVertex(n2);
+	g->dijkstra(n1);
 }
 
 

@@ -6,12 +6,14 @@
 #include <iostream>
 #include <stdio.h>
 #include "Edge.h"
+#include "../Node.h"
 
 using namespace std;
 
 
 class Vertex {
   public:
+	Node *node;
 	int id_;
 	Vertex* previous_;
 	int distanceFromStart_;
