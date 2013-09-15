@@ -1,7 +1,7 @@
-#include "BNode.h"
+//#include "BNode.h"
 
 
-void BNode::insert(BNode* node, bool* direction, int startIndex){
+/*void BNode::insert(BNode* node, bool* direction, int startIndex){
   
   if(lChild == NULL){
     node->parent = this;
@@ -20,6 +20,6 @@ void BNode::insert(BNode* node, bool* direction, int startIndex){
     lChild->insert(node, direction, ++startIndex);      
   }
 
-}
+}*/
 
 

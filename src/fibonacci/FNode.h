@@ -7,23 +7,24 @@
 #include "../Node.h"
 using namespace std;
 
-class FNode : public Node{
+template <class T>
+class FNode : public Node<T>{
  public:
-	FNode *left;
-	FNode *right;
-	FNode *parent;
-	FNode *child;
+	FNode<T> *left;
+	FNode<T> *right;
+	FNode<T> *parent;
+	FNode<T> *child;
 
  	bool marked;
 
 	int rank;
 
-	FNode(int key, string payload);
+	FNode(int key, T payload);
 
-	void insert(FNode *node);
+	void insert(FNode<T> *node);
 	void remove();
-	void addChild(FNode *node);
-	void removeChild(FNode *node);
+	void addChild(FNode<T> *node);
+	void removeChild(FNode<T> *node);
 	void subplot(ofstream &file);
 
 	virtual void makePlot(ofstream &file){

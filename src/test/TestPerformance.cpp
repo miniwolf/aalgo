@@ -18,7 +18,7 @@ void TestPerformance::testDeleteMin(int num_deletions){
   
 }
 
-void TestPerformance::testDecreaseKey(Node* node, int step, int num_decreasions){
+void TestPerformance::testDecreaseKey(Node<string>* node, int step, int num_decreasions){
   
 }
 

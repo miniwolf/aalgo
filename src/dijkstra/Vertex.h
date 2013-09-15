@@ -13,7 +13,7 @@ using namespace std;
 
 class Vertex {
   public:
-	Node *node;
+	Node<Vertex> *node;
 	int id_;
 	Vertex* previous_;
 	int distanceFromStart_;

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <sstream>
 #include <string>
-#include "test/TestPerformance.h"
-#include "binary/BinaryHeap.h"
+//#include "test/TestPerformance.h"
+//#include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
 

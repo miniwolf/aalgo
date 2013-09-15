@@ -5,12 +5,12 @@
 #include <fstream>
 using namespace std;
 
-
-void FibonacciHeap::meld(FibonacciHeap *otherHeap){
+template <class T>
+void FibonacciHeap<T>::meld(FibonacciHeap<T> *otherHeap){
   if ( !otherHeap) {
     return;
   }
-  FNode *minRoot2 = otherHeap->minRoot;
+  FNode<T> *minRoot2 = otherHeap->minRoot;
 
   if ( !minRoot2 ){
     return;
@@ -30,7 +30,8 @@ void FibonacciHeap::meld(FibonacciHeap *otherHeap){
 }
 
 
-void FibonacciHeap::insertNode(FNode *node){
+template <class T>
+void FibonacciHeap<T>::insertNode(FNode<T> *node){
   if ( !minRoot ) {
     minRoot = node;
   } else {
@@ -42,7 +43,8 @@ void FibonacciHeap::insertNode(FNode *node){
 }
 
 
-void FibonacciHeap::remove(FNode *node){
+template <class T>
+void FibonacciHeap<T>::remove(FNode<T> *node){
   decreaseKey(node,INT_MIN);
   deleteMin();
 }

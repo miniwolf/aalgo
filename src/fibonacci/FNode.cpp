@@ -3,9 +3,12 @@
 #include <limits.h>
 #include <iostream>
 #include <fstream>
+#include "../Node.h"
 using namespace std;
 
-FNode::FNode(int key, string payload){
+
+template <class T>
+FNode<T>::FNode(int key, T payload){
 	this->payload = payload;
 	this->key = key;
 	child = NULL;
@@ -16,15 +19,17 @@ FNode::FNode(int key, string payload){
 	marked = false;
 }
 
-void FNode::insert(FNode *node){
+
+template <class T>
+void FNode<T>::insert(FNode<T> *node){
 	if( !node ){
 		return;
 	}
 	if(parent){
 		parent->rank++;
 	}
-	FNode *x = right;
-	FNode *y = node->left;
+	FNode<T> *x = right;
+	FNode<T> *y = node->left;
 	right = node;
 	node->left = this;
 	node->parent = parent;
@@ -32,7 +37,9 @@ void FNode::insert(FNode *node){
 	y->right = x;
 }
 
-void FNode::remove(){
+
+template <class T>
+void FNode<T>::remove(){
 
 	if (parent){
 		if ( parent->rank == 1 ){
@@ -50,12 +57,14 @@ void FNode::remove(){
 	right = this;
 }
 
-void FNode::addChild(FNode *node){
+
+template <class T>
+void FNode<T>::addChild(FNode<T> *node){
 	if(!node){
 		return;
 	}
 
-	if (node->key < key){
+	if (node->key < Node<T>::key){
 		cout << "Can not add child with smaller key " << endl;
 		exit(1);
 	}
@@ -71,7 +80,9 @@ void FNode::addChild(FNode *node){
 	node->marked = false;
 }
 
-void FNode::removeChild(FNode *node){
+
+template <class T>
+void FNode<T>::removeChild(FNode<T> *node){
 	if ( !node) {
 		return;
 	}
@@ -88,19 +99,20 @@ void FNode::removeChild(FNode *node){
 	node->remove();
 }
 
-void FNode::subplot(ofstream &file){
+template <class T>
+void FNode<T>::subplot(ofstream &file){
 	if ( child ){
-	  file <<  payload << key  << " -> " << child->payload << child->key << " [style=dashed,color=red] \n";
+	  file <<  this->payload << this->key  << " -> " << child->payload << child->key << " [style=dashed,color=red] \n";
 	}
 
 	if ( parent ){
-		file  << payload << key << " -> "  << parent->payload << parent->key << " [style=dotted,color=blue] \n";
+		file  << this->payload << this->key << " -> "  << parent->payload << parent->key << " [style=dotted,color=blue] \n";
 	}
 
-	file  << payload << key << " -> "  << right->payload << right->key << "\n";
-	file  << payload << key << " -> "  << left->payload << left->key << " [color=green] \n";
+	file  << this->payload << this->key << " -> "  << right->payload << right->key << "\n";
+	file  << this->payload << this->key << " -> "  << left->payload << left->key << " [color=green] \n";
 
-	file << "{rank=same; "  << payload << key << " " << right->payload << right->key << "}\n";
+	file << "{rank=same; "  << this->payload << this->key << " " << right->payload << right->key << "}\n";
 
 	file << "{ \n";
 	if ( child ){

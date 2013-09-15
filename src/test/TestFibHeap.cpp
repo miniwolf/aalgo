@@ -18,7 +18,7 @@ string IntToStr(ROFL tmp){
 
 bool TestFibHeap::testFib() {
 
-	FibonacciHeap *heap = new FibonacciHeap();
+	FibonacciHeap<string> *heap = new FibonacciHeap<string>();
 	int testSize = 32;
 
 	for( int i = testSize ; i > 0; i--) {
@@ -34,7 +34,7 @@ bool TestFibHeap::testFib() {
 	for( int j = 0 ; j < testSize; j++) {
 		string name = "graphs/o" + IntToStr(j);
 		heap->makePlot(name);
-		FNode* n = heap->deleteMin();
+		FNode<string>* n = heap->deleteMin();
 		if(n->key<lastSeen){
 		  cerr << "ERROR: Did not delete in right order.";
 		}
