@@ -13,7 +13,8 @@ class Node{
  public:
   int key;
   T payload;
-  virtual void makePlot(ofstream &file) = 0;  
+  virtual void makePlot(ofstream &file) = 0;
+  Node(int k, T p):key(k),payload(p){}  
 };
 
 #endif
