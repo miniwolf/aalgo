@@ -28,11 +28,17 @@ void Graph::dijkstra(Vertex* source){
 	}	
 	
 	source->distanceFromStart_ = 0;
-	// here we need or queue.0
-	Heap<Vertex*> *h = new FibonacciHeap<Vertex*>();
+	// here we need our queue.
+	Heap<Vertex*> *Q = new FibonacciHeap<Vertex*>();
 	for ( auto val : vertices){
 		int d = val->distanceFromStart_;
-		Node<Vertex*>* n = h->insert(d,val);
+		Node<Vertex*>* n = Q->insert(d,val);
+		val->node = n;
 	}
+
+	/*while(Q->findMin() != NULL){
+		
+	}*/
+	
 	
 }
