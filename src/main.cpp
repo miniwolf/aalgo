@@ -5,8 +5,8 @@
 #include <string>
 #include "test/TestPerformance.h"
 #include "binary/BinaryHeap.h"
-//#include "dijkstra/Vertex.h"
-//#include "dijkstra/Graph.h"
+#include "dijkstra/Vertex.h"
+#include "dijkstra/Graph.h"
 
 
 string IntToString(int num)
@@ -20,7 +20,7 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-  Heap* h = new BinaryHeap();
+  Heap<string>* h = new BinaryHeap<string>();
   h->insert(2, "p");
   h->insert(3, "p");  
   h->insert(4, "p");
@@ -36,22 +36,14 @@ int main(int argc, char *argv[]){
   h->deleteMin();
   h->makePlot("graphs/g0");
   
+
+  Vertex* n1 = new Vertex(1);
+  Vertex* n2 = new Vertex(2);
+
+  n1->addNeighbour(n2,10);
+
+  Graph* g = new Graph();
+  g->addVertex(n1);
+  g->addVertex(n2);
+  g->dijkstra(n1);
 }
-
-
-/*
-
-int main(int argc, char *argv[]){
-	Vertex* n1 = new Vertex(1);
-	Vertex* n2 = new Vertex(2);
-
-	n1->addNeighbour(n2,10);
-
-	Graph* g = new Graph();
-	g->addVertex(n1);
-	g->addVertex(n2);
-	g->dijkstra(n1);
-}
-
-
-*/

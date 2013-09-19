@@ -11,45 +11,51 @@
 
 using namespace std;
 
+
 struct BoolArrayPointerTuple{
   bool* arr;  
   int counter;
 };
 
+template <class T>
 
-class BinaryHeap : public Heap{
+class BinaryHeap : public Heap<T>{
   
  private:
   int size = 0;
-  BNode* root = NULL;
-  BNode* last = NULL;
-  void deleteAndInsert(BNode* n);
-  BNode* insert(BNode* n);
-  BoolArrayPointerTuple createTuple(int size);
+  BNode<T>* root = NULL;
+  BNode<T>* last = NULL;
+  void deleteAndInsert(BNode<T>* n);
 
  public:
-  BinaryHeap(){}
+ BinaryHeap():Heap<T>(){}
   
-  virtual BNode* insert(int key, string payload){
-    BNode* node = new BNode(key, payload);
+  virtual BNode<T>* insert(int key, T payload){
+    BNode<T>* node = new BNode<T>(key, payload);
     size++;
     insert(node);
   }
   
-  virtual BNode* findMin(){
+  virtual BNode<T>* findMin(){
     return root;
   }
-  virtual BNode* deleteMin(){
+  virtual BNode<T>* deleteMin(){
     if(!size){
       return NULL;
     } 
     size--;
+    if(root == last){
+      BNode<T>* tn = last;
+      root = last = NULL;
+      return tn;
+    }
+    
     if(last->parent->lChild == last){
       last->parent->lChild = NULL;
     } else if (last->parent->rChild == last){
       last->parent->rChild = NULL;
     }
-    BNode* r = root, *lp;
+    BNode<T>* r = root, *lp;
     root = last;
     last->lChild = r->lChild;
     last->rChild = r->rChild;
@@ -61,7 +67,7 @@ class BinaryHeap : public Heap{
     }
     last->parent = NULL;
 
-    BNode* tempN = NULL;
+    BNode<T>* tempN = NULL;
     bool first = true;
     do {
       if(last->rChild && last->lChild){      
@@ -89,9 +95,9 @@ class BinaryHeap : public Heap{
     return r;
   }
 
-  virtual void decreaseKey(Node* node, int key){ }
+  virtual void decreaseKey(Node<T>* node, int key){ }
 
-  virtual void decreaseKey(BNode* node, int key){    
+  virtual void decreaseKey(BNode<T>* node, int key){    
     node->key = key;
     if(node == root){
       return;
@@ -103,6 +109,46 @@ class BinaryHeap : public Heap{
   }
   
   
+  BNode<T>* insert(BNode<T>* node){
+    node->clear();
+
+    if(size == 1){
+      root = node;
+      return node;
+    }
+    BoolArrayPointerTuple t = createTuple(size);
+    root->insert(node, t.arr, t.counter);
+    last = node;  
+    BNode<T>* l;
+  
+  
+    if(l = node->balance()){
+      last = l;
+      while(node->balance());
+    }
+  
+    if(!node->parent){
+      root = node;
+    }
+
+    return node;
+  }
+
+ BoolArrayPointerTuple createTuple(int size){
+   int n = size, i = 0, arSize = ceil(log2(size))+1;
+   bool boolAr[arSize];
+   while(n != 0){
+     i++;      
+     boolAr[arSize-i] = (n % 2) == 1;
+    n = n/2;
+   }
+   
+   BoolArrayPointerTuple t;
+   t.arr = boolAr;
+   t.counter = arSize-i+1;
+   return t;
+ }
+
 };
 
 #endif

@@ -9,6 +9,8 @@
 #include "../Heap.h"
 #include "../Node.h"
 #include "../fibonacci/FibonacciHeap.h"
+#include "../binary/BinaryHeap.h"
+
 
 using namespace std;
 
@@ -29,11 +31,11 @@ void Graph::dijkstra(Vertex* source){
 	
 	source->distanceFromStart_ = 0;
 	// here we need our queue.
-	Heap<Vertex*> *Q = new FibonacciHeap<Vertex*>();
+	Heap<Vertex*> *Q = new BinaryHeap<Vertex*>();
 	for ( auto val : vertices){
-		int d = val->distanceFromStart_;
-		Node<Vertex*>* n = Q->insert(d,val);
-		val->node = n;
+	  int d = val->distanceFromStart_;
+	  Node<Vertex*>* n = Q->insert(d,val);
+	  val->node = n;
 	}
 
 	while(Q->findMin() != NULL){

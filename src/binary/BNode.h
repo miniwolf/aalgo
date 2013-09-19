@@ -8,28 +8,24 @@
 
 using namespace std;
 
-class BNode : public Node{  
+template <class T> 
+class BNode : public Node<T>{  
  public:
-  BNode(int key, string payload){
-    this->key = key;
-    this->payload = payload;
-  }
-
-  void insert(BNode* node, bool* direction, int startIndex);
-  BNode*  find(bool* direction, int startIndex);
-  BNode* parent = NULL;
-  BNode* lChild = NULL;
-  BNode* rChild = NULL;
+ BNode(int key, T payload) : Node<T>(key, payload){}
+  
+  BNode<T>* parent = NULL;
+  BNode<T>* lChild = NULL;
+  BNode<T>* rChild = NULL;
   virtual void makePlot(ofstream &file){
     if (lChild) {
-      file << payload << key << " -> " << lChild->payload << lChild->key << "[color=red] \n";
+      file << this->payload << this->key << " -> " << lChild->payload << lChild->key << "[color=red] \n";
     }
 
     if (rChild) {
-      file << payload << key << " -> " << rChild->payload << rChild->key << "[color=blue] \n";
+      file << this->payload << this->key << " -> " << rChild->payload << rChild->key << "[color=blue] \n";
     }
     if (parent) {
-      file << payload << key << " -> " << parent->payload << parent->key << "[color=green] \n";
+      file << this->payload << this->key << " -> " << parent->payload << parent->key << "[color=green] \n";
     }
 
     if ( rChild && lChild ){
@@ -46,9 +42,90 @@ class BNode : public Node{
     file << "} \n";
   }
 
-  BNode* balance();
+void insert(BNode<T>* node, bool* direction, int startIndex){
   
-  void clear();
+  if(!lChild){
+    node->parent = this;
+    lChild = node;
+    return;
+  }
+  if(!rChild){
+    node->parent = this;
+    rChild = node;
+    return;
+  }
+  
+  if(direction[startIndex]){
+    rChild->insert(node, direction, ++startIndex);    
+  } else {
+    lChild->insert(node, direction, ++startIndex);      
+  }
+  
+}
+
+ BNode<T>* find(bool* direction, int startIndex){
+  
+   if(!lChild && !rChild){
+     return this;
+   }
+   if(direction[startIndex]){
+     return rChild->find(direction, ++startIndex);
+   } else {
+     return lChild->find(direction, ++startIndex);  
+   }
+ }
+
+
+
+ BNode<T>* balance(){
+   if(!parent || parent->key<=this->key){
+     return NULL;
+   }
+
+   BNode<T>* p = parent, *op = parent->parent, *orc = parent->rChild, *olc = parent->lChild; 
+   if(op){
+     if(op->lChild == parent){
+       op->lChild = this;
+     } else {
+       op->rChild = this;
+     }
+   }
+  
+
+   parent->parent = this;
+   parent->lChild = lChild;
+   parent->rChild = rChild;
+   parent = op; 
+   if(lChild){
+     lChild->parent = p;
+   }
+   if(rChild){
+     rChild->parent = p;
+   }
+  
+   if(olc == this){
+     rChild = orc;
+     lChild = p;
+     if(orc){
+       orc->parent = this;
+     }
+   } else if (orc == this) {
+     if(olc){
+       olc->parent = this;
+     }
+     rChild = p;
+     lChild = olc;
+   }
+  
+   return p;
+ }
+
+
+ void clear(){
+   parent = lChild = rChild = NULL;
+ }
+
+
 };
 
 
