@@ -2,11 +2,11 @@ CXX:=g++
 
 PROGRAM_NAME:=fibheap
 
-SOURCES:=$(wildcard *.cpp) $(wildcard ./fibonacci/*.cpp) $(wildcard ./binary/*.cpp)  $(wildcard ./test/*.cpp) $(wildcard ./dijkstra/*.cpp) 
+SOURCES:=$(wildcard *.cpp) $(wildcard */*.cpp)
 OBJS:=$(patsubst %.cpp,%.o,$(SOURCES))
 DEPS:=$(patsubst %.cpp,%.d,$(SOURCES))
 
-all: clean  $(PROGRAM_NAME)
+all: $(PROGRAM_NAME)
 
 run: $(PROGRAM_NAME)
 	 ./$(PROGRAM_NAME)
