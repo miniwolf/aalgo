@@ -36,9 +36,24 @@ void Graph::dijkstra(Vertex* source){
 		val->node = n;
 	}
 
-	/*while(Q->findMin() != NULL){
+	while(Q->findMin() != NULL){
+		Node<Vertex*>* uNode = Q->deleteMin();
+		Vertex* u = uNode->payload;
 		
-	}*/
-	
-	
+		if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
+			break;
+		}
+
+		for ( auto val : u->edges_ ) {
+			Vertex* v = val->n_;
+			int distanceFromUtoV = val->d_;
+			int alt = u->distanceFromStart_ + distanceFromUtoV;
+
+			if ( alt < v->distanceFromStart_ ){
+				v->distanceFromStart_ = alt;
+				v->previous_ = u;
+				Q->decreaseKey(v->node,v->distanceFromStart_);
+			}
+		}	
+	}
 }
