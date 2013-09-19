@@ -18,20 +18,21 @@ using namespace std;
 int main(int argc, char *argv[]){
 
   Heap* h = new BinaryHeap();
-  h->insert(1, "p");
-  h->insert(2, "p");  
-  h->insert(3, "p");
+  h->insert(2, "p");
+  h->insert(3, "p");  
   h->insert(4, "p");
-  h->insert(5, "p");  
-  h->insert(6, "p");
+  h->insert(5, "p");
+  h->insert(6, "p");  
   h->insert(7, "p");
-  h->insert(8, "p");  
-  h->insert(9, "p");
+  h->insert(8, "p");
+  h->insert(9, "p");  
   h->insert(10, "p");
-  h->insert(11, "p");  
-  h->insert(12, "p");
-
+  h->insert(11, "p");
+  h->insert(12, "p");  
+  // h->insert(1, "b");
+  h->deleteMin();
   h->makePlot("graphs/g0");
+  
 }
 
 

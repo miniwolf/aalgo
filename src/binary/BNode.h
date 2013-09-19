@@ -16,6 +16,7 @@ class BNode : public Node{
   }
 
   void insert(BNode* node, bool* direction, int startIndex);
+  BNode*  find(bool* direction, int startIndex);
   BNode* parent = NULL;
   BNode* lChild = NULL;
   BNode* rChild = NULL;
@@ -26,6 +27,9 @@ class BNode : public Node{
 
     if (rChild) {
       file << payload << key << " -> " << rChild->payload << rChild->key << "[color=blue] \n";
+    }
+    if (parent) {
+      file << payload << key << " -> " << parent->payload << parent->key << "[color=green] \n";
     }
 
     if ( rChild && lChild ){
@@ -41,6 +45,10 @@ class BNode : public Node{
     }
     file << "} \n";
   }
+
+  BNode* balance();
+  
+  void clear();
 };
 
 
