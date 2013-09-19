@@ -12,9 +12,10 @@
 
 using namespace std;
 
-class FibonacciHeap : public Heap {
+template <class T>
+class FibonacciHeap : public Heap<T> {
  public:
-  FNode *minRoot;
+  FNode<T> *minRoot;
   int size;
 
   FibonacciHeap(){
@@ -22,9 +23,9 @@ class FibonacciHeap : public Heap {
     size=0;
   }
 
-  virtual FNode* insert(int key, string payload){
+  virtual FNode<T>* insert(int key, T payload){
     
-    FNode *node = new FNode(key, payload);
+    FNode<T> *node = new FNode<T>(key, payload);
     
     if ( minRoot ){
       minRoot->insert(node);
@@ -40,13 +41,13 @@ class FibonacciHeap : public Heap {
     return node;
   }
 
-  virtual FNode* findMin(){
+  virtual FNode<T>* findMin(){
     return minRoot;
   }
 
-  virtual FNode* deleteMin(){
+  virtual FNode<T>* deleteMin(){
 
-    FNode* c = minRoot->child, *d = c;
+    FNode<T>* c = minRoot->child, *d = c;
 
     // 1. Remove children of minRoot
     if(c){
@@ -58,7 +59,7 @@ class FibonacciHeap : public Heap {
       minRoot->rank = 0;
       minRoot->child = NULL;
     } else if(minRoot->right == minRoot) {
-      FNode* m = minRoot;
+      FNode<T>* m = minRoot;
       minRoot->remove();
       minRoot = NULL;
       return m;
@@ -67,7 +68,7 @@ class FibonacciHeap : public Heap {
     // 2. Build proper tree
     int i;
     i = int(ceil(log2(size) + 2));
-    FNode *rank[i];
+    FNode<T> *rank[i];
     for(int j =0; j<i; j++){
       rank[j] = NULL;
     }
@@ -76,9 +77,9 @@ class FibonacciHeap : public Heap {
     c = minRoot->right;
     do{
       int r = c->rank;
-      FNode* n2 = c->right;
+      FNode<T>* n2 = c->right;
       while(rank[r]){
-	FNode* n = rank[r];
+	FNode<T>* n = rank[r];
 	if(n->key < c->key){
 	  c->remove();
 	  n->addChild(c);
@@ -97,7 +98,7 @@ class FibonacciHeap : public Heap {
   
 
     //3. Find new min
-    FNode* minSeen = NULL;
+    FNode<T>* minSeen = NULL;
     c = minRoot->right;
     while(minRoot != c){
       //minSeen= !minSeen || minSeen->key > c->key?c:minSeen;
@@ -123,8 +124,8 @@ class FibonacciHeap : public Heap {
 
 
   
-  virtual void decreaseKey(Node *node, int newKey){}
-  virtual void decreaseKey(FNode *node, int newKey){
+  virtual void decreaseKey(Node<T> *node, int newKey){}
+  virtual void decreaseKey(FNode<T> *node, int newKey){
 
     if( newKey >= node->key ) {
       return; // can only decrease keys, not increase.	
@@ -141,8 +142,8 @@ class FibonacciHeap : public Heap {
 
     // node has parent, we need to update when the invariant is violated.
     if ( newKey < node->parent->key ) {
-      FNode *currentParent = node->parent;
-      FNode *currentNode = node;
+      FNode<T> *currentParent = node->parent;
+      FNode<T> *currentNode = node;
 
       while(true){
 	currentParent->removeChild(currentNode);
@@ -178,9 +179,45 @@ class FibonacciHeap : public Heap {
   }
 
 
-  void meld(FibonacciHeap *other);
-  void remove(FNode *node);
-  void insertNode(FNode *node);
+	void meld(FibonacciHeap<T> *otherHeap){
+	  if ( !otherHeap) {
+		return;
+	  }
+	  FNode<T> *minRoot2 = otherHeap->minRoot;
+
+	  if ( !minRoot2 ){
+		return;
+	  }
+
+	  if ( minRoot ) {
+		minRoot->insert( minRoot2 );
+		size += otherHeap->size;
+
+		if ( minRoot->key > minRoot2->key ) {
+		  minRoot = minRoot2;
+		}
+	  } else {
+		minRoot = minRoot2;
+		size = otherHeap->size;
+	  }
+	}
+
+
+  	void remove(FNode<T> *node){
+	  decreaseKey(node,INT_MIN);
+	  deleteMin();
+	}
+
+	  void insertNode(FNode<T> *node){
+		  if ( !minRoot ) {
+				minRoot = node;
+		  } else {
+				minRoot->insert(node);
+				if( node->key < minRoot->key ){
+			  		minRoot = node;
+				}
+		  }
+	}
 };
 
 #endif

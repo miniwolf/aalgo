@@ -2,7 +2,7 @@ CXX:=g++
 
 PROGRAM_NAME:=fibheap
 
-SOURCES:=$(wildcard *.cpp) $(wildcard ./fibonacci/*.cpp) $(wildcard ./binary/*.cpp)  $(wildcard ./test/*.cpp)
+SOURCES:=$(wildcard *.cpp) $(wildcard ./fibonacci/*.cpp) $(wildcard ./binary/*.cpp)  $(wildcard ./test/*.cpp) $(wildcard ./dijkstra/*.cpp) 
 OBJS:=$(patsubst %.cpp,%.o,$(SOURCES))
 DEPS:=$(patsubst %.cpp,%.d,$(SOURCES))
 

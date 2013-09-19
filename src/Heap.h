@@ -5,18 +5,19 @@
 #include "Node.h"
 using namespace std;
 
+template <class T>
 class Heap{
  public:
-  virtual Node* insert(int key, string payload)  = 0;
-  virtual Node* findMin() = 0;
-  virtual Node* deleteMin() = 0;
-  virtual void decreaseKey(Node* node, int key) = 0;
+  virtual Node<T>* insert(int key, T payload)  = 0;
+  virtual Node<T>* findMin() = 0;
+  virtual Node<T>* deleteMin() = 0;
+  virtual void decreaseKey(Node<T>* node, int key) = 0;
   void makePlot(string filename){   
     ofstream file;
     string fname = filename+".gv";
     file.open(fname.c_str());
     file << "digraph G {\n";
-    Node* n = findMin();
+    Node<T>* n = findMin();
     if( n ){
       n->makePlot(file);
     }

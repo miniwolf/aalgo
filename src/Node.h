@@ -8,12 +8,13 @@
 
 using namespace std;
 
-class Node {
+template <class T> 
+class Node{
  public:
   int key;
-  string payload;
+  T payload;
   virtual void makePlot(ofstream &file) = 0;
-  
+  Node(int k, T p):key(k),payload(p){}  
 };
 
 #endif

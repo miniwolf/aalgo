@@ -5,6 +5,9 @@
 #include <string>
 #include "test/TestPerformance.h"
 #include "binary/BinaryHeap.h"
+//#include "dijkstra/Vertex.h"
+//#include "dijkstra/Graph.h"
+
 
 string IntToString(int num)
 {     ostringstream myStream; //creates an ostringstream object
@@ -36,3 +39,19 @@ int main(int argc, char *argv[]){
 }
 
 
+/*
+
+int main(int argc, char *argv[]){
+	Vertex* n1 = new Vertex(1);
+	Vertex* n2 = new Vertex(2);
+
+	n1->addNeighbour(n2,10);
+
+	Graph* g = new Graph();
+	g->addVertex(n1);
+	g->addVertex(n2);
+	g->dijkstra(n1);
+}
+
+
+*/
