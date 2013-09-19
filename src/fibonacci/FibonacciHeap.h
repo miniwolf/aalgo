@@ -1,5 +1,5 @@
-#ifndef FIBONACCI_HEAP_H_
-#define FIBONACCI_HEAP_H_
+#ifndef FIBONACCI_HEAP_H
+#define FIBONACCI_HEAP_H
 
 #include "../Heap.h"
 #include "FNode.h"

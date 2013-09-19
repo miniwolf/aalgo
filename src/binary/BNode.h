@@ -1,5 +1,5 @@
-#ifndef BNODE_H_
-#define BNODE_H_
+#ifndef BNODE_H
+#define BNODE_H
 
 #include "../Node.h"
 

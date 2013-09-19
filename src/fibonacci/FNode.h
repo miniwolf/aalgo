@@ -1,5 +1,5 @@
-#ifndef FNODE_H_
-#define FNODE_H_
+#ifndef FNODE_H
+#define FNODE_H
 
 #include <stdio.h>
 #include <stdlib.h>

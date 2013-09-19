@@ -1,5 +1,6 @@
-#ifndef HEAP_H_
-#define HEAP_H_
+#ifndef HEAP_H
+#define HEAP_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "Node.h"
