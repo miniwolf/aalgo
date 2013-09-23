@@ -16,30 +16,42 @@ string IntToStr(ROFL tmp){
     return out.str();
 }
 
+const int TEST_SIZE = 32;
+
+bool testInsert(FibonacciHeap<string> *heap) {
+    for ( int i = TEST_SIZE; i > 0; i-- ) {
+        heap->insert(TEST_SIZE - i, "test");
+        if ( heap->size != TEST_SIZE - i + 1 ) { return false; }
+    }
+    heap->makePlot("graphs/oBeforeEvil0");
+    return true;
+}
+
+bool testDeletemin(FibonacciHeap<string> *heap) {
+    heap->insert(0,"Evil");
+    int lastSeen = 0;
+    for ( int j = 0; j < TEST_SIZE; j++ ) {
+        string name = "graphs/o" + IntToStr(j);
+        heap->makePlot(name);
+        FNode<string>* n = heap->deleteMin();
+        if ( n->key < lastSeen ) {
+            cerr << "ERROR: Did not delete in right order.";
+            return false;
+        }
+        lastSeen = n->key;
+        if ( heap->size != TEST_SIZE - j ) { return false; }
+    }
+    return true;
+}
+
 bool TestFibHeap::testFib() {
-
-	FibonacciHeap<string> *heap = new FibonacciHeap<string>();
-	int testSize = 32;
-
-	for ( int i = testSize; i > 0; i--) {
-		int key = testSize-i;
-		heap->insert(key, "test");
-	}
-
-	string name0 = "graphs/oBeforeEvil0";
-	heap->makePlot(name0);
-
-	heap->insert(0,"Evil");
-	int lastSeen = 0;
-	for ( int j = 0; j < testSize; j++ ) {
-		string name = "graphs/o" + IntToStr(j);
-		heap->makePlot(name);
-		FNode<string>* n = heap->deleteMin();
-		if ( n->key < lastSeen )
-		  cerr << "ERROR: Did not delete in right order.";
-		cout << "Deleted min element: " << n->key << endl;
-	}
-	return false;
+    FibonacciHeap<string> *heap = new FibonacciHeap<string>();
+    bool result = false;
+    result = testInsert(heap);
+    if ( !result ) { return false; }
+    result = testDeletemin(heap);
+    if ( !result ) { return false; }
+    return result;
 }
 
 TestFibHeap::~TestFibHeap() {

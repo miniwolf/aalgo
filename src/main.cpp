@@ -7,6 +7,7 @@
 //#include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
+#include "test/TestFibHeap.h"
 
 using namespace std;
 
@@ -28,6 +29,12 @@ void dijkstra() {
   g->dijkstra(n1);
 }
 
+void testFib() {
+  TestFibHeap *test = new TestFibHeap();
+  assert(test->testFib());
+}
+
 int main(int argc, char* argv[]) {
-  dijkstra();
+    //dijkstra();
+  testFib();
 }
