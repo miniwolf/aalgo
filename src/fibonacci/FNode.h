@@ -88,38 +88,32 @@ public:
   }
 
   void subplot(ofstream &file){
-		/*if ( child ){
-		  file <<  this->payload << this->key  << " -> " << child->payload << child->key << " [style=dashed,color=red] \n";
-		}
+    if ( child )
+      file <<  this->payload << this->key  << " -> " << child->payload << child->key << " [style=dashed,color=red] \n";
 
-		if ( parent ){
-			file  << this->payload << this->key << " -> "  << parent->payload << parent->key << " [style=dotted,color=blue] \n";
-		}
+    if ( parent )
+      file  << this->payload << this->key << " -> "  << parent->payload << parent->key << " [style=dotted,color=blue] \n";
 
-		file  << this->payload << this->key << " -> "  << right->payload << right->key << "\n";
-		file  << this->payload << this->key << " -> "  << left->payload << left->key << " [color=green] \n";
-
-		file << "{rank=same; "  << this->payload << this->key << " " << right->payload << right->key << "}\n";
-
-		file << "{ \n";
-		if ( child ){
-			child->makePlot(file);
-		}
-		file << "} \n";*/
+    file  << this->payload << this->key << " -> "  << right->payload << right->key << "\n";
+    file  << this->payload << this->key << " -> "  << left->payload << left->key << " [color=green] \n";
+    file << "{rank=same; "  << this->payload << this->key << " " << right->payload << right->key << "}\n";
+    file << "{ \n";
+    if ( child )
+      child->makePlot(file);
+    file << "} \n";
   }
 
 
   
   virtual void makePlot(ofstream &file) {
-	  
-	 /* subplot(file);
+    subplot(file);
 
-	  FNode *temp = right;
+    FNode *temp = right;
 
-	  while(!(temp == this)){
-	    temp->subplot(file);
-	    temp = temp->right;
-	  }*/
+    while(!(temp == this)){
+      temp->subplot(file);
+      temp = temp->right;
+    }
   }
 };
 
