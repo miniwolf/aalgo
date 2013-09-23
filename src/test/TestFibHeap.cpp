@@ -21,26 +21,24 @@ bool TestFibHeap::testFib() {
 	FibonacciHeap<string> *heap = new FibonacciHeap<string>();
 	int testSize = 32;
 
-	for( int i = testSize ; i > 0; i--) {
+	for ( int i = testSize; i > 0; i--) {
 		int key = testSize-i;
-
 		heap->insert(key, "test");
 	}
+
 	string name0 = "graphs/oBeforeEvil0";
 	heap->makePlot(name0);
 
 	heap->insert(0,"Evil");
 	int lastSeen = 0;
-	for( int j = 0 ; j < testSize; j++) {
+	for ( int j = 0; j < testSize; j++ ) {
 		string name = "graphs/o" + IntToStr(j);
 		heap->makePlot(name);
 		FNode<string>* n = heap->deleteMin();
-		if(n->key<lastSeen){
+		if ( n->key < lastSeen )
 		  cerr << "ERROR: Did not delete in right order.";
-		}
 		cout << "Deleted min element: " << n->key << endl;
 	}
-
 	return false;
 }
 

@@ -10,7 +10,7 @@ using namespace std;
 
 class BNode : public Node{  
  public:
-  BNode(int key, string payload){
+  BNode(int key, string payload) {
     this->key = key;
     this->payload = payload;
   }
@@ -19,26 +19,20 @@ class BNode : public Node{
   BNode* parent = NULL;
   BNode* lChild = NULL;
   BNode* rChild = NULL;
-  virtual void makePlot(ofstream &file){
-    if (lChild) {
+  virtual void makePlot(ofstream &file) {
+    if ( lChild )
       file << payload << key << " -> " << lChild->payload << lChild->key << "[color=red] \n";
-    }
-
-    if (rChild) {
+    if (rChild)
       file << payload << key << " -> " << rChild->payload << rChild->key << "[color=blue] \n";
-    }
 
-    if ( rChild && lChild ){
-      file << "{rank=same; " << lChild->payload << lChild->key << " " << rChild->payload << rChild->key << "}\n"; 
-    }
+    if ( rChild && lChild )
+      file << "{rank=same; " << lChild->payload << lChild->key << " " << rChild->payload << rChild->key << "}\n";
 
     file << "{ \n";
-    if(lChild){
+    if ( lChild )
       lChild->makePlot(file);
-    }
-    if(rChild){
+    if ( rChild )
       rChild->makePlot(file);
-    }
     file << "} \n";
   }
 };
