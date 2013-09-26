@@ -2,22 +2,25 @@
 #define TESTPERFORMANCE_H
 
 #include "../Heap.h"
+#include "../binary/BinaryHeap.h"
+#include "../fibonacci/FibonacciHeap.h"
 
 class TestPerformance {
  private:
-  Heap<string>* mHeap;
   long double mStartTime;
   double getTime();
  public:
-  TestPerformance(Heap<string>* h){
-    mHeap = h;
+  TestPerformance(){
     mStartTime = 0;
   }
-  void testInsert(int num_insertions);
-  void testDeleteMin(int num_deletions);
-  void testDecreaseKey(Node<string>* node, int step, int num_decreasions);
+  int* generateKeySet(int i, int* ar);
+  Node<int>** testInsert(Heap<int>* heap, int* set, int size, Node<int>** array);
+  void testDeleteMin(Heap<int>* heap);
+  void testDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
+  void runTest(Heap<int>* heap, int size, int* set, ofstream &file); 
   void startClock();
   double stopClock();
+  
 };
 
 #endif

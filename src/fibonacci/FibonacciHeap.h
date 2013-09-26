@@ -45,7 +45,10 @@ public:
 
   /* Cover test it all! */
   virtual FNode<T>* deleteMin() {
-    assert(minRoot);
+    if(!minRoot){
+      assert(size>0);
+      return NULL;
+    }
     FNode<T>* c = minRoot->child, *d = c;
 
     // 1. Remove children of minRoot
@@ -58,7 +61,6 @@ public:
       minRoot->rank = 0;
       minRoot->child = NULL;
     } else if ( minRoot->right == minRoot ) { // will this ever be true
-      cover(); 
       FNode<T>* result = minRoot;
       minRoot->remove();
       minRoot = NULL;
@@ -66,8 +68,8 @@ public:
     }
 
     // 2. Build proper tree
-    const size_t i = (sizeof(size) + 1) * 8;
-    FNode<T> *rank[i];
+    int i = ceil(log2(size)*2);
+    FNode<T>** rank = new FNode<T>*[i];
     memset(rank, 0, sizeof(rank));
 
     c = minRoot->right;
@@ -161,7 +163,9 @@ public:
       insert(newNode, otherHeap->size);
   }
 
-  void remove(FNode<T> *node) {
+  virtual void remove(Node<T>* node){}
+
+  virtual void remove(FNode<T> *node) {
 	decreaseKey(node,INT_MIN);
     deleteMin();
   }

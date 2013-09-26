@@ -12,6 +12,7 @@ class Heap{
   virtual Node<T>* insert(int key, T payload)  = 0;
   virtual Node<T>* findMin() = 0;
   virtual Node<T>* deleteMin() = 0;
+  virtual void remove(Node<T>* n) = 0;
   virtual void decreaseKey(Node<T>* node, int key) = 0;
   void makePlot(string filename){   
     ofstream file;

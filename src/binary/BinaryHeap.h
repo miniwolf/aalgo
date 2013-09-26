@@ -136,7 +136,7 @@ class BinaryHeap : public Heap<T>{
 
  BoolArrayPointerTuple createTuple(int size){
    int n = size, i = 0, arSize = ceil(log2(size))+1;
-   bool boolAr[arSize];
+   bool* boolAr = new bool[arSize];
    while(n != 0){
      i++;      
      boolAr[arSize-i] = (n % 2) == 1;
@@ -148,6 +148,14 @@ class BinaryHeap : public Heap<T>{
    t.counter = arSize-i+1;
    return t;
  }
+ 
+ virtual void remove(Node<T>* n){}
+ 
+ virtual void remove(BNode<T>* n){
+   decreaseKey(n, root->key-1);
+   deleteMin(); 
+ }
+ 
 
 };
 
