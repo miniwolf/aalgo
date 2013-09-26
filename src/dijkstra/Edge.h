@@ -1,5 +1,5 @@
-#ifndef EDGE_H_
-#define EDGE_H_
+#ifndef EDGE_H
+#define EDGE_H
 
 #include <stdlib.h>
 #include <vector>

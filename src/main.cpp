@@ -3,40 +3,21 @@
 #include <stdlib.h>
 #include <sstream>
 #include <string>
-#include "test/TestPerformance.h"
-#include "binary/BinaryHeap.h"
+//#include "test/TestPerformance.h"
+//#include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
+#include "test/TestFibHeap.h"
 
-
-string IntToString(int num)
-{     ostringstream myStream; //creates an ostringstream object
-	  myStream<<num<<flush;
-	  /*outputs the number into the string stream and then flushes
-	  the buffer (makes sure the output is put into the stream)*/
-	  return myStream.str(); //returns the string form of the stringstream object
-}
 using namespace std;
 
-int main(int argc, char *argv[]){
+string IntToString(int num) {
+  ostringstream myStream;
+  myStream << num << flush;
+  return myStream.str();
+}
 
-  Heap<string>* h = new BinaryHeap<string>();
-  h->insert(2, "p");
-  h->insert(3, "p");  
-  h->insert(4, "p");
-  h->insert(5, "p");
-  h->insert(6, "p");  
-  h->insert(7, "p");
-  h->insert(8, "p");
-  h->insert(9, "p");  
-  h->insert(10, "p");
-  h->insert(11, "p");
-  h->insert(12, "p");  
-  // h->insert(1, "b");
-  h->deleteMin();
-  h->makePlot("graphs/g0");
-  
-
+void dijkstra() {
   Vertex* n1 = new Vertex(1);
   Vertex* n2 = new Vertex(2);
 
@@ -46,4 +27,14 @@ int main(int argc, char *argv[]){
   g->addVertex(n1);
   g->addVertex(n2);
   g->dijkstra(n1);
+}
+
+void testFib() {
+  TestFibHeap *test = new TestFibHeap();
+  assert(test->testFib());
+}
+
+int main(int argc, char* argv[]) {
+  //dijkstra();
+  testFib();
 }

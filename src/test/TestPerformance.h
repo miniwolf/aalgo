@@ -1,6 +1,6 @@
+#ifndef TESTPERFORMANCE_H
+#define TESTPERFORMANCE_H
 
-#ifndef TESTPERFORMANCE_H_
-#define TESTPERFORMANCE_H_
 #include "../Heap.h"
 
 class TestPerformance {
@@ -20,4 +20,4 @@ class TestPerformance {
   double stopClock();
 };
 
-#endif /* TESTFIBHEAP_H_ */
+#endif
