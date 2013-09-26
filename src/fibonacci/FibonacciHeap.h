@@ -33,6 +33,7 @@ public:
               (minRoot->insert(node),
                node->key < minRoot->key ? node : minRoot);
     size += nodeSize;
+    return node;
   }
 
   virtual FNode<T>* insert(int key, T payload) {
@@ -45,7 +46,7 @@ public:
 
   /* Cover test it all! */
   virtual FNode<T>* deleteMin() {
-    assert(minRoot);
+    if ( !minRoot ) { return NULL; }
     FNode<T>* c = minRoot->child, *d = c;
 
     // 1. Remove children of minRoot
@@ -58,7 +59,6 @@ public:
       minRoot->rank = 0;
       minRoot->child = NULL;
     } else if ( minRoot->right == minRoot ) { // will this ever be true
-      cover(); 
       FNode<T>* result = minRoot;
       minRoot->remove();
       minRoot = NULL;
@@ -110,7 +110,7 @@ public:
   
   virtual void decreaseKey(Node<T> *node, int newKey){}
   virtual void decreaseKey(FNode<T> *node, int newKey) {
-    assert(newKey < node->key);
+    assert(newKey <= node->key);
     node->key = newKey;
     if ( !node->parent ) {
       // TODO: Check this for correctness.

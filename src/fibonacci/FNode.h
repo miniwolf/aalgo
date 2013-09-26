@@ -56,7 +56,7 @@ public:
   void addChild(FNode<T> *node) {
     assert(node);
 
-    if ( node->key < Node<T>::key ) {
+    if ( node->key < this->key ) {
       cout << "Can not add child with smaller key " << endl;
       exit(1);
     }
