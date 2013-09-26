@@ -15,18 +15,20 @@
 
 using namespace std;
 
+#define cover() assert(false);
+
 template <class T>
 class FibonacciHeap : public Heap<T> {
 public:
   FNode<T> *minRoot;
   int size;
 
-  FibonacciHeap()  {
+  FibonacciHeap() {
     minRoot = NULL;
     size = 0;
   }
 
-  virtual FNode<T>* insert(FNode<T> *node, size_t nodeSize = 1) {
+  virtual FNode<T>* insert(FNode<T> *node, size_t nodeSize = 1) {      
     minRoot = !minRoot ? node :
               (minRoot->insert(node),
                node->key < minRoot->key ? node : minRoot);
@@ -41,9 +43,9 @@ public:
     return minRoot;
   }
 
+  /* Cover test it all! */
   virtual FNode<T>* deleteMin() {
     assert(minRoot);
-
     FNode<T>* c = minRoot->child, *d = c;
 
     // 1. Remove children of minRoot
@@ -55,7 +57,8 @@ public:
       minRoot->insert(c);
       minRoot->rank = 0;
       minRoot->child = NULL;
-    } else if ( minRoot->right == minRoot ) {
+    } else if ( minRoot->right == minRoot ) { // will this ever be true
+      cover(); 
       FNode<T>* result = minRoot;
       minRoot->remove();
       minRoot = NULL;
@@ -75,9 +78,9 @@ public:
       while( rank[r] ) {
         FNode<T>* n = rank[r];
         if ( n->key < c->key ) {
-            c->remove();
-            n->addChild(c);
-            c = n;
+          c->remove();
+          n->addChild(c);
+          c = n;
         } else {
           n->remove();
           c->addChild(n);
@@ -89,13 +92,10 @@ public:
       c = n2;
     } while(c != minRoot);
 
-  
-
     //3. Find new min
     FNode<T>* minSeen = NULL;
     c = minRoot->right;
     while ( minRoot != c ) {
-      //minSeen= !minSeen || minSeen->key > c->key?c:minSeen;
       if ( !minSeen || minSeen->key > c->key )
         minSeen = c;
       c->marked = false;
@@ -111,7 +111,7 @@ public:
   virtual void decreaseKey(Node<T> *node, int newKey){}
   virtual void decreaseKey(FNode<T> *node, int newKey) {
     assert(newKey < node->key);
-
+    cover();
     node->key = newKey;
     if ( !node->parent ) {
       // TODO: Check this for correctness.
@@ -142,14 +142,13 @@ public:
     }
   }
 
-  virtual void makePlot(string filename){
+  virtual void makePlot(string filename) {
     ofstream file;
-    string fname = filename+".gv";
+    string fname = filename + ".gv";
     file.open(fname.c_str());
     file << "digraph G {\n";
-    if( minRoot ){
+    if ( minRoot )
       minRoot->makePlot(file);
-    }
     file << "}\n" << endl;
     file.close();
     string fname2 = filename;
@@ -159,16 +158,19 @@ public:
 
   void meld(FibonacciHeap<T> *otherHeap) {
     assert(otherHeap);
+    cover();
     if ( FNode<T> *newNode = otherHeap->minRoot )
       insert(newNode, otherHeap->size);
   }
 
   void remove(FNode<T> *node) {
+    cover();
 	decreaseKey(node,INT_MIN);
     deleteMin();
   }
 
   void insertNode(FNode<T> *node) {
+    cover();
     if ( !minRoot )
       minRoot = node;
     else {
