@@ -28,7 +28,7 @@ public:
     size = 0;
   }
 
-  virtual FNode<T>* insert(FNode<T> *node, size_t nodeSize = 1) {      
+  virtual FNode<T>* insert(FNode<T> *node, size_t nodeSize = 1) {
     minRoot = !minRoot ? node :
               (minRoot->insert(node),
                node->key < minRoot->key ? node : minRoot);
@@ -111,7 +111,6 @@ public:
   virtual void decreaseKey(Node<T> *node, int newKey){}
   virtual void decreaseKey(FNode<T> *node, int newKey) {
     assert(newKey < node->key);
-    cover();
     node->key = newKey;
     if ( !node->parent ) {
       // TODO: Check this for correctness.
@@ -158,19 +157,16 @@ public:
 
   void meld(FibonacciHeap<T> *otherHeap) {
     assert(otherHeap);
-    cover();
     if ( FNode<T> *newNode = otherHeap->minRoot )
       insert(newNode, otherHeap->size);
   }
 
   void remove(FNode<T> *node) {
-    cover();
 	decreaseKey(node,INT_MIN);
     deleteMin();
   }
 
   void insertNode(FNode<T> *node) {
-    cover();
     if ( !minRoot )
       minRoot = node;
     else {
