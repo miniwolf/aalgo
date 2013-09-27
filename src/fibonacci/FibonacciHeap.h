@@ -50,28 +50,29 @@ public:
       return NULL;
     }
     FNode<T>* c = minRoot->child, *d = c;
-
     // 1. Remove children of minRoot
     if ( c ) {
       do {
         d->parent = NULL;
+        assert(d->right);
         d = d->right;
       } while(c != d);
+      assert(c);
       minRoot->insert(c);
       minRoot->rank = 0;
       minRoot->child = NULL;
-    } else if ( minRoot->right == minRoot ) { // will this ever be true
+    } else if ( minRoot->right == minRoot ) {
       FNode<T>* result = minRoot;
       minRoot->remove();
       minRoot = NULL;
       return result;
     }
-
     // 2. Build proper tree
     int i = ceil(log2(size)*2);
     FNode<T>** rank = new FNode<T>*[i];
-    memset(rank, 0, sizeof(rank));
-
+    for(int slap = 0; slap < i ; slap++){
+      rank[slap] = NULL;
+    } // memset did not work on my system!
     c = minRoot->right;
     do {
       int r = c->rank;
@@ -93,7 +94,6 @@ public:
       rank[r] = c;
       c = n2;
     } while(c != minRoot);
-
     //3. Find new min
     FNode<T>* minSeen = NULL;
     c = minRoot->right;
@@ -107,6 +107,7 @@ public:
     minRoot = minSeen;
 
     size --;
+    delete []rank;
     return c;
   }
   
@@ -170,6 +171,10 @@ public:
     deleteMin();
   }
 
+  virtual int getSize() {
+    return size;
+  }
+
   void insertNode(FNode<T> *node) {
     if ( !minRoot )
       minRoot = node;
@@ -179,6 +184,8 @@ public:
         minRoot = node;
     }
   }
+
+  ~FibonacciHeap(){}
 };
 
 #endif

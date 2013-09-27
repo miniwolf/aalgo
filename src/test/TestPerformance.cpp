@@ -21,7 +21,11 @@ Node<int>** TestPerformance::testInsert(Heap<int>* heap, int* set, int size, Nod
 }
 
 void TestPerformance::testDeleteMin(Heap<int>* heap){
-  while(heap->deleteMin());
+  Node<int>* n = NULL;
+  while(heap->findMin()){
+    n = heap->deleteMin();
+    delete n;
+  };
 }
 
 

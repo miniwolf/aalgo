@@ -29,6 +29,11 @@ class BinaryHeap : public Heap<T>{
 
  public:
  BinaryHeap():Heap<T>(){}
+ ~BinaryHeap(){}
+
+  virtual int getSize() {
+    return size;
+  }
   
   virtual BNode<T>* insert(int key, T payload){
     BNode<T>* node = new BNode<T>(key, payload);

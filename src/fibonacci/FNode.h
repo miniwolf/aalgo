@@ -102,8 +102,6 @@ public:
       child->makePlot(file);
     file << "} \n";
   }
-
-
   
   virtual void makePlot(ofstream &file) {
     subplot(file);
@@ -115,6 +113,8 @@ public:
       temp = temp->right;
     }
   }
+
+  ~FNode(){}
 
 };
 

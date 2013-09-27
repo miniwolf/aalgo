@@ -50,6 +50,9 @@ void testPerformance(){
       bfile << endl;
       ffile.flush();
       bfile.flush();
+      delete []set;
+      delete fHeap;
+      //delete bHeap;
     }
     
   }
