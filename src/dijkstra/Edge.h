@@ -17,7 +17,7 @@ class Edge {
 	int d_;
 
 	Edge(Vertex* v, int dist);
-	~Edge();
+	~Edge(){}
 };
 
 #endif

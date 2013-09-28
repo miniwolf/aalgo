@@ -21,6 +21,14 @@ class Graph {
   void connectVertices(Vertex* from, Vertex* to, int distance);
   void dijkstra(Vertex* source, Heap<Vertex*>* heap);
   void makePlot(string filename);
+  ~Graph(){
+    for(auto vertex : vertices){
+      for(auto edge : vertex->edges_){
+        delete edge;
+      }
+      delete vertex;
+    }
+  }
 };
 
 struct GraphSource{
@@ -29,5 +37,6 @@ struct GraphSource{
 };
 
 GraphSource makeBuddeGraph(int size);
+GraphSource makeLukasGraph(int size);
 
 #endif

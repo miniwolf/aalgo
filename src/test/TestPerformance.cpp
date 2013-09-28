@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <time.h>       
+#include <time.h> 
+#include "../dijkstra/Graph.h"      
 using namespace std;
 
 int* TestPerformance::generateKeySet(int i, int* ar ){
@@ -50,6 +51,33 @@ double TestPerformance::getTime(){
   return double (tv.tv_sec) + 0.000001 * tv.tv_usec;
 }
 
+double* TestPerformance::testDijkstraBudde(int size){
+  GraphSource gs = makeBuddeGraph(size);
+  double* temp = testDijkstra(gs);
+  delete gs.graph;
+  return temp;
+}
+
+double* TestPerformance::testDijkstraLukas(int size){
+  GraphSource gs = makeLukasGraph(size);
+  double* temp = testDijkstra(gs);
+  delete gs.graph;
+  return temp;
+}
+
+double* TestPerformance::testDijkstra(GraphSource gs){
+  double* result = new double[2];
+
+  startClock();
+  gs.graph->dijkstra(gs.source,new FibonacciHeap<Vertex*>());
+  result[0] = stopClock();
+
+  startClock();
+  gs.graph->dijkstra(gs.source, new BinaryHeap<Vertex*>());
+  result[1] = stopClock();
+  cout << " decrease key calls: " << gs.graph->countDecreaseKey << endl;
+  return result;
+}
 
 void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){  
   Node<int>** nodes = new Node<int>*[size];

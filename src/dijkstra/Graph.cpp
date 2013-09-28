@@ -36,6 +36,28 @@ GraphSource makeBuddeGraph(int size){
   return result;
 }
 
+GraphSource makeLukasGraph(int size){
+  GraphSource result;
+  Graph* g = new Graph();
+
+  Vertex* source = new Vertex(0);
+  g->addVertex(source);
+  
+  Vertex* end = new Vertex(size+1);
+  g->addVertex(end);
+
+  for (int i = 1; i <= size ; i++){
+    Vertex* temp  = new Vertex(i);    
+    g->addVertex(temp);
+    g->connectVertices(source,temp,i);
+    g->connectVertices(temp,end,size*2 +1 - i*2);  
+  }
+
+  result.graph = g;
+  result.source = source;
+  return result;
+}
+
 
 
 void Graph::makePlot(string filename){
@@ -83,8 +105,10 @@ void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
 
 	while(Q->findMin() != NULL){
 		Node<Vertex*>* uNode = Q->deleteMin();
+    
 		Vertex* u = uNode->payload;
-		
+    delete uNode;		
+
 		if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
 			break;
 		}

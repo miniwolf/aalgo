@@ -17,9 +17,6 @@ string IntToString(int num) {
   return myStream.str();
 }
 
-void dijkstra() {
-}
-
 void testPerformance(){
   TestPerformance* tPerf = new TestPerformance();
   ofstream ffile, bfile;
@@ -58,5 +55,11 @@ void testFib() {
 }
 
 int main(int argc, char* argv[]) {
-  testPerformance();
+  TestPerformance* tPerf = new TestPerformance();
+  double* result1 = tPerf->testDijkstraBudde(5000000);
+  double* result2 = tPerf->testDijkstraLukas(5000000);
+
+  cout << "1 - Fib: " << result1[0] << " Bin: " << result1[1] << endl;
+  cout << "2 - Fib: " << result2[0] << " Bin: " << result2[1] << endl;
+  //testPerformance();
 }

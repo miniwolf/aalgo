@@ -4,6 +4,7 @@
 #include "../Heap.h"
 #include "../binary/BinaryHeap.h"
 #include "../fibonacci/FibonacciHeap.h"
+#include "../dijkstra/Graph.h"
 
 class TestPerformance {
  private:
@@ -20,7 +21,10 @@ class TestPerformance {
   void runTest(Heap<int>* heap, int size, int* set, ofstream &file); 
   void startClock();
   double stopClock();
-  
+
+  double* testDijkstraBudde(int size);
+  double* testDijkstraLukas(int size);
+  double* testDijkstra(GraphSource gs);  
 };
 
 #endif
