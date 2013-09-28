@@ -97,6 +97,8 @@ class BinaryHeap : public Heap<T>{
     BoolArrayPointerTuple t = createTuple(size);
     last = root->find(t.arr, t.counter);
     r->clear();
+
+    delete [](t.arr);
     return r;
   }
 
@@ -136,6 +138,8 @@ class BinaryHeap : public Heap<T>{
       root = node;
     }
 
+
+    delete [](t.arr);
     return node;
   }
 

@@ -64,6 +64,5 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
   startClock();
   testDeleteMin(heap);
   file << stopClock()  << ", ";
-  delete []nodes;  
-
+  delete []nodes;
 }
