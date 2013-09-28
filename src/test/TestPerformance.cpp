@@ -51,21 +51,19 @@ double TestPerformance::getTime(){
 }
 
 
-void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){
-  
+void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){  
   Node<int>** nodes = new Node<int>*[size];
   startClock(); 
   testInsert(heap, set, size, nodes);
   file << stopClock() << ", " ;
   Node<int>* n = heap->insert(0,0);
   heap->remove(n);
-  //delete n;
   startClock(); 
   testDecreaseKey(heap, nodes, size);
   file << stopClock() << ", ";
   startClock();
   testDeleteMin(heap);
   file << stopClock()  << ", ";
-  
+  delete []nodes;  
 
 }
