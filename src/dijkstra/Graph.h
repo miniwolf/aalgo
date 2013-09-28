@@ -37,6 +37,7 @@ struct GraphSource{
 };
 
 GraphSource makeBuddeGraph(int size);
+GraphSource makeNtagramGraph(int size);
 GraphSource makeLukasGraph(int size);
 
 #endif

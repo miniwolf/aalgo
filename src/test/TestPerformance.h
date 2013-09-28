@@ -24,6 +24,7 @@ class TestPerformance {
 
   double* testDijkstraBudde(int size);
   double* testDijkstraLukas(int size);
+  double* testDijkstraNtagram(int size);
   double* testDijkstra(GraphSource gs);  
 };
 
