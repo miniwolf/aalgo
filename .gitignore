@@ -21,3 +21,6 @@ src/.project
 *.gv
 *.ps
 
+src/test_b_file
+src/test_f_file
+
