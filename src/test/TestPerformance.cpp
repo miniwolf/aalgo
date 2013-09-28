@@ -32,7 +32,7 @@ void TestPerformance::testDeleteMin(Heap<int>* heap){
 
 void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
   for(int i = 0; i < size; i++){
-    heap->decreaseKey(array[i], array[i]->key/2);
+    heap->decreaseKey(array[i], (array[i]->key)/2);
   }
 }
 
@@ -92,8 +92,10 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
   startClock(); 
   testInsert(heap, set, size, nodes);
   file << stopClock() << ", " ;
-  Node<int>* n = heap->insert(0,0);
+  Node<int>* n = heap->insert(500,500); 
   heap->remove(n);
+  heap->deleteMin();
+  size--;
   startClock(); 
   testDecreaseKey(heap, nodes, size);
   file << stopClock() << ", ";

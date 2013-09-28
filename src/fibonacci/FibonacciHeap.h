@@ -119,11 +119,11 @@ public:
     return c;
   }
   
-  virtual void decreaseKey(Node<T> *node, int newKey){
-    decreaseKey((FNode<T>*) node, newKey);
+  void decreaseKey(Node<T> *node, int newKey){
+    decreaseKey(dynamic_cast<FNode<T>*>(node), newKey);
   }
   
-  virtual void decreaseKey(FNode<T> *node, int newKey) {
+  void decreaseKey(FNode<T> *node, int newKey) {
     assert(newKey < node->key);
     node->key = newKey;
     if ( !(node->parent) ) {
@@ -143,12 +143,14 @@ public:
         currentParent->removeChild(currentNode);
         insertNode(currentNode);
 
-        if ( !currentParent->parent )
+        if ( !(currentParent->parent) )
             break;
 
-        if ( !currentParent->marked && (currentParent->marked = true) )
-            break;
-        
+        if ( !(currentParent->marked) ){
+          currentParent->marked = true;
+          break;
+        }        
+
         currentNode = currentParent;
         currentParent = currentParent->parent;
       }
@@ -176,11 +178,11 @@ public:
   }
 
   virtual void remove(Node<T>* node){
-    remove((FNode<T>*) node);
+    remove(dynamic_cast<FNode<T>*> (node));
   }
 
   virtual void remove(FNode<T> *node) {
-	decreaseKey(node,INT_MIN);
+	  decreaseKey(node,(minRoot->key)-1);
     deleteMin();
   }
 
@@ -197,8 +199,6 @@ public:
         minRoot = node;
     }
   }
-
-  ~FibonacciHeap(){}
 };
 
 #endif

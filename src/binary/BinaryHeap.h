@@ -104,7 +104,7 @@ class BinaryHeap : public Heap<T>{
   }
 
   virtual void decreaseKey(Node<T>* node, int key){ 
-    decreaseKey((BNode<T>*) node, key);
+    decreaseKey(dynamic_cast<BNode<T>*> (node), key);
   }
 
   virtual void decreaseKey(BNode<T>* node, int key){    
@@ -144,7 +144,6 @@ class BinaryHeap : public Heap<T>{
       root = node;
     }
 
-
     delete [](t.arr);
     return node;
   }
@@ -165,15 +164,13 @@ class BinaryHeap : public Heap<T>{
  }
  
  virtual void remove(Node<T>* n){
-   remove((BNode<T>*) n);
+   remove(dynamic_cast<BNode<T>*> (n));
  }
  
  virtual void remove(BNode<T>* n){
    decreaseKey(n, root->key-1);
    deleteMin(); 
  }
- 
-
 };
 
 #endif

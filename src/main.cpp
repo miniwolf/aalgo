@@ -55,9 +55,6 @@ void testFib() {
   assert(test->testFib());
 }
 
-int main(int argc, char* argv[]) {
-  
-  testPerformance();
-  
-  
+int main(int argc, char* argv[]) {  
+  testPerformance();  
 }
