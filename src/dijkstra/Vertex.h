@@ -19,7 +19,6 @@ class Vertex {
 	int distanceFromStart_;
 	vector<Edge*> edges_;
 	void addNeighbour(Vertex* vertex, int d);
-
 	Vertex(int id);	
 };
 

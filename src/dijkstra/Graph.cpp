@@ -28,7 +28,7 @@ GraphSource makeBuddeGraph(int size){
     Vertex* temp  = new Vertex(i);    
     g->addVertex(temp);
     g->connectVertices(source,temp,i);
-    g->connectVertices(temp,end,2*size + 1 - i*2);  
+    g->connectVertices(temp,end,1);  
   }
 
   result.graph = g;
@@ -64,7 +64,7 @@ void Graph::connectVertices(Vertex* from, Vertex* to, int distance){
 	from->addNeighbour(to,distance);
 }
 
-void Graph::dijkstra(Vertex* source){
+void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
   countDecreaseKey = 0;
 	for ( auto val : vertices){
 		val->distanceFromStart_ = numeric_limits<int>::max(); 
@@ -74,7 +74,7 @@ void Graph::dijkstra(Vertex* source){
 	
 	source->distanceFromStart_ = 0;
 	// here we need our queue.
-	Heap<Vertex*> *Q = new BinaryHeap<Vertex*>();
+	Heap<Vertex*> *Q = heap;
 	for ( auto val : vertices){
 	  int d = val->distanceFromStart_;
 	  Node<Vertex*>* n = Q->insert(d,val);

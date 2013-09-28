@@ -9,6 +9,7 @@
 #include <string>
 #include "Edge.h"
 #include "Vertex.h"
+#include "../Heap.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ class Graph {
   int countDecreaseKey;
   void addVertex(Vertex* v);
   void connectVertices(Vertex* from, Vertex* to, int distance);
-  void dijkstra(Vertex* source);
+  void dijkstra(Vertex* source, Heap<Vertex*>* heap);
   void makePlot(string filename);
 };
 
