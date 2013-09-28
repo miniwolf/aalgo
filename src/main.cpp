@@ -56,10 +56,8 @@ void testFib() {
 }
 
 int main(int argc, char* argv[]) {
-  TestPerformance* tPerf = new TestPerformance();
-  int i = atoi(argv[1]);
-  double* result2 = tPerf->testDijkstraNtagram(i);
   
-  cout << "2 - Fib: " << result2[0] << " Bin: " << result2[1] << endl;
-  //testPerformance();
+  testPerformance();
+  
+  
 }

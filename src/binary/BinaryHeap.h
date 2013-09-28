@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <assert.h>
 
 
 using namespace std;
@@ -102,16 +103,21 @@ class BinaryHeap : public Heap<T>{
     return r;
   }
 
-  virtual void decreaseKey(Node<T>* node, int key){ }
+  virtual void decreaseKey(Node<T>* node, int key){ 
+    decreaseKey((BNode<T>*) node, key);
+  }
 
   virtual void decreaseKey(BNode<T>* node, int key){    
+    assert( key <= node->key);
     node->key = key;
     if(node == root){
       return;
     }
-    node->balance();
+    while(node->balance());
     if(!node->parent){
       root = node;
+    } else {
+      assert(node->parent->key <= node->key);
     }
   }
   
@@ -158,7 +164,9 @@ class BinaryHeap : public Heap<T>{
    return t;
  }
  
- virtual void remove(Node<T>* n){}
+ virtual void remove(Node<T>* n){
+   remove((BNode<T>*) n);
+ }
  
  virtual void remove(BNode<T>* n){
    decreaseKey(n, root->key-1);
