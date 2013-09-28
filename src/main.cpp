@@ -52,7 +52,7 @@ void testPerformance(){
       bfile.flush();
       delete []set;
       delete fHeap;
-      //delete bHeap;
+      delete bHeap;
     }
     
   }
