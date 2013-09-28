@@ -8,6 +8,7 @@
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
 #include "test/TestFibHeap.h"
+#include <cstdlib>
 
 using namespace std;
 
@@ -56,10 +57,9 @@ void testFib() {
 
 int main(int argc, char* argv[]) {
   TestPerformance* tPerf = new TestPerformance();
-  double* result1 = tPerf->testDijkstraBudde(5000000);
-  double* result2 = tPerf->testDijkstraLukas(5000000);
-
-  cout << "1 - Fib: " << result1[0] << " Bin: " << result1[1] << endl;
+  int i = atoi(argv[1]);
+  double* result2 = tPerf->testDijkstraNtagram(i);
+  
   cout << "2 - Fib: " << result2[0] << " Bin: " << result2[1] << endl;
   //testPerformance();
 }

@@ -65,6 +65,14 @@ double* TestPerformance::testDijkstraLukas(int size){
   return temp;
 }
 
+double* TestPerformance::testDijkstraNtagram(int size){
+  GraphSource gs = makeNtagramGraph(size);
+  double* tmp = testDijkstra(gs);
+  delete gs.graph;
+  return tmp;
+
+}
+
 double* TestPerformance::testDijkstra(GraphSource gs){
   double* result = new double[2];
 

@@ -14,6 +14,37 @@
 
 using namespace std;
 
+
+GraphSource makeNtagramGraph(int size){
+  GraphSource result;
+  Graph* g = new Graph();
+
+  Vertex* source = new Vertex(0);
+  g->addVertex(source);  
+  Vertex** vArray = new Vertex*[size];
+  vArray[0] = source;
+  for (int i = 1; i < size ; i++){
+    Vertex* temp  = new Vertex(i); 
+    g->addVertex(temp);
+    vArray[i] = temp;
+  }
+  
+  for(int i = 0; i < size-1 ; i++){
+    Vertex* next = vArray[i+1];
+    Vertex* current = vArray[i];
+    g->connectVertices(current, next, 1);
+    for(int j = i+2; j < size; j++){      
+      g->connectVertices(current, vArray[j], 2*size+1-2*i);      
+    } 
+  }
+
+  result.graph = g;
+  result.source = source;
+  return result;
+}
+
+
+
 GraphSource makeBuddeGraph(int size){
   GraphSource result;
   Graph* g = new Graph();
@@ -79,51 +110,53 @@ void Graph::makePlot(string filename){
 }
 
 void Graph::addVertex(Vertex* v){
-	vertices.push_back(v);
+  vertices.push_back(v);
 }
 
 void Graph::connectVertices(Vertex* from, Vertex* to, int distance){
-	from->addNeighbour(to,distance);
+  from->addNeighbour(to,distance);
 }
 
 void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
   countDecreaseKey = 0;
-	for ( auto val : vertices){
-		val->distanceFromStart_ = numeric_limits<int>::max(); 
-		val->previous_ = NULL;
-		val->node = NULL;
-	}	
+  for ( auto val : vertices){
+    val->distanceFromStart_ = numeric_limits<int>::max(); 
+    val->previous_ = NULL;
+    val->node = NULL;
+  }	
 	
-	source->distanceFromStart_ = 0;
-	// here we need our queue.
-	Heap<Vertex*> *Q = heap;
-	for ( auto val : vertices){
-	  int d = val->distanceFromStart_;
-	  Node<Vertex*>* n = Q->insert(d,val);
-	  val->node = n;
-	}
+  source->distanceFromStart_ = 0;
+  // here we need our queue.
+  Heap<Vertex*> *Q = heap;
+  for ( auto val : vertices){
+    int d = val->distanceFromStart_;
+    Node<Vertex*>* n = Q->insert(d,val);
+    val->node = n;
+  }
 
-	while(Q->findMin() != NULL){
-		Node<Vertex*>* uNode = Q->deleteMin();
+  while(Q->findMin() != NULL){
+    Node<Vertex*>* uNode = Q->deleteMin();
     
-		Vertex* u = uNode->payload;
+    Vertex* u = uNode->payload;
+    cout <<  "uNode: " << u->id_<< " "<< u->distanceFromStart_ << endl;
     delete uNode;		
 
-		if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
-			break;
-		}
+    if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
+      break;
+    }
 
-		for ( auto val : u->edges_ ) {
-			Vertex* v = val->n_;
-			int distanceFromUtoV = val->d_;
-			int alt = u->distanceFromStart_ + distanceFromUtoV;
-
-			if ( alt < v->distanceFromStart_ ){
-				v->distanceFromStart_ = alt;
-				v->previous_ = u;
-				Q->decreaseKey(v->node,v->distanceFromStart_);
-        countDecreaseKey++;
-			}
-		}	
-	}
+    for ( auto val : u->edges_ ) {
+      Vertex* v = val->n_;
+      int distanceFromUtoV = val->d_;
+      int alt = u->distanceFromStart_ + distanceFromUtoV;
+      cout << "Seeing v: " << v->id_ << " " << v->distanceFromStart_ << endl; 
+      if ( alt < v->distanceFromStart_ ){
+	v->distanceFromStart_ = alt;
+	v->previous_ = u;
+	Q->decreaseKey(v->node,v->distanceFromStart_);
+	cout << "decreasing" << endl; 
+	countDecreaseKey++;
+      }
+    }	
+  }
 }
