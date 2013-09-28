@@ -67,5 +67,9 @@ void testFib() {
 }
 
 int main(int argc, char* argv[]) {
-  testPerformance();
+  GraphSource gs = makeBuddeGraph(100);
+  //gs.graph->makePlot("testStuff");
+  gs.graph->dijkstra(gs.source);
+  cout << "Counter = " << gs.graph->countDecreaseKey << endl;
+  //testPerformance();
 }
