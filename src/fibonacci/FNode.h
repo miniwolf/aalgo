@@ -107,7 +107,7 @@ public:
     }
   }
 
-  ~FNode(){}
+  virtual ~FNode(){}
 
 };
 

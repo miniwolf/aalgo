@@ -28,6 +28,10 @@ public:
     size = 0;
   }
 
+  virtual ~FibonacciHeap() {
+
+  }
+
   virtual FNode<T>* insert(FNode<T> *node) {
 
     if(!minRoot){

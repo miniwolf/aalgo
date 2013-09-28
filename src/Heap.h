@@ -15,6 +15,8 @@ class Heap{
   virtual void remove(Node<T>* n) = 0;
   virtual void decreaseKey(Node<T>* node, int key) = 0;
   virtual int getSize() = 0;
+  virtual ~Heap(){};
+
   void makePlot(string filename){   
     ofstream file;
     string fname = filename+".gv";
@@ -30,9 +32,6 @@ class Heap{
     string arg = "dot -Tps " + fname2 + ".gv -o "+fname2+".ps";
     system(arg.c_str());
   }
-
-  
-  
 };
 
 

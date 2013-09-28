@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 
 using namespace std;
 
@@ -12,22 +13,23 @@ template <class T>
 class BNode : public Node<T>{  
 public:
   BNode(int key, T payload) : Node<T>(key, payload){}
+  virtual ~BNode(){}
   
   BNode<T>* parent = NULL;
   BNode<T>* lChild = NULL;
   BNode<T>* rChild = NULL;
   virtual void makePlot(ofstream &file){
     if ( lChild )
-      file << this->payload << this->key << " -> " << lChild->payload << lChild->key << "[color=red] \n";
+      file <<  "a"<< this->payload << "a" << this->key << " -> " << "a"<<lChild->payload  << "a" << lChild->key << "[color=red] \n";
 
     if ( rChild )
-      file << this->payload << this->key << " -> " << rChild->payload << rChild->key << "[color=blue] \n";
+      file << "a"<<this->payload << "a" << this->key << " -> " << "a"<<rChild->payload  << "a" << rChild->key << "[color=blue] \n";
 
     if ( parent )
-      file << this->payload << this->key << " -> " << parent->payload << parent->key << "[color=green] \n";
+      file << "a"<<this->payload  << "a" << this->key << " -> " << "a"<<parent->payload  << "a" << parent->key << "[color=green] \n";
 
     if ( rChild && lChild )
-      file << "{rank=same; " << lChild->payload << lChild->key << " " << rChild->payload << rChild->key << "}\n";
+      file << "{rank=same; "  << "a"<<lChild->payload  << "a" << lChild->key << " " << "a"<<rChild->payload  << "a" << rChild->key << "}\n";
 
     file << "{ \n";
     if ( lChild )
@@ -45,7 +47,7 @@ public:
       return;
     }
 
-    if ( !rChild ) {
+    if ( !rChild && lChild ) {
        node->parent = this;
        rChild = node;
        return;
@@ -58,6 +60,10 @@ public:
   }
 
   BNode<T>* find(bool* direction, int startIndex) {
+   /* cout << "inside find" << endl;
+    cout << "l:" << lChild << endl;
+    cout << "r:" << rChild << endl;*/
+    assert( (rChild && lChild) || lChild || (!rChild && !lChild));
     if ( !lChild && !rChild )
       return this;
 
@@ -68,6 +74,7 @@ public:
   }
  
   BNode<T>* balance() {
+    assert( (rChild && lChild) || lChild || (!rChild && !lChild));  
     if ( !parent || parent->key <= this->key )
       return NULL;
 
@@ -99,6 +106,8 @@ public:
       rChild = p;
       lChild = olc;
     }
+
+    assert( (rChild && lChild) || lChild || (!rChild && !lChild));  
     return p;
   }
 

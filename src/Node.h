@@ -14,6 +14,7 @@ class Node{
   int key;
   T payload;
   virtual void makePlot(ofstream &file) = 0;
+  virtual ~Node(){};
   Node(int k, T p):key(k),payload(p){}  
 };
 

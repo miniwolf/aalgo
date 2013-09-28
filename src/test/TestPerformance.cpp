@@ -23,7 +23,10 @@ Node<int>** TestPerformance::testInsert(Heap<int>* heap, int* set, int size, Nod
 
 void TestPerformance::testDeleteMin(Heap<int>* heap){
   Node<int>* n = NULL;
+  int counter = 0;
   while(heap->findMin()){
+    //cout << "Counter: " << counter << " size: " << heap->getSize() << endl;
+    counter++;
     n = heap->deleteMin();
     delete n;
   };
@@ -32,7 +35,7 @@ void TestPerformance::testDeleteMin(Heap<int>* heap){
 
 void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
   for(int i = 0; i < size; i++){
-    heap->decreaseKey(array[i], (array[i]->key)/2);
+    heap->decreaseKey(array[i], (array[i]->key)/2 );
   }
 }
 
@@ -89,17 +92,23 @@ double* TestPerformance::testDijkstra(GraphSource gs){
 
 void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){  
   Node<int>** nodes = new Node<int>*[size];
-  startClock(); 
-  testInsert(heap, set, size, nodes);
+  startClock();   
+  testInsert(heap, set, size, nodes);  
   file << stopClock() << ", " ;
+  heap->makePlot("heap_before_insert_500");
   Node<int>* n = heap->insert(500,500); 
+  heap->makePlot("heap_before_delete_500");
   heap->remove(n);
-  size--;
+
   startClock(); 
+  heap->makePlot("heap_before_decrease");
   testDecreaseKey(heap, nodes, size);
   file << stopClock() << ", ";
+
   startClock();
+  heap->makePlot("heap_before_deletion");
   testDeleteMin(heap);
   file << stopClock()  << ", ";
+
   delete []nodes;
 }
