@@ -94,7 +94,6 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
   file << stopClock() << ", " ;
   Node<int>* n = heap->insert(500,500); 
   heap->remove(n);
-  heap->deleteMin();
   size--;
   startClock(); 
   testDecreaseKey(heap, nodes, size);
