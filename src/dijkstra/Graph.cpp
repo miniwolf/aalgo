@@ -131,14 +131,14 @@ void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
   for ( auto val : vertices){
     int d = val->distanceFromStart_;
     Node<Vertex*>* n = Q->insert(d,val);
+    cout << "Inserting " << d << " " << val->id_ << endl;
     val->node = n;
   }
 
   while(Q->findMin() != NULL){
     Node<Vertex*>* uNode = Q->deleteMin();
-    
     Vertex* u = uNode->payload;
-    cout <<  "uNode: " << u->id_<< " "<< u->distanceFromStart_ << endl;
+    cout << "Deleting " << uNode->key << " " << u->id_ << endl ;
     delete uNode;		
 
     if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
@@ -149,12 +149,11 @@ void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
       Vertex* v = val->n_;
       int distanceFromUtoV = val->d_;
       int alt = u->distanceFromStart_ + distanceFromUtoV;
-      cout << "Seeing v: " << v->id_ << " " << v->distanceFromStart_ << endl; 
       if ( alt < v->distanceFromStart_ ){
 	v->distanceFromStart_ = alt;
 	v->previous_ = u;
 	Q->decreaseKey(v->node,v->distanceFromStart_);
-	cout << "decreasing" << endl; 
+	cout << "Decrease Key " <<  v->id_ << " to: " << v->distanceFromStart_ << endl ;
 	countDecreaseKey++;
       }
     }	

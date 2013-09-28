@@ -28,15 +28,23 @@ public:
     size = 0;
   }
 
-  virtual FNode<T>* insert(FNode<T> *node, size_t nodeSize = 1) {
-    minRoot = !minRoot ? node :
-              (minRoot->insert(node),
-               node->key < minRoot->key ? node : minRoot);
-    size += nodeSize;
+  virtual FNode<T>* insert(FNode<T> *node) {
+
+    if(!minRoot){
+      minRoot = node;
+    } else {
+      minRoot->insert(node);
+      if(node->key < minRoot->key ){
+	minRoot = node;
+      }
+    }
+    size++;
+    return node;
   }
 
   virtual FNode<T>* insert(int key, T payload) {
-    return insert(new FNode<T>(key, payload));
+    FNode<T>* f = new FNode<T>(key, payload);
+    return insert(f);
   }
 
   virtual FNode<T>* findMin() {
@@ -68,7 +76,7 @@ public:
       return result;
     }
     // 2. Build proper tree
-    int i = ceil(log2(size)*2);
+    int i = ceil(log2(size)*4);
     FNode<T>** rank = new FNode<T>*[i];
     for(int slap = 0; slap < i ; slap++){
       rank[slap] = NULL;
@@ -111,18 +119,21 @@ public:
     return c;
   }
   
-  virtual void decreaseKey(Node<T> *node, int newKey){}
+  virtual void decreaseKey(Node<T> *node, int newKey){
+    decreaseKey((FNode<T>*) node, newKey);
+  }
+  
   virtual void decreaseKey(FNode<T> *node, int newKey) {
     assert(newKey < node->key);
     node->key = newKey;
-    if ( !node->parent ) {
+    if ( !(node->parent) ) {
       // TODO: Check this for correctness.
       // node has no parent, only check the invariant.
       if ( newKey < minRoot->key )
         minRoot = node;
       return;
-    }
-
+    } 
+    
     // node has parent, we need to update when the invariant is violated.
     if ( newKey < node->parent->key ) {
       FNode<T> *currentParent = node->parent;
@@ -164,7 +175,9 @@ public:
       insert(newNode, otherHeap->size);
   }
 
-  virtual void remove(Node<T>* node){}
+  virtual void remove(Node<T>* node){
+    remove((FNode<T>*) node);
+  }
 
   virtual void remove(FNode<T> *node) {
 	decreaseKey(node,INT_MIN);

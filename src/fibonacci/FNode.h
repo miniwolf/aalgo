@@ -10,30 +10,23 @@ using namespace std;
 template <class T>
 class FNode : public Node<T>{
 public:
-  FNode<T> *left;
-  FNode<T> *right;
-  FNode<T> *parent;
-  FNode<T> *child;
+  FNode<T> *left = this;
+  FNode<T> *right = this;
+  FNode<T> *parent = NULL;
+  FNode<T> *child = NULL;
 
-  bool marked;
-  int rank;
+  bool marked  = false;
+  int rank = 0 ;
 
   FNode(int key_, T payload_)
-	:Node<T>(key_,payload_),
-    child(NULL),
-    parent(NULL),
-    left(this),
-    right(this),
-    rank(0),
-    marked(false){}
+	:Node<T>(key_,payload_){}
 
   //void insert(FNode<T> *node);
   void insert(FNode<T> *node){
-	if ( !node )
+    if ( !node )
       return;
     if ( parent )
       parent->rank++;
-
     right->left = node->left;
     node->left->right = right;
     right = node;
