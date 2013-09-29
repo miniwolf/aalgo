@@ -22,6 +22,8 @@ void writeSetFile(int* set, int size){
     string afilename = "SET.txt";
     ofstream setfile;
     setfile.open(afilename.c_str());
+    setfile << "size "<< size << endl;
+
     for( int a = 0; a < size ; a++ ) {
         setfile << set[a] << endl;
     }
@@ -31,27 +33,28 @@ void writeSetFile(int* set, int size){
 
 void testPerformance(){
   TestPerformance* tPerf = new TestPerformance();
+
   ofstream ffile, bfile;
   string ffilename = "test_f_file", bfilename = "test_b_file";
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
-  for(int size = 1000; size<=10000; size = size+1){
+  for(int size = 1000; size<=1000000  ; size = size*10){
     for(int i = 0; i<50; i++){
       cout << size << endl;
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
-      int* set = new int[size];
-      tPerf->generateKeySet(size, set);
-
+      int* keyset = new int[size];
+      tPerf->generateKeySet(size, keyset);
+      //writeSetFile(set,size);
       ffile << size << ", ";
       bfile << size << ", ";
-      tPerf->runTest(fHeap, size, set, ffile);
-      tPerf->runTest(bHeap, size, set, bfile);
+      tPerf->runTest(fHeap, size, keyset, ffile);
+      tPerf->runTest(bHeap, size, keyset, bfile);
       ffile << endl;
       bfile << endl;
       ffile.flush();
       bfile.flush();
-      delete []set;
+      delete []keyset;
       delete fHeap;
       delete bHeap;
     }

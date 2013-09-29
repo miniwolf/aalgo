@@ -33,7 +33,6 @@ public:
   }
 
   virtual FNode<T>* insert(FNode<T> *node) {
-
     if(!minRoot){
       minRoot = node;
     } else {
@@ -61,7 +60,8 @@ public:
       assert(size>0);
       return NULL;
     }
-    FNode<T>* c = minRoot->child, *d = c;
+    FNode<T>* c = minRoot->child;
+    FNode<T>* d = c;
     // 1. Remove children of minRoot
     if ( c ) {
       do {
@@ -69,9 +69,10 @@ public:
         assert(d->right);
         d = d->right;
       } while(c != d);
-      assert(c);
+
       minRoot->insert(c);
       minRoot->rank = 0;
+      if ( minRoot->child) { minRoot->child->parent = NULL; }
       minRoot->child = NULL;
     } else if ( minRoot->right == minRoot ) {
       FNode<T>* result = minRoot;
@@ -81,10 +82,14 @@ public:
     }
     // 2. Build proper tree
     int i = ceil(log2(size)*4);
+
     FNode<T>** rank = new FNode<T>*[i];
     for(int slap = 0; slap < i ; slap++){
       rank[slap] = NULL;
-    } // memset did not work on my system!
+    }
+
+    //cout << "1: "<< rank << endl;
+
     c = minRoot->right;
     do {
       int r = c->rank;
@@ -93,10 +98,12 @@ public:
       while( rank[r] ) {
         FNode<T>* n = rank[r];
         if ( n->key < c->key ) {
+          assert(c != n);
           c->remove();
           n->addChild(c);
           c = n;
         } else {
+          assert(c != n);
           n->remove();
           c->addChild(n);
         }
@@ -108,25 +115,34 @@ public:
     } while(c != minRoot);
     //3. Find new min
     FNode<T>* minSeen = NULL;
+
     c = minRoot->right;
     while ( minRoot != c ) {
       if ( !minSeen || minSeen->key > c->key )
         minSeen = c;
       c->marked = false;
+      c->parent = NULL;
       c = c->right;
     }
+
     minRoot->remove();
+
+    // before deleting the old minRoot, go through the whole tree, check if someone knows minroot
+    // this is SLOW
+   // assert(!(minSeen->knows(minRoot)));
+
     minRoot = minSeen;
 
     size --;
+    //cout << "2: "<<rank << endl;
     delete []rank;
     return c;
   }
-  
+
   void decreaseKey(Node<T> *node, int newKey){
     decreaseKey(dynamic_cast<FNode<T>*>(node), newKey);
   }
-  
+
   void decreaseKey(FNode<T> *node, int newKey) {
     assert(newKey < node->key);
     node->key = newKey;
@@ -136,8 +152,8 @@ public:
       if ( newKey < minRoot->key )
         minRoot = node;
       return;
-    } 
-    
+    }
+
     // node has parent, we need to update when the invariant is violated.
     if ( newKey < node->parent->key ) {
       FNode<T> *currentParent = node->parent;
@@ -153,7 +169,7 @@ public:
         if ( !(currentParent->marked) ){
           currentParent->marked = true;
           break;
-        }        
+        }
 
         currentNode = currentParent;
         currentParent = currentParent->parent;
@@ -186,8 +202,9 @@ public:
   }
 
   virtual void remove(FNode<T> *node) {
-	  decreaseKey(node,(minRoot->key)-1);
-    deleteMin();
+	decreaseKey(node,INT_MIN);
+    FNode<T>* test = deleteMin();
+    assert(test == node);
   }
 
   virtual int getSize() {
