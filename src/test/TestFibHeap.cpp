@@ -42,7 +42,7 @@ bool testDeletemin(FibonacciHeap<string> *heap) {
             return false;
         }
         lastSeen = n->key;
-        if ( heap->size != TEST_SIZE - j ) { return false; }
+        if ( heap->size != TEST_SIZE - j) { return false; }
     }
     return true;
 }
@@ -53,7 +53,7 @@ bool TestFibHeap::testFib() {
     result = testInsert(heap);
     if ( !result ) { return false; }
     result = testDeletemin(heap);
-    if ( !result ) { return false; }
+    if ( !result ) { cout << "dimmer2\n"; return false; }
     return result;
 }
 

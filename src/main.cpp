@@ -28,35 +28,34 @@ void writeSetFile(int* set, int size){
     setfile.close();
 }
 
-void testPerformance(){
+void testPerformance() {
   TestPerformance* tPerf = new TestPerformance();
   ofstream ffile, bfile;
   string ffilename = "test_f_file", bfilename = "test_b_file";
   ffile.open(ffilename.c_str());
-  bfile.open(bfilename.c_str());
-  for(int size = 1000; size<=10000; size = size+1){
-    for(int i = 0; i<50; i++){
-      cout << size << endl;
-      Heap<int>* bHeap = new BinaryHeap<int>();
+  //bfile.open(bfilename.c_str());
+  for ( int size = 1000; size <= 10000; size++ ) {
+    for ( int i = 0; i < 50; i++ ) {
+      //Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
       int* set = new int[size];
       tPerf->generateKeySet(size, set);
-
+      
       ffile << size << ", ";
-      bfile << size << ", ";
+      //bfile << size << ", ";
       tPerf->runTest(fHeap, size, set, ffile);
-      tPerf->runTest(bHeap, size, set, bfile);
+      //tPerf->runTest(bHeap, size, set, bfile);
       ffile << endl;
-      bfile << endl;
+      //bfile << endl;
       ffile.flush();
-      bfile.flush();
+      //bfile.flush();
       delete []set;
       delete fHeap;
-      delete bHeap;
+      //delete bHeap;
     }
   }
   ffile.close();
-  bfile.close();
+  //bfile.close();
 }
 
 void testFib() {
@@ -65,6 +64,7 @@ void testFib() {
 }
 
 int main() {
+    // testFib();
   testPerformance();
  /*Heap<int>* bHeap = new BinaryHeap<int>();
   TestPerformance* tPerf = new TestPerformance();

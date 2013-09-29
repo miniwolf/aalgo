@@ -15,7 +15,7 @@ int* TestPerformance::generateKeySet(int i, int* ar ){
 }
 
 Node<int>** TestPerformance::testInsert(Heap<int>* heap, int* set, int size, Node<int>** array){
-  for(int i = 0;  i< size; i++){
+  for(int i = 0; i < size; i++){
     array[i] = heap->insert(set[i], set[i]);
   }
   return array;
@@ -24,11 +24,10 @@ Node<int>** TestPerformance::testInsert(Heap<int>* heap, int* set, int size, Nod
 void TestPerformance::testDeleteMin(Heap<int>* heap){
   Node<int>* n = NULL;
   int counter = 0;
-  while(heap->findMin()){
+  while ( heap->findMin() ) {
     counter++;
-    n = heap->deleteMin();
-    delete n;
-  };
+    heap->deleteMin();
+  }
 }
 
 
@@ -96,14 +95,13 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
   file << stopClock() << ", " ;
   Node<int>* n = heap->insert(500,500);
   heap->remove(n);
-
+  
   startClock();
   testDecreaseKey(heap, nodes, size);
   file << stopClock() << ", ";
-
+  
   startClock();
   testDeleteMin(heap);
-  file << stopClock()  << ", ";
-
+  file << stopClock() << ", ";
   delete []nodes;
 }
