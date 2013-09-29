@@ -14,16 +14,17 @@ using namespace std;
 
 
 struct BoolArrayPointerTuple{
-  bool* arr;  
+  bool* arr;
   int counter;
 };
 
 template <class T>
 
 class BinaryHeap : public Heap<T>{
-  
+
  private:
   int size = 0;
+  int counter = 0;
   BNode<T>* root = NULL;
   BNode<T>* last = NULL;
   void deleteAndInsert(BNode<T>* n);
@@ -35,35 +36,35 @@ class BinaryHeap : public Heap<T>{
   virtual int getSize() {
     return size;
   }
-  
+
   virtual BNode<T>* insert(int key, T payload){
     BNode<T>* node = new BNode<T>(key, payload);
     size++;
     return insert(node);
   }
-  
+
   virtual BNode<T>* findMin(){
     return root;
   }
 
-  virtual BNode<T>* deleteMin(){ 
-    BoolArrayPointerTuple ta = createTuple(size);
-    last = root->find(ta.arr, ta.counter);
-   
-    /*cout << last->key << endl; 
-    cout << size << endl;*/ 
+  virtual BNode<T>* deleteMin(){
+    //BoolArrayPointerTuple ta = createTuple(size);
+    //last = root->find(ta.arr, ta.counter);
+
+    /*cout << last->key << endl;
+    cout << size << endl;*/
 
     if(!size){
       return NULL;
-    } 
+    }
     size--;
     if(root == last){
       BNode<T>* tn = last;
       root = last = NULL;
       return tn;
     }
-    
-    
+
+
     if(last->parent->lChild == last){
       last->parent->lChild = NULL;
     } else if (last->parent->rChild == last){
@@ -84,7 +85,7 @@ class BinaryHeap : public Heap<T>{
     BNode<T>* tempN = NULL;
     bool first = true;
     do {
-      if(last->rChild && last->lChild){      
+      if(last->rChild && last->lChild){
       	if(last->rChild->key < last->lChild->key){
 	       tempN = last->rChild->balance();
 	      } else {
@@ -100,7 +101,7 @@ class BinaryHeap : public Heap<T>{
         if(first && tempN){
 	        first = false;
 	        root = tempN->parent;
-        }	
+        }
     } while(tempN);
 
     BoolArrayPointerTuple t = createTuple(size);
@@ -116,25 +117,33 @@ class BinaryHeap : public Heap<T>{
     return r;
   }
 
-  virtual void decreaseKey(Node<T>* node, int key){ 
+  virtual void decreaseKey(Node<T>* node, int key){
     decreaseKey(dynamic_cast<BNode<T>*> (node), key);
   }
 
-  virtual void decreaseKey(BNode<T>* node, int key){    
+  virtual void decreaseKey(BNode<T>* node, int key){
     assert( key <= node->key);
     node->key = key;
     if(node == root){
       return;
     }
+
+    if(node==last){
+        BNode<T>* temp = node->balance();
+        if(temp){
+            last = temp;
+        }
+    }
     while(node->balance());
+
     if(!node->parent){
       root = node;
     } else {
       assert(node->parent->key <= node->key);
     }
   }
-  
-  
+
+
   BNode<T>* insert(BNode<T>* node){
     node->clear();
 
@@ -144,14 +153,14 @@ class BinaryHeap : public Heap<T>{
     }
     BoolArrayPointerTuple t = createTuple(size);
     root->insert(node, t.arr, t.counter);
-    last = node;  
+    last = node;
     BNode<T>* l;
-  
+
     if((l = node->balance())){
       last = l;
       while(node->balance());
     }
-  
+
     if(!(node->parent)){
       root = node;
     }
@@ -160,11 +169,11 @@ class BinaryHeap : public Heap<T>{
     return node;
   }
 
-template<class C> 
+template<class C>
 int integer_log2(C t){
   C result = 0;
-  while(t){   
-    result++; 
+  while(t){
+    result++;
     t/=2;
   }
   return result;
@@ -175,7 +184,7 @@ BoolArrayPointerTuple createTuple(int size){
   int arSize = sizeof(size)*8; // antal bytes gange 8 = antal bits.
 
   bool* boolAr = new bool[arSize];
-  
+
   for(int i = 0 ; i < arSize ; i++ ){
     boolAr[i] = false;
   }
@@ -186,20 +195,20 @@ BoolArrayPointerTuple createTuple(int size){
     n = n/2;
     i++;
   }
-   
+
   BoolArrayPointerTuple t;
   t.arr = boolAr;
   t.counter = arSize-i+1;
   return t;
 }
- 
+
  virtual void remove(Node<T>* n){
    remove(dynamic_cast<BNode<T>*> (n));
  }
- 
+
  virtual void remove(BNode<T>* n){
    decreaseKey(n, root->key-1);
-   deleteMin(); 
+   deleteMin();
  }
 };
 

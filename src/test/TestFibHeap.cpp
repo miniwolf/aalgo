@@ -8,7 +8,6 @@ TestFibHeap::TestFibHeap() {
 	srand(45);
 }
 
-
 template <typename ROFL>
 string IntToStr(ROFL tmp){
     std::ostringstream out;

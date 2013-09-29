@@ -18,6 +18,17 @@ string IntToString(int num) {
   return myStream.str();
 }
 
+void writeSetFile(int* set, int size){
+    string afilename = "SET.txt";
+    ofstream setfile;
+    setfile.open(afilename.c_str());
+    for( int a = 0; a < size ; a++ ) {
+        setfile << set[a] << endl;
+    }
+    setfile.flush();
+    setfile.close();
+}
+
 void testPerformance(){
   TestPerformance* tPerf = new TestPerformance();
   ofstream ffile, bfile;
@@ -28,35 +39,25 @@ void testPerformance(){
     for(int i = 0; i<50; i++){
       cout << size << endl;
       Heap<int>* bHeap = new BinaryHeap<int>();
-      //Heap<int>* fHeap = new FibonacciHeap<int>();
+      Heap<int>* fHeap = new FibonacciHeap<int>();
       int* set = new int[size];
       tPerf->generateKeySet(size, set);
-      
-      string afilename = "SET.txt";
-      ofstream setfile;
-      setfile.open(afilename.c_str());
-      for( int a = 0; a < size ; a++ ) {
-        setfile << set[a] << endl;
-      }
-      setfile.flush();
-      setfile.close();
-      
 
       ffile << size << ", ";
       bfile << size << ", ";
-      //tPerf->runTest(fHeap, size, set, ffile);
+      tPerf->runTest(fHeap, size, set, ffile);
       tPerf->runTest(bHeap, size, set, bfile);
       ffile << endl;
       bfile << endl;
       ffile.flush();
       bfile.flush();
       delete []set;
-      //delete fHeap;
+      delete fHeap;
       delete bHeap;
-    }    
+    }
   }
   ffile.close();
-  bfile.close();  
+  bfile.close();
 }
 
 void testFib() {
@@ -64,9 +65,9 @@ void testFib() {
   assert(test->testFib());
 }
 
-int main() { 
-  testPerformance(); 
-/*  Heap<int>* bHeap = new BinaryHeap<int>();
+int main() {
+  testPerformance();
+ /*Heap<int>* bHeap = new BinaryHeap<int>();
   TestPerformance* tPerf = new TestPerformance();
   int size = 5;
   int* set = new int[size];
@@ -78,5 +79,5 @@ int main() {
   ofstream file;
   string a = "a";
   file.open(a.c_str());
-  tPerf->runTest(bHeap, size, set, file);*/  
+  tPerf->runTest(bHeap, size, set, file);*/
 }
