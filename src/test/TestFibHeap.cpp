@@ -61,6 +61,50 @@ bool testCheckTree(const FibonacciHeap<string>* heap) {
     return true;       
 }
 
+bool testDelete(FibonacciHeap<string> *heap) {
+    FNode<string>* node_1 = heap->insert(1, "test");
+    FNode<string>* node_2 = heap->insert(2, "test");
+    FNode<string>* node_6 = heap->insert(6, "test");
+    
+    FNode<string>* node_5 = new FNode<string>(5, "test");
+
+    node_2->addChild(node_5);
+    FNode<string>* node_3 = new FNode<string>(3, "test");
+    FNode<string>* node_4 = new FNode<string>(4, "test");
+    FNode<string>* node_7 = new FNode<string>(7, "test");
+    node_1->addChild(node_3);
+    node_1->addChild(node_4);
+    node_1->addChild(node_7);
+
+    FNode<string>* node_8 = new FNode<string>(8, "test");
+    FNode<string>* node_9 = new FNode<string>(9, "test");
+    node_7->addChild(node_8);
+    node_8->addChild(node_9);
+    heap->remove(node_9);
+    //if ( node_9 != heap->remove(node_9) ) { return false; }
+    if ( node_1->key != heap->findMin()->key ) { return false; }
+
+    /*if ( !node_8->marked ) { return false; }
+
+    if ( node_1->parent ) { return false; }
+    if ( node_2->parent ) { return false; }
+    if ( node_6->parent ) { return false; }
+
+    if ( node_1 != node_3->parent ) { return false; }
+    if ( node_1 != node_4->parent ) { return false; }
+    if ( node_1 != node_7->parent ) { return false; }
+    if ( node_1 != node_8->parent ) { return false; }
+
+    if ( node_1 != node_3->parent ) { return false; }
+
+    if ( node_1 != node_3->parent ) { return false; }
+    if ( node_1 != node_3->parent ) { return false; }
+    if ( node_1 != node_3->parent ) { return false; }
+    if ( node_1 != node_3->parent ) { return false; }
+
+    if ( node_1 != node_3->parent ) { return false; }*/
+}
+
 bool testInsert(FibonacciHeap<string> *heap) {
     FNode<string>* node;
     for ( int i = TEST_SIZE; i > 0; i-- ) {
@@ -265,6 +309,8 @@ bool TestFibHeap::testFib() {
     result = neDecreaseKeyValue(setup());
     if ( !result ) { return false; }
     result = neDecreaseKeyRestructuring(setup());
+    if ( !result ) { return false; }
+    //result = testDelete(setup());
     return result;
 }
 
