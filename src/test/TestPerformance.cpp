@@ -105,6 +105,27 @@ double* TestPerformance::testDijkstra(GraphSource* gs){
   return result;
 }
 
+double TestPerformance::testRandomGraphDecreaseKey(int size, int density, int average, ofstream & file){
+    int temp = 0;
+    double time = 0.0;
+    for(int i = 0; i < average; i++){
+        GraphSource* gs = makeRandomGraph(size,density);
+        Heap<Vertex*>* heap = new BinaryHeap<Vertex*>();
+
+        startClock();
+        gs->graph->dijkstra(gs->source, heap);
+        time+=stopClock();
+        temp+=gs->graph->countDecreaseKey;
+        delete gs->graph;
+        delete gs;
+        delete heap;
+    }
+    temp = temp/average;
+    file << temp << ", ";
+
+    return time/average;
+}
+
 void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){
   Node<int>** nodes = new Node<int>*[size];
   startClock();

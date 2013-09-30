@@ -29,7 +29,7 @@ void shuffle(T* array, int size){
 }
 
 GraphSource* makeRandomGraph(int size, int density){
-    assert(density < size - 1);
+    density = density < size ? density : size-1;
     srand(time(NULL));
     GraphSource* result = new GraphSource();
     Graph* g = new Graph();
@@ -199,11 +199,11 @@ void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
       int distanceFromUtoV = val->d_;
       int alt = u->distanceFromStart_ + distanceFromUtoV;
       if ( alt < v->distanceFromStart_ ){
-	v->distanceFromStart_ = alt;
-	v->previous_ = u;
-	Q->decreaseKey(v->node,v->distanceFromStart_);
-	//cout << "Decrease Key " <<  v->id_ << " to: " << v->distanceFromStart_ << endl ;
-	countDecreaseKey++;
+        v->distanceFromStart_ = alt;
+        v->previous_ = u;
+        Q->decreaseKey(v->node,v->distanceFromStart_);
+        //cout << "Decrease Key " <<  v->id_ << " to: " << v->distanceFromStart_ << endl ;
+        countDecreaseKey++;
       }
     }
   }

@@ -29,7 +29,14 @@ public:
   }
 
   virtual ~FibonacciHeap() {
+    if(minRoot){
+      cout << "Leftovers in FHeap!" <<  "  size: "<< size << endl;
 
+      while(findMin()){
+        FNode<T>* n = deleteMin();
+        delete n;
+      }
+    }
   }
 
   virtual FNode<T>* insert(FNode<T> *node) {

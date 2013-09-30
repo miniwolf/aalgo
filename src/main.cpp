@@ -78,17 +78,52 @@ void testNTagram(){
       tPerf->testNTagramDijkstra(size,file);
     file.flush();
   }
+
+  delete tPerf;
+}
+
+void computeRandomGraphDecreaseRelation(int average){
+    ofstream file;
+    string filename = "decrease_relation.csv";
+    file.open(filename.c_str());
+
+    int minSize = 10;
+    int maxSize = 100;
+    int step = 2;
+
+    file << " , ";
+    for( int i = minSize; i <=maxSize ; i = i*step){
+        file << i << ", ";
+    }
+    file << endl;
+
+    TestPerformance* tPerf = new TestPerformance();
+
+    for(float density = 0.1f ; density <= 1.0001f; density +=  0.1f){
+        file << density << ", " ;
+        for( int i = minSize; i <= maxSize ; i = i*step){
+            cout << "size: " << i << "   density: " <<density * (float(i))<< endl;
+            tPerf->testRandomGraphDecreaseKey(i,density * (float(i)),average,file);
+            file.flush();
+        }
+        file << endl;
+    }
+    delete tPerf;
 }
 
 int main() {
+
+    computeRandomGraphDecreaseRelation(1);
+  /*
   TestPerformance* tPerf = new TestPerformance();
-  GraphSource* gs = makeRandomGraph(1000,500);
+  GraphSource* gs = makeRandomGraph(10000,5);
   double* result = tPerf->testDijkstra(gs);
 
   delete gs->graph;
   delete gs;
   delete tPerf;
   delete []result;
+  */
   //testNTagram();
   //testPerformance();
   //tPerf->testDijkstra(makeNtagramGraph(20));
