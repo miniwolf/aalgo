@@ -38,6 +38,9 @@ public:
   Vertex* source = NULL;
 };
 
+template <class T>
+void shuffle(T* array, int size);
+
 GraphSource* makeBuddeGraph(int size);
 GraphSource* makeNtagramGraph(int size);
 GraphSource* makeLukasGraph(int size);

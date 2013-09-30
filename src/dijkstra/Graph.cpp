@@ -16,6 +16,18 @@
 
 using namespace std;
 // building high density graphs is SLOW :/
+template <class T>
+void shuffle(T* array, int size){
+    srand(time(NULL));
+    for ( int i = size-1 ; i > 0 ; i--){
+        int j = rand() % (i+1);
+        assert( 0 <= j && j <= i);
+        T temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
 GraphSource* makeRandomGraph(int size, int density){
     assert(density < size - 1);
     srand(time(NULL));
@@ -23,46 +35,27 @@ GraphSource* makeRandomGraph(int size, int density){
     Graph* g = new Graph();
 
     Vertex** vArray = new Vertex*[size];
+    Vertex** shuffleArray = new Vertex*[size];
     for( int i = 0 ; i < size ; i++){
         vArray[i] = new Vertex(i);
+        shuffleArray[i] = vArray[i];
         g->addVertex(vArray[i]);
     }
 
     for ( int i = 0; i < size ; i++){
         Vertex* v = vArray[i];
         int dense = 0;
+
+        shuffle(shuffleArray,size);
+        int sIndex = 0;
         while( dense < density){
-            int randomIndex = rand()%size;
-            assert(randomIndex < size);
-            Vertex* u = NULL;
-            bool contains = true;
-
-            while(contains){
-                assert(randomIndex < size);
-                u = vArray[randomIndex];
-                if(u == v){
-                    randomIndex++;
-                    randomIndex = randomIndex % size;
-                    continue;
-                }
-
-                bool found = false;
-                for( auto x : v->edges_ ){
-                    if ( x->n_ == u){
-                        found = true;
-                        randomIndex++;
-                        randomIndex = randomIndex % size;
-                        break;
-                    }
-                }
-
-                if(!found){
-                    contains = false;
-                }
+            assert(sIndex < size);
+            Vertex* u = shuffleArray[sIndex];
+            if(v!=u){
+                v->addNeighbour(u,rand()%100000);
+                dense++;
             }
-
-            v->addNeighbour(u,rand()%100000);
-            dense++;
+            sIndex++;
         }
     }
 
