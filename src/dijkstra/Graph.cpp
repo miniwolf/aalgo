@@ -62,6 +62,7 @@ GraphSource* makeRandomGraph(int size, int density){
     result->graph = g;
     result->source = vArray[0];
     delete []vArray;
+    delete []shuffleArray;
     return result;
 }
 
