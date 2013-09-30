@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <limits>
+#include <cstdlib>
+
 
 #include "../Heap.h"
 #include "../Node.h"
@@ -13,6 +15,62 @@
 
 
 using namespace std;
+// building high density graphs is SLOW :/
+GraphSource* makeRandomGraph(int size, int density){
+    assert(density < size - 1);
+    srand(time(NULL));
+    GraphSource* result = new GraphSource();
+    Graph* g = new Graph();
+
+    Vertex** vArray = new Vertex*[size];
+    for( int i = 0 ; i < size ; i++){
+        vArray[i] = new Vertex(i);
+        g->addVertex(vArray[i]);
+    }
+
+    for ( int i = 0; i < size ; i++){
+        Vertex* v = vArray[i];
+        int dense = 0;
+        while( dense < density){
+            int randomIndex = rand()%size;
+            assert(randomIndex < size);
+            Vertex* u = NULL;
+            bool contains = true;
+
+            while(contains){
+                assert(randomIndex < size);
+                u = vArray[randomIndex];
+                if(u == v){
+                    randomIndex++;
+                    randomIndex = randomIndex % size;
+                    continue;
+                }
+
+                bool found = false;
+                for( auto x : v->edges_ ){
+                    if ( x->n_ == u){
+                        found = true;
+                        randomIndex++;
+                        randomIndex = randomIndex % size;
+                        break;
+                    }
+                }
+
+                if(!found){
+                    contains = false;
+                }
+            }
+
+            v->addNeighbour(u,rand()%100000);
+            dense++;
+        }
+    }
+
+    result->graph = g;
+    result->source = vArray[0];
+    delete []vArray;
+    return result;
+}
 
 GraphSource* makeNtagramGraph(int size){
   GraphSource* result = new GraphSource();

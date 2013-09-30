@@ -41,5 +41,6 @@ public:
 GraphSource* makeBuddeGraph(int size);
 GraphSource* makeNtagramGraph(int size);
 GraphSource* makeLukasGraph(int size);
+GraphSource* makeRandomGraph(int size, int density);
 
 #endif

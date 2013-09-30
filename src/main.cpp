@@ -81,7 +81,15 @@ void testNTagram(){
 }
 
 int main() {
-  testNTagram();
+  TestPerformance* tPerf = new TestPerformance();
+  GraphSource* gs = makeRandomGraph(500,100);
+  double* result = tPerf->testDijkstra(gs);
+
+  delete gs->graph;
+  delete gs;
+  delete tPerf;
+  delete []result;
+  //testNTagram();
   //testPerformance();
   //tPerf->testDijkstra(makeNtagramGraph(20));
 

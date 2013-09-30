@@ -23,7 +23,7 @@ Node<int>** TestPerformance::testInsert(Heap<int>* heap, int* set, int size, Nod
 
 void TestPerformance::testDeleteMin(Heap<int>* heap){
   Node<int>* n = NULL;
-    while(heap->findMin()){
+  while(heap->findMin()){
     n = heap->deleteMin();
     if(n){ delete n; }
   };
@@ -40,7 +40,6 @@ void TestPerformance::startClock(){
 }
 
 double TestPerformance::stopClock(){
-
   return (getTime()) - mStartTime;
 }
 
@@ -54,6 +53,7 @@ double* TestPerformance::testDijkstraBudde(int size){
   GraphSource* gs = makeBuddeGraph(size);
   double* temp = testDijkstra(gs);
   delete gs->graph;
+  delete gs;
   return temp;
 }
 
@@ -61,6 +61,7 @@ double* TestPerformance::testDijkstraLukas(int size){
   GraphSource* gs = makeLukasGraph(size);
   double* temp = testDijkstra(gs);
   delete gs->graph;
+  delete gs;
   return temp;
 }
 
@@ -68,8 +69,8 @@ double* TestPerformance::testDijkstraNtagram(int size){
   GraphSource* gs = makeNtagramGraph(size);
   double* tmp = testDijkstra(gs);
   delete gs->graph;
+  delete gs;
   return tmp;
-
 }
 
 void TestPerformance::testNTagramDijkstra(int size, ofstream & file){
@@ -81,21 +82,26 @@ void TestPerformance::testNTagramDijkstra(int size, ofstream & file){
     file << size << ", " << decreaseCalls << ", " << results[0] << ", " << results[1] << ", " << endl;
     delete []results;
     delete gs->graph;
+    delete gs;
 }
 
 double* TestPerformance::testDijkstra(GraphSource* gs){
   double* result = new double[2];
+  Heap<Vertex*>* fheap = new FibonacciHeap<Vertex*>();
 
   startClock();
-  gs->graph->dijkstra(gs->source,new FibonacciHeap<Vertex*>());
+  gs->graph->dijkstra(gs->source,fheap);
   result[0] = stopClock();
 
- //cout << "Fibonacci - decrease key calls: " << gs->graph->countDecreaseKey << " Time: " << result[0] << endl;
+  cout << "Fibonacci - decrease key calls: " << gs->graph->countDecreaseKey << " Time: " << result[0] << endl;
 
+  Heap<Vertex*>* bheap = new BinaryHeap<Vertex*>();
   startClock();
-  gs->graph->dijkstra(gs->source, new BinaryHeap<Vertex*>());
+  gs->graph->dijkstra(gs->source, bheap);
   result[1] = stopClock();
-  //cout << " Binary - decrease key calls: " << gs->graph->countDecreaseKey <<  " Time: " << result[1] <<endl;
+  cout << " Binary - decrease key calls: " << gs->graph->countDecreaseKey <<  " Time: " << result[1] <<endl;
+  delete fheap;
+  delete bheap;
   return result;
 }
 
