@@ -33,12 +33,11 @@ void writeSetFile(int* set, int size){
 
 void testPerformance(){
   TestPerformance* tPerf = new TestPerformance();
-
   ofstream ffile, bfile;
   string ffilename = "test_f_file", bfilename = "test_b_file";
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
-  for(int size = 1000; size<=1000000  ; size = size*10){
+  for(int size = 1000; size<=10000000  ; size = size*10){
     for(int i = 0; i<50; i++){
       cout << size << endl;
       Heap<int>* bHeap = new BinaryHeap<int>();
@@ -68,19 +67,22 @@ void testFib() {
   assert(test->testFib());
 }
 
-int main() {
-  testPerformance();
- /*Heap<int>* bHeap = new BinaryHeap<int>();
-  TestPerformance* tPerf = new TestPerformance();
-  int size = 5;
-  int* set = new int[size];
-  set[0] = 1921513324;
-  set[1] = 2006223736;
-  set[2] = 1166238333;
-  set[3] = 1980908868;
-  set[4] = 1233045774;
+void testNTagram(){
   ofstream file;
-  string a = "a";
-  file.open(a.c_str());
-  tPerf->runTest(bHeap, size, set, file);*/
+  string filename = "ntagram";
+  file.open(filename.c_str());
+
+  TestPerformance* tPerf = new TestPerformance();
+  for( int size = 10; size < 20000; size = size*2){
+    for(int i = 0; i < 10; i++)
+      tPerf->testNTagramDijkstra(size,file);
+    file.flush();
+  }
+}
+
+int main() {
+  testNTagram();
+  //testPerformance();
+  //tPerf->testDijkstra(makeNtagramGraph(20));
+
 }

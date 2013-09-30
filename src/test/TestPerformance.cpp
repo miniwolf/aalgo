@@ -29,7 +29,6 @@ void TestPerformance::testDeleteMin(Heap<int>* heap){
   };
 }
 
-
 void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
   for(int i = 0; i < size; i++){
     heap->decreaseKey(array[i], (array[i]->key)/2 );
@@ -52,38 +51,51 @@ double TestPerformance::getTime(){
 }
 
 double* TestPerformance::testDijkstraBudde(int size){
-  GraphSource gs = makeBuddeGraph(size);
+  GraphSource* gs = makeBuddeGraph(size);
   double* temp = testDijkstra(gs);
-  delete gs.graph;
+  delete gs->graph;
   return temp;
 }
 
 double* TestPerformance::testDijkstraLukas(int size){
-  GraphSource gs = makeLukasGraph(size);
+  GraphSource* gs = makeLukasGraph(size);
   double* temp = testDijkstra(gs);
-  delete gs.graph;
+  delete gs->graph;
   return temp;
 }
 
 double* TestPerformance::testDijkstraNtagram(int size){
-  GraphSource gs = makeNtagramGraph(size);
+  GraphSource* gs = makeNtagramGraph(size);
   double* tmp = testDijkstra(gs);
-  delete gs.graph;
+  delete gs->graph;
   return tmp;
 
 }
 
-double* TestPerformance::testDijkstra(GraphSource gs){
+void TestPerformance::testNTagramDijkstra(int size, ofstream & file){
+    GraphSource* gs = makeNtagramGraph(size);
+
+    double* results = testDijkstra(gs);
+    int decreaseCalls = gs->graph->countDecreaseKey;
+
+    file << size << ", " << decreaseCalls << ", " << results[0] << ", " << results[1] << ", " << endl;
+    delete []results;
+    delete gs->graph;
+}
+
+double* TestPerformance::testDijkstra(GraphSource* gs){
   double* result = new double[2];
 
   startClock();
-  gs.graph->dijkstra(gs.source,new FibonacciHeap<Vertex*>());
+  gs->graph->dijkstra(gs->source,new FibonacciHeap<Vertex*>());
   result[0] = stopClock();
 
+ //cout << "Fibonacci - decrease key calls: " << gs->graph->countDecreaseKey << " Time: " << result[0] << endl;
+
   startClock();
-  gs.graph->dijkstra(gs.source, new BinaryHeap<Vertex*>());
+  gs->graph->dijkstra(gs->source, new BinaryHeap<Vertex*>());
   result[1] = stopClock();
-  cout << " decrease key calls: " << gs.graph->countDecreaseKey << endl;
+  //cout << " Binary - decrease key calls: " << gs->graph->countDecreaseKey <<  " Time: " << result[1] <<endl;
   return result;
 }
 

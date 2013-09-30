@@ -18,14 +18,16 @@ class TestPerformance {
   Node<int>** testInsert(Heap<int>* heap, int* set, int size, Node<int>** array);
   void testDeleteMin(Heap<int>* heap);
   void testDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
-  void runTest(Heap<int>* heap, int size, int* set, ofstream &file); 
+  void runTest(Heap<int>* heap, int size, int* set, ofstream &file);
   void startClock();
+  void testNTagramDijkstra(int size, ofstream & file);
+
   double stopClock();
 
   double* testDijkstraBudde(int size);
   double* testDijkstraLukas(int size);
   double* testDijkstraNtagram(int size);
-  double* testDijkstra(GraphSource gs);  
+  double* testDijkstra(GraphSource* gs);
 };
 
 #endif

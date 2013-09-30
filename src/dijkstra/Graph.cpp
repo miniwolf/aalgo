@@ -14,82 +14,79 @@
 
 using namespace std;
 
-
-GraphSource makeNtagramGraph(int size){
-  GraphSource result;
+GraphSource* makeNtagramGraph(int size){
+  GraphSource* result = new GraphSource();
   Graph* g = new Graph();
 
   Vertex* source = new Vertex(0);
-  g->addVertex(source);  
+  g->addVertex(source);
   Vertex** vArray = new Vertex*[size];
   vArray[0] = source;
   for (int i = 1; i < size ; i++){
-    Vertex* temp  = new Vertex(i); 
+    Vertex* temp  = new Vertex(i);
     g->addVertex(temp);
     vArray[i] = temp;
   }
-  
+
   for(int i = 0; i < size-1 ; i++){
     Vertex* next = vArray[i+1];
     Vertex* current = vArray[i];
     g->connectVertices(current, next, 1);
-    for(int j = i+2; j < size; j++){      
-      g->connectVertices(current, vArray[j], 2*size+1-2*i);      
-    } 
+    for(int j = i+2; j < size; j++){
+      g->connectVertices(current, vArray[j], 2*size+1-2*i);
+    }
   }
 
-  result.graph = g;
-  result.source = source;
+  result->graph = g;
+  result->source = source;
   return result;
 }
 
 
 
-GraphSource makeBuddeGraph(int size){
-  GraphSource result;
+GraphSource* makeBuddeGraph(int size){
+  GraphSource* result = new GraphSource();
   Graph* g = new Graph();
 
   Vertex* source = new Vertex(0);
   g->addVertex(source);
-  
+
   Vertex* end = new Vertex(size+1);
   g->addVertex(end);
 
   for (int i = 1; i <= size ; i++){
-    Vertex* temp  = new Vertex(i);    
+    Vertex* temp  = new Vertex(i);
     g->addVertex(temp);
     g->connectVertices(source,temp,i);
-    g->connectVertices(temp,end,1);  
+    g->connectVertices(temp,end,1);
   }
 
-  result.graph = g;
-  result.source = source;
+  result->graph = g;
+  result->source = source;
   return result;
 }
 
-GraphSource makeLukasGraph(int size){
-  GraphSource result;
+GraphSource* makeLukasGraph(int size){
+  GraphSource* result = new GraphSource();
   Graph* g = new Graph();
 
   Vertex* source = new Vertex(0);
   g->addVertex(source);
-  
+
   Vertex* end = new Vertex(size+1);
   g->addVertex(end);
 
   for (int i = 1; i <= size ; i++){
-    Vertex* temp  = new Vertex(i);    
+    Vertex* temp  = new Vertex(i);
     g->addVertex(temp);
     g->connectVertices(source,temp,i);
-    g->connectVertices(temp,end,size*2 +1 - i*2);  
+    g->connectVertices(temp,end,size*2 +1 - i*2);
   }
 
-  result.graph = g;
-  result.source = source;
+  result->graph = g;
+  result->source = source;
   return result;
 }
-
-
 
 void Graph::makePlot(string filename){
   ofstream file;
@@ -120,26 +117,26 @@ void Graph::connectVertices(Vertex* from, Vertex* to, int distance){
 void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
   countDecreaseKey = 0;
   for ( auto val : vertices){
-    val->distanceFromStart_ = numeric_limits<int>::max(); 
+    val->distanceFromStart_ = numeric_limits<int>::max();
     val->previous_ = NULL;
     val->node = NULL;
-  }	
-	
+  }
+
   source->distanceFromStart_ = 0;
   // here we need our queue.
   Heap<Vertex*> *Q = heap;
   for ( auto val : vertices){
     int d = val->distanceFromStart_;
     Node<Vertex*>* n = Q->insert(d,val);
-    cout << "Inserting " << d << " " << val->id_ << endl;
+   // cout << "Inserting " << d << " " << val->id_ << endl;
     val->node = n;
   }
 
   while(Q->findMin() != NULL){
     Node<Vertex*>* uNode = Q->deleteMin();
     Vertex* u = uNode->payload;
-    cout << "Deleting " << uNode->key << " " << u->id_ << endl ;
-    delete uNode;		
+    //cout << "Deleting " << uNode->key << " " << u->id_ << endl ;
+    delete uNode;
 
     if ( u->distanceFromStart_ == numeric_limits<int>::max() ){
       break;
@@ -153,9 +150,9 @@ void Graph::dijkstra(Vertex* source, Heap<Vertex*>* heap){
 	v->distanceFromStart_ = alt;
 	v->previous_ = u;
 	Q->decreaseKey(v->node,v->distanceFromStart_);
-	cout << "Decrease Key " <<  v->id_ << " to: " << v->distanceFromStart_ << endl ;
+	//cout << "Decrease Key " <<  v->id_ << " to: " << v->distanceFromStart_ << endl ;
 	countDecreaseKey++;
       }
-    }	
+    }
   }
 }
