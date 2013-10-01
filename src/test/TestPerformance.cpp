@@ -126,13 +126,44 @@ double TestPerformance::testRandomGraphDecreaseKey(int size, int density, int av
     return time/average;
 }
 
+void TestPerformance::testSameSizeInsertions(Heap<int>* heap, int heapsize, int averageFactor, ofstream & file){
+   int* keys = new int[heapsize];
+   keys = generateKeySet(heapsize,keys);
+
+   Node<int>** nodes = new Node<int>*[heapsize];
+   nodes = testInsert(heap,keys,heapsize,nodes);
+
+    for(int i = 0 ; i < averageFactor ; i++){
+       // int r = rand();
+        Node<int>* node = NULL;
+        startClock();
+        node = heap->insert(0,0);
+        double time = stopClock();
+        int comparisons = heap->getComparisons();
+        heap->remove(node);
+        file << heapsize << ", "<< time << ", " << comparisons << endl;
+        delete node;
+    }
+
+    testDeleteMin(heap);
+
+
+   delete [] keys;
+   delete [] nodes;
+}
+
 void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & file){
   Node<int>** nodes = new Node<int>*[size];
+
+  //insert
   startClock();
   testInsert(heap, set, size, nodes);
   file << stopClock() << ", " ;
+  //
+
   Node<int>* n = heap->insert(500,500);
   heap->remove(n);
+  delete n;
 
   startClock();
   testDecreaseKey(heap, nodes, size);

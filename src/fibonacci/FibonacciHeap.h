@@ -22,10 +22,12 @@ class FibonacciHeap : public Heap<T> {
 public:
   FNode<T> *minRoot;
   int size;
+  int comparisons;
 
   FibonacciHeap() {
     minRoot = NULL;
     size = 0;
+    comparisons = 0;
   }
 
   virtual ~FibonacciHeap() {
@@ -37,6 +39,10 @@ public:
         delete n;
       }
     }
+  }
+
+  virtual int getComparisons(){
+    return comparisons;
   }
 
   virtual FNode<T>* insert(FNode<T> *node) {
@@ -195,7 +201,10 @@ public:
     file.close();
     string fname2 = filename;
     string arg = "dot -Tps " + fname2 + ".gv -o "+fname2+".ps";
-    system(arg.c_str());
+    int i = system(arg.c_str());
+    if (!i){
+        cout << "error in dot: " <<  arg << endl;
+    }
   }
 
   void meld(FibonacciHeap<T> *otherHeap) {

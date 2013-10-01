@@ -37,9 +37,9 @@ void testPerformance(){
   string ffilename = "test_f_file", bfilename = "test_b_file";
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
-  for(int size = 1000; size<=10000000  ; size = size*10){
+  for(int size = 10; size<=10000000  ; size = size*10){
+    cout << size << endl;
     for(int i = 0; i<50; i++){
-      cout << size << endl;
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
       int* keyset = new int[size];
@@ -60,6 +60,7 @@ void testPerformance(){
   }
   ffile.close();
   bfile.close();
+  delete tPerf;
 }
 
 void testFib() {
@@ -73,7 +74,7 @@ void testNTagram(){
   file.open(filename.c_str());
 
   TestPerformance* tPerf = new TestPerformance();
-  for( int size = 10; size < 20000; size = size*2){
+  for( int size = 10; size < 100000; size = size*10){
     for(int i = 0; i < 10; i++)
       tPerf->testNTagramDijkstra(size,file);
     file.flush();
@@ -88,8 +89,8 @@ void computeRandomGraphDecreaseRelation(int average){
     file.open(filename.c_str());
 
     int minSize = 10;
-    int maxSize = 100;
-    int step = 2;
+    int maxSize = 10000;
+    int step = 5;
 
     file << " , ";
     for( int i = minSize; i <=maxSize ; i = i*step){
@@ -99,7 +100,14 @@ void computeRandomGraphDecreaseRelation(int average){
 
     TestPerformance* tPerf = new TestPerformance();
 
-    for(float density = 0.1f ; density <= 1.0001f; density +=  0.1f){
+    for(float density = 0.01f ; density <= 1.000001f;){
+
+        if(density < 0.5f){
+            density*= 1.2f;
+        }else{
+            density+=0.1f;
+        }
+
         file << density << ", " ;
         for( int i = minSize; i <= maxSize ; i = i*step){
             cout << "size: " << i << "   density: " <<density * (float(i))<< endl;
@@ -108,22 +116,29 @@ void computeRandomGraphDecreaseRelation(int average){
         }
         file << endl;
     }
+    file.flush();
+    file.close();
     delete tPerf;
 }
 
+void performSingleInsertBHeap(){
+    ofstream file;
+    string filename = "binary_inserts.csv";
+    file.open(filename.c_str());
+    TestPerformance* tPerf = new TestPerformance();
+    Heap<int>* heap = new BinaryHeap<int>();
+
+    for( int i = 10 ; i <= 100000000 ; i*=10){
+        tPerf->testSameSizeInsertions(heap,i,50,file);
+    }
+    delete tPerf;
+    delete heap;
+}
+
 int main() {
+  performSingleInsertBHeap();
+  //computeRandomGraphDecreaseRelation(5);
 
-    computeRandomGraphDecreaseRelation(1);
-  /*
-  TestPerformance* tPerf = new TestPerformance();
-  GraphSource* gs = makeRandomGraph(10000,5);
-  double* result = tPerf->testDijkstra(gs);
-
-  delete gs->graph;
-  delete gs;
-  delete tPerf;
-  delete []result;
-  */
   //testNTagram();
   //testPerformance();
   //tPerf->testDijkstra(makeNtagramGraph(20));

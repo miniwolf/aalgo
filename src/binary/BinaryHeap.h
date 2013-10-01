@@ -25,6 +25,7 @@ class BinaryHeap : public Heap<T>{
  private:
   int size = 0;
   int counter = 0;
+  int comparisons;
   BNode<T>* root = NULL;
   BNode<T>* last = NULL;
   void deleteAndInsert(BNode<T>* n);
@@ -39,6 +40,10 @@ class BinaryHeap : public Heap<T>{
         delete n;
       }
     }
+ }
+
+ virtual int getComparisons(){
+    return comparisons;
  }
 
   virtual int getSize() {
@@ -153,6 +158,7 @@ class BinaryHeap : public Heap<T>{
 
 
   BNode<T>* insert(BNode<T>* node){
+    comparisons = 0;
     node->clear();
 
     if(size == 1){
@@ -166,12 +172,16 @@ class BinaryHeap : public Heap<T>{
 
     if((l = node->balance())){
       last = l;
-      while(node->balance());
+      comparisons++;
+      while(node->balance()){
+        comparisons++;
+      };
     }
 
     if(!(node->parent)){
       root = node;
     }
+
 
     delete [](t.arr);
     return node;

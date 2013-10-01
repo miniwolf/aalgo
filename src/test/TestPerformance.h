@@ -22,6 +22,8 @@ class TestPerformance {
   void startClock();
   void testNTagramDijkstra(int size, ofstream & file);
 
+  void testSameSizeInsertions(Heap<int>* heap, int size, int averageFactor, ofstream & file);
+
   double testRandomGraphDecreaseKey(int size, int density, int average, ofstream & file);
   double stopClock();
 

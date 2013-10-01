@@ -91,6 +91,7 @@ GraphSource* makeNtagramGraph(int size){
 
   result->graph = g;
   result->source = source;
+  delete []vArray;
   return result;
 }
 
@@ -155,7 +156,10 @@ void Graph::makePlot(string filename){
   file << "}\n" << endl;
   file.close();
   string arg = "dot -Tps " + filename + ".gv -o "+ filename +".ps";
-  system(arg.c_str());
+  int i = system(arg.c_str());
+  if (!i){
+     cout << "error in dot: " <<  arg << endl;
+  }
 }
 
 void Graph::addVertex(Vertex* v){
