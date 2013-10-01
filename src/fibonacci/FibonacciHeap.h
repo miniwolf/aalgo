@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <vector>
 
 #include "../Heap.h"
 #include "FNode.h"
@@ -28,27 +29,18 @@ public:
     size = 0;
   }
 
-  virtual ~FibonacciHeap() {
-
-  }
+  virtual ~FibonacciHeap() {}
 
   virtual FNode<T>* insert(FNode<T> *node) {
-
-    if(!minRoot){
-      minRoot = node;
-    } else {
-      minRoot->insert(node);
-      if(node->key < minRoot->key ){
-	minRoot = node;
-      }
-    }
-    size++;
+    minRoot = !minRoot ? node :
+              (minRoot->insert(node),
+               node->key < minRoot->key ? node : minRoot);
     return node;
   }
 
   virtual FNode<T>* insert(int key, T payload) {
-    FNode<T>* f = new FNode<T>(key, payload);
-    return insert(f);
+    size++;
+    return insert(new FNode<T>(key, payload));
   }
 
   virtual FNode<T>* findMin() {
@@ -57,19 +49,18 @@ public:
 
   /* Cover test it all! */
   virtual FNode<T>* deleteMin() {
-    if(!minRoot){
-      assert(size>0);
+    if ( !minRoot ) {
+      assert(size > 0);
       return NULL;
     }
-    FNode<T>* c = minRoot->child, *d = c;
+
     // 1. Remove children of minRoot
-    if ( c ) {
+    if ( minRoot->child ) {
+      FNode<T>* c = minRoot->child;
       do {
-        d->parent = NULL;
-        assert(d->right);
-        d = d->right;
-      } while(c != d);
-      assert(c);
+        c->parent = NULL;
+        c = c->right;
+      } while ( c != minRoot->child );
       minRoot->insert(c);
       minRoot->rank = 0;
       minRoot->child = NULL;
@@ -79,48 +70,43 @@ public:
       minRoot = NULL;
       return result;
     }
-    // 2. Build proper tree
-    int i = ceil(log2(size)*4);
-    FNode<T>** rank = new FNode<T>*[i];
-    for(int slap = 0; slap < i ; slap++){
-      rank[slap] = NULL;
-    } // memset did not work on my system!
-    c = minRoot->right;
-    do {
-      int r = c->rank;
-      assert(0 <= r && r < i);
-      FNode<T>* n2 = c->right;
-      while( rank[r] ) {
-        FNode<T>* n = rank[r];
-        if ( n->key < c->key ) {
-          c->remove();
-          n->addChild(c);
-          c = n;
-        } else {
-          n->remove();
-          c->addChild(n);
-        }
-        rank[r] = NULL;
-        r++;
-      }
-      rank[r] = c;
-      c = n2;
-    } while(c != minRoot);
-    //3. Find new min
-    FNode<T>* minSeen = NULL;
-    c = minRoot->right;
-    while ( minRoot != c ) {
-      if ( !minSeen || minSeen->key > c->key )
-        minSeen = c;
-      c->marked = false;
-      c = c->right;
-    }
-    minRoot->remove();
-    minRoot = minSeen;
 
-    size --;
-    delete []rank;
-    return c;
+    // 2. Build proper tree
+    vector<FNode<T>*> rank((sizeof(size) + 1) * 8);
+    fill(rank.begin(), rank.end(), (FNode<T>*) NULL);
+    FNode<T>* currentP = minRoot->right;
+    uint currentRank;
+    do {
+      currentRank = currentP->rank;
+      FNode<T>* current = currentP;
+      currentP = currentP->right;
+      while ( rank[currentRank] ) {
+        FNode<T>* other = rank[currentRank];
+        if ( current->key > other->key )
+            swap(other, current);
+        other->remove();
+        current->addChild(other);
+        rank[currentRank] = NULL;
+        currentRank++;
+        if ( currentRank >= rank.size() )
+          rank.push_back((FNode<T>*)NULL);
+      }
+      rank[currentRank] = current;
+    } while(currentP != minRoot);
+
+    //3. Find new min
+    delete minRoot;
+    minRoot = NULL;
+
+    for ( uint d = 0; d < rank.size(); ++d ) {
+      if ( rank[d] ) {
+        rank[d]->right = rank[d]->left = rank[d];
+        insert(rank[d]);
+      }
+    }
+
+    size--;
+    return minRoot;
   }
   
   void decreaseKey(Node<T> *node, int newKey){
@@ -145,7 +131,7 @@ public:
 
       while ( true ) {
         currentParent->removeChild(currentNode);
-        insertNode(currentNode);
+        insert(currentNode);
 
         if ( !(currentParent->parent) )
             break;
@@ -192,16 +178,6 @@ public:
 
   virtual int getSize() {
     return size;
-  }
-
-  void insertNode(FNode<T> *node) {
-    if ( !minRoot )
-      minRoot = node;
-    else {
-      minRoot->insert(node);
-      if ( node->key < minRoot->key )
-        minRoot = node;
-    }
   }
 };
 

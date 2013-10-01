@@ -1,6 +1,7 @@
 #ifndef FNODE_H
 #define FNODE_H
 
+#include <assert.h>
 #include <iostream>
 #include "../Node.h"
 using namespace std;
@@ -13,7 +14,7 @@ public:
   FNode<T> *parent = NULL;
   FNode<T> *child = NULL;
 
-  bool marked  = false;
+  bool marked = false;
   int rank = 0 ;
 
   FNode(int key_, T payload_)
@@ -23,22 +24,16 @@ public:
   void insert(FNode<T> *node){
     if ( !node )
       return;
-    if ( parent )
-      parent->rank++;
+
     right->left = node->left;
     node->left->right = right;
+
     right = node;
     node->left = this;    
-    node->parent = parent;
+//    node->parent = parent;
   }
 
   void remove() {
-    if ( parent ) {
-      if ( parent->rank == 1 )
-        parent->child = NULL;
-      parent->rank--;
-      parent = NULL;
-    }
     left->right = right;
     right->left = left;
     left = right = this;
@@ -73,9 +68,18 @@ public:
     }
 	
     // there are other children left
-    if ( rank > 1 && child == node )
-      child = child->right;
-    node->remove();
+    if ( node == node->right ) {
+      if ( child != node )
+        cout << "Remove a non child\n";
+      child = NULL;
+    } else {
+        if ( child == node )
+          child = node->right;
+        node->remove();
+    }
+    node->parent = NULL;
+    node->marked = false;
+    rank--;
   }
 
   void subplot(ofstream &file){
