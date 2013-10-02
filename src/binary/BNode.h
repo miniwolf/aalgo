@@ -9,12 +9,20 @@
 
 using namespace std;
 
-template <class T> 
-class BNode : public Node<T>{  
+template <class T>
+class BNode : public Node<T>{
 public:
   BNode(int key, T payload) : Node<T>(key, payload){}
-  virtual ~BNode(){}
-  
+  virtual ~BNode(){
+    if(lChild){
+        delete lChild;
+    }
+
+    if(rChild){
+        delete rChild;
+    }
+  }
+
   BNode<T>* parent = NULL;
   BNode<T>* lChild = NULL;
   BNode<T>* rChild = NULL;
@@ -52,9 +60,9 @@ public:
        rChild = node;
        return;
     }
-  
+
     if ( direction[startIndex] )
-      rChild->insert(node, direction, ++startIndex);    
+      rChild->insert(node, direction, ++startIndex);
     else
       lChild->insert(node, direction, ++startIndex);
   }
@@ -70,15 +78,15 @@ public:
     if ( direction[startIndex])
       return rChild->find(direction, ++startIndex);
     else
-      return lChild->find(direction, ++startIndex);  
+      return lChild->find(direction, ++startIndex);
   }
- 
+
   BNode<T>* balance() {
-    assert( (rChild && lChild) || lChild || (!rChild && !lChild));  
+    assert( (rChild && lChild) || lChild || (!rChild && !lChild));
     if ( !parent || parent->key <= this->key )
       return NULL;
 
-    BNode<T>* p = parent, *op = parent->parent, *orc = parent->rChild, *olc = parent->lChild; 
+    BNode<T>* p = parent, *op = parent->parent, *orc = parent->rChild, *olc = parent->lChild;
     if ( op ) {
       if ( op->lChild == parent )
         op->lChild = this;
@@ -89,12 +97,12 @@ public:
     parent->parent = this;
     parent->lChild = lChild;
     parent->rChild = rChild;
-    parent = op; 
+    parent = op;
     if ( lChild )
       lChild->parent = p;
     if ( rChild )
       rChild->parent = p;
-  
+
     if ( olc == this ) {
       rChild = orc;
       lChild = p;
@@ -107,7 +115,7 @@ public:
       lChild = olc;
     }
 
-    assert( (rChild && lChild) || lChild || (!rChild && !lChild));  
+    assert( (rChild && lChild) || lChild || (!rChild && !lChild));
     return p;
   }
 
