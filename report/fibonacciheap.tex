@@ -139,7 +139,7 @@ In the table below, we present the measured running times, and the computed func
 \begin{table}
   \begin{center}
     \begin{tabular}{l|r|r}
-      $N$ & $f(N)$ & measured running time(ms)\\
+      $N$ & $f(N)$ & measured running time(s)\\
       \hline
       10       & 6         & \num{5.60E-6}\\
       100      & 157       & \num{2.34E-5}\\
@@ -158,16 +158,24 @@ In the table below, we present the measured running times, and the computed func
 \end{figure}
 
 \subsubsection*{Conclusion}
-If we plot the graph for the proposed and measured running time on a doubly logarithmic graph, then we see they have the same tendency.
+If we plot the graph for the proposed and measured running time on a doubly logarithmic graph, then we see they have the same tendency. We can safely discard the measured running times for 10 elements, as running times this close to single microseconds may easiliy be inflated when not using a high-performance timing API.
 This means that our measured running time conforms to the expected running time $O(\log N!)$. Hereby the running time of binary heap's insert conforms to the expected asymptotic running time $O(\log n)$.
 
 \subsection*{Decrease Key$(H,x,k)$}
 
 \subsubsection*{Hypothesis}
-Worst case is $O(\log n)$ where n is the size of the heap.
+The \texttt{BINARY-HEAP-DECREASE-KEY} method has a worst case running time of $O(\log n)$ where n is the current size of the heap. This means, when we run \texttt{BINARY-HEAP-DECREASE-KEY} on every element, the asymptotic running is expected to be $O(n\log n)$ 
 
-Our experiment consists of a Binary Heap where $N$ random elements were inserted and we measure the time it takes to call \texttt{DECREASE-KEY} on all elements once. Their key is halved. This is done 50 times and we present the average running time.
+Our experiment consists of a Binary Heap where $N$ random elements were inserted and we measure the time it takes to call \texttt{BINARY-HEAP-DECREASE-KEY} on every element once. The elements keys are halved. This is done 50 times and we present the average running time.
+\subsubsection*{Graphs}
 
+\subsubsection*{Conclusion}
+Observe that the graph shows the same inclination for the measured data and the $n\log n$ function, when we discard the measurements for 10 elements. The measured running time increases proportionally just as much as the $n\log n$ function, thereby a single \texttt{BINARY-HEAP-DECREASE-KEY} performs in $O(\log n)$ time.
+
+\subsection*{Delete Min$(H,x,k)$}
+
+\subsubsection*{Hypothesis}
+The \texttt{BINARY-HEAP-DELETE-MIN} method has a worst case running time of $O(\log n)$ where n is the current size of the heap.
 \subsubsection*{Graphs}
 
 \subsubsection*{Conclusion}
