@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include "../dijkstra/Graph.h"
+#include <cmath>
 using namespace std;
 
 int* TestPerformance::generateKeySet(int i, int* ar ){
@@ -175,3 +176,38 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
 
   delete []nodes;
 }
+
+
+int myPow(int x, int p){
+    if(p==0) return 1;
+    if(p==1) return x;
+
+    int tmp = myPow(x, p/2);
+    if(p%2 == 0) return tmp*tmp;
+    else return x*tmp*tmp;
+}
+
+void TestPerformance::performLayerInsert(Heap<int>* heap, int layer, ofstream & file){
+    // build a full heap, with layer-1 layers. Layer 0 has one element, Layer 1 has two etc..
+    for(int i = 0; i < layer; i++ ){
+    cout << "layer: " << i << endl;
+        double totalTime = 0.0;
+
+        int layerElements = myPow(2,i);
+//
+        int* keys = new int[layerElements];
+       // keys = generateKeySet(layerElements,keys);
+        startClock();
+        for(int j = 0; j < layerElements ; j++){
+            heap->insert(10+layer - i, 10+layer - i);
+        }
+        totalTime = stopClock();
+        totalTime = totalTime/layerElements;
+        // the average time for all the inserts on this layer.
+        file << totalTime << ", ";
+        file.flush();
+       // delete []keys;
+    }
+    file << endl;
+}
+

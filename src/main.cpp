@@ -135,8 +135,31 @@ void performSingleInsertBHeap(){
     delete heap;
 }
 
+
+void performLayerInsertBHeap(){
+    ofstream file;
+    string filename = "binary_layer_inserts.csv";
+    file.open(filename.c_str());
+    TestPerformance* tPerf = new TestPerformance();
+
+    int layers = 26;
+    int repeats = 25;
+    for(int l = 0; l < layers; l++){
+        file << l << ", ";
+    }
+    file << endl;
+    for(int r = 0; r < repeats ; r++){
+        Heap<int>* heap = new BinaryHeap<int>();
+        tPerf->performLayerInsert(heap,layers,file);
+        delete heap;
+    }
+
+    delete tPerf;
+}
+
 int main() {
-  performSingleInsertBHeap();
+  performLayerInsertBHeap();
+  //performSingleInsertBHeap();
   //computeRandomGraphDecreaseRelation(5);
 
   //testNTagram();

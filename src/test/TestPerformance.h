@@ -21,6 +21,7 @@ class TestPerformance {
   void runTest(Heap<int>* heap, int size, int* set, ofstream &file);
   void startClock();
   void testNTagramDijkstra(int size, ofstream & file);
+  void performLayerInsert(Heap<int>* heap,int layer, ofstream & file);
 
   void testSameSizeInsertions(Heap<int>* heap, int size, int averageFactor, ofstream & file);
 
