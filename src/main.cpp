@@ -166,12 +166,9 @@ void performSingleInsertBHeap(){
 
 void performLayerInsertBHeap(){
     ofstream file;
-    ofstream file2;
     string filename = "binary_layer_inserts.csv";
-    string fname2 = "binary_layer_deletes.csv";
 
     file.open(filename.c_str());
-    file2.open(fname2.c_str());
 
     TestPerformance* tPerf = new TestPerformance();
 
