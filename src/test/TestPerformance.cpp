@@ -38,6 +38,19 @@ void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int si
   }
 }
 
+Node<int>** TestPerformance::testWorstInsert(Heap<int>* heap, int size, Node<int>** array){
+  for(int i = 0;  i< size; i++){
+    array[i] = heap->insert(2*size - i, 2*size - i);
+  }
+  return array;
+}
+
+void TestPerformance::testWorstDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
+  for(int i = 0; i < size; i++){
+    heap->decreaseKey(array[i], size-i);
+  }
+}
+
 void TestPerformance::startClock(){
   getTime();
 }
@@ -173,6 +186,30 @@ void TestPerformance::runTest(Heap<int>* heap, int size, int* set, ofstream & fi
 
   startClock();
   testDecreaseKey(heap, nodes, size);
+  file << stopClock() << ", ";
+
+  startClock();
+  testDeleteMin(heap);
+  file << stopClock()  << ", ";
+
+  delete []nodes;
+}
+
+void TestPerformance::performWorstTest(Heap<int>* heap, int size, ofstream &file){
+  Node<int>** nodes = new Node<int>*[size];
+
+  //insert
+  startClock();
+  testWorstInsert(heap, size, nodes);
+  file << stopClock() << ", " ;
+  //
+
+  Node<int>* n = heap->insert(500,500);
+  heap->remove(n);
+  delete n;
+
+  startClock();
+  testWorstDecreaseKey(heap, nodes, size);
   file << stopClock() << ", ";
 
   startClock();

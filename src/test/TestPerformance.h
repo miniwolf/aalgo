@@ -17,6 +17,11 @@ class TestPerformance {
   Node<int>** testInsert(Heap<int>* heap, int* set, int size, Node<int>** array);
   void testDeleteMin(Heap<int>* heap);
   void testDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
+
+  Node<int>** testWorstInsert(Heap<int>* heap, int size, Node<int>** array);
+  void testWorstDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
+  void performWorstTest(Heap<int>* heap, int size, ofstream &file);
+
   void runTest(Heap<int>* heap, int size, int* set, ofstream &file);
   void startClock();
   void testNTagramDijkstra(int size, ofstream & file);

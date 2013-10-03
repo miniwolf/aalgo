@@ -34,7 +34,7 @@ void writeSetFile(int* set, int size){
 void testPerformance(){
   TestPerformance* tPerf = new TestPerformance();
   ofstream ffile, bfile;
-  string ffilename = "test_f_file", bfilename = "test_b_file";
+  string ffilename = "test_f_file.csv", bfilename = "test_b_file.csv";
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
   for(int size = 10; size<=10000000  ; size = size*10){
@@ -54,6 +54,34 @@ void testPerformance(){
       ffile.flush();
       bfile.flush();
       delete []keyset;
+      delete fHeap;
+      delete bHeap;
+    }
+  }
+  ffile.close();
+  bfile.close();
+  delete tPerf;
+}
+
+void testWorstPerformance(){
+  TestPerformance* tPerf = new TestPerformance();
+  ofstream ffile, bfile;
+  string ffilename = "test_worst_f_file.csv", bfilename = "test_worst_b_file.csv";
+  ffile.open(ffilename.c_str());
+  bfile.open(bfilename.c_str());
+  for(int size = 10; size<=10000000  ; size = size*10){
+    cout << size << endl;
+    for(int i = 0; i<50; i++){
+      Heap<int>* bHeap = new BinaryHeap<int>();
+      Heap<int>* fHeap = new FibonacciHeap<int>();
+      ffile << size << ", ";
+      bfile << size << ", ";
+      tPerf->performWorstTest(fHeap, size, ffile);
+      tPerf->performWorstTest(bHeap, size, bfile);
+      ffile << endl;
+      bfile << endl;
+      ffile.flush();
+      bfile.flush();
       delete fHeap;
       delete bHeap;
     }
@@ -158,7 +186,8 @@ void performLayerInsertBHeap(){
 }
 
 int main() {
-  performLayerInsertBHeap();
+  testWorstPerformance();
+  //performLayerInsertBHeap();
   //performSingleInsertBHeap();
   //computeRandomGraphDecreaseRelation(5);
 
