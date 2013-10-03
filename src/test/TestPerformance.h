@@ -5,15 +5,14 @@
 #include "../binary/BinaryHeap.h"
 #include "../fibonacci/FibonacciHeap.h"
 #include "../dijkstra/Graph.h"
+#include "../timespec/timespec.h"
 
 class TestPerformance {
  private:
-  long double mStartTime;
-  double getTime();
+  timespec mStartTime;
+  void getTime();
  public:
-  TestPerformance(){
-    mStartTime = 0;
-  }
+  TestPerformance(){  }
   int* generateKeySet(int i, int* ar);
   Node<int>** testInsert(Heap<int>* heap, int* set, int size, Node<int>** array);
   void testDeleteMin(Heap<int>* heap);

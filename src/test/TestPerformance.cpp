@@ -5,6 +5,8 @@
 #include <time.h>
 #include "../dijkstra/Graph.h"
 #include <cmath>
+#include <time.h>
+
 using namespace std;
 
 int* TestPerformance::generateKeySet(int i, int* ar ){
@@ -37,17 +39,20 @@ void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int si
 }
 
 void TestPerformance::startClock(){
-  mStartTime = getTime();
+  getTime();
 }
 
 double TestPerformance::stopClock(){
-  return (getTime()) - mStartTime;
+  timespec currentTime;
+  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &currentTime);
+
+  timespec result = timespec_sub(currentTime, mStartTime);
+
+  return double(result.tv_sec) + 0.000000001*double(result.tv_nsec);
 }
 
-double TestPerformance::getTime(){
-  timeval tv;
-  gettimeofday (&tv, NULL);
-  return double (tv.tv_sec) + 0.000001 * tv.tv_usec;
+void TestPerformance::getTime(){
+   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &mStartTime);
 }
 
 double* TestPerformance::testDijkstraBudde(int size){
@@ -193,9 +198,10 @@ void TestPerformance::performLayerInsert(Heap<int>* heap, int layer, ofstream & 
     for(int i = 0; i < layer; i++ ){
         totalElements += myPow(2,i);
     }
+    cout << totalElements << endl;
 
     // total elements is total elements +1.
-
+    int total = 0;
     for(int i = 0; i < layer; i++ ){
     cout << "layer: " << i << endl;
         double totalTime = 0.0;
@@ -205,7 +211,8 @@ void TestPerformance::performLayerInsert(Heap<int>* heap, int layer, ofstream & 
         startClock();
         for(int j = 0; j < layerElements ; j++){
             // key is total-i, so this will be the smallest key yet!
-            heap->insert(totalElements- i, totalElements - i);
+            heap->insert(totalElements- total, totalElements - total);
+            total++;
         }
         totalTime = stopClock();
         totalTime = totalTime/layerElements;
