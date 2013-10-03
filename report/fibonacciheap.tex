@@ -120,7 +120,7 @@ We expect constant running time
 
 \section*{Experiments - Binary Heap}
 \subsection*{Insert$(H,x,k)$}
-In this section will we explore the running time of Binary-Heaps insert method.
+In this section will we explore the running time of Binary-Heaps insert method. The running time is analyzed in two different ways. At first, we run a number of inserts accumulative and observe the total running time of $N$ \texttt{BINARY-HEAP-INSERT} operations. Then we analyze \texttt{BINARY-HEAP-INSERT} operations relative to the height of the heap.
 \subsubsection*{Hypothesis}
 To measure the running, $N=10^k$ randomly generated elements are inserted into the heap in succession. This is done 50 times to compute an average time. The elements inserted into the heap are randomly generated before we start timing the \texttt{BINARY-HEAP-INSERT} method $N$ times.
 
@@ -133,6 +133,10 @@ We have that:
   &=\lg(1*2*3*\cdots *N)\\
   &=\lg(N!)
 \end{align*}
+
+In the second experiment, an emtpy heap is used, and elements are inserted layer by layer. To increase the height of the heap by one every time, we insert $2^k$ elements, where k is the height of the heap. Each element is inserted with a key that is smaller than the smallest key currently in the heap, which means that the element has to travel through the $k$ layers in the heap to reach the top. This is the worst case scenario for \texttt{BINARY-HEAP-INSERT}.
+
+For each layer, we measure the time for running \texttt{BINARY-HEAP-INSERT} $2^k$ times and divide the running time by the numbers of elements inserted, which yields an average running time for the current height of the graph.
 \subsubsection*{Graphs}
 
 In the table below, we present the measured running times, and the computed function $f(N)$.
