@@ -51,7 +51,7 @@ We create the array of pointers which has a cost $\leq$ max degree of any node i
 
 Lets suppose we start with $k$ trees in our doubly linked list of roots, and perform $l$ link operations we then perform $k+l$ work, and end up with $k-l$ trees.
 
-The worst case for searching for the new \texttt{minRoot} would be $n$ elements in our doubly-linked list of roots, with none of these combined in a tree.
+The worst case for linking the heap would be $n$ elements in our doubly-linked list of roots, with none of these combined in a tree.
 \begin{itemize}
 \item{$t(H)$ is reduces by $k/2$, m($H$) is not changed as we mark no nodes}
 \item{Worst case} $= O(n)$
@@ -118,6 +118,10 @@ We delete by first decreasing the key of $x$ to the lowest value of our heap and
 \subsection*{Insert$(H,x,k)$}
 We expect constant running time 
 
+\subsection*{Decrease-Key$(H,x,k)$}
+
+\subsection*{Delete-Min$(H)$}
+
 \section*{Experiments - Binary Heap}
 \subsection*{Insert$(H,x,k)$}
 In this section will we explore the running time of Binary-Heaps insert method. The running time is analyzed in two different ways. At first, we run a number of inserts accumulative and observe the total running time of $N$ \texttt{BINARY-HEAP-INSERT} operations. Then we analyze \texttt{BINARY-HEAP-INSERT} operations relative to the height of the heap.
@@ -176,7 +180,7 @@ Our experiment consists of a Binary Heap where $N$ random elements were inserted
 \subsubsection*{Conclusion}
 Observe that the graph shows the same inclination for the measured data and the $n\log n$ function, when we discard the measurements for 10 elements. The measured running time increases proportionally just as much as the $n\log n$ function, thereby a single \texttt{BINARY-HEAP-DECREASE-KEY} performs in $O(\log n)$ time.
 
-\subsection*{Delete Min$(H,x,k)$}
+\subsection*{Delete Min$(H)$}
 
 \subsubsection*{Hypothesis}
 The \texttt{BINARY-HEAP-DELETE-MIN} method has a worst case running time of $O(\log n)$ where n is the current size of the heap.
