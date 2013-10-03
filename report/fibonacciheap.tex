@@ -47,6 +47,7 @@ We combine $H1$ and $H2$ together, forming a new heap $H$. We update $min(H)$ ac
 \item{Worst case}$ = 2 + 0 = O(1)$, 2 because we put trees together and set $min(H)$
 \end{itemize}
 \subsection*{Delete-Min$(H)$}
+
 We create the array of pointers which has a cost $\leq$ max degree of any node in our Fibonacci heap($d_n$) + 1.
 
 Lets suppose we start with $k$ trees in our doubly linked list of roots, and perform $l$ link operations we then perform $k+l$ work, and end up with $k-l$ trees.
@@ -88,10 +89,10 @@ We also mark up the tree untill we hit a node or an unmarked node. For each cut 
   &= O(1)
 \end{align*}
 \subsection*{Delete($H, x$)}
-We delete by first decreasing the key of $x$ to the lowest value of our heap and then \texttt{Delete-Min} to remove it.
+We delete by first decreasing the key of $x$ to the lowest value of our heap and then \texttt{DELETE-MIN} to remove it.
 
 \begin{itemize}
-\item{Worst case} $= O(\log n) + O(n) = O(n)$, worst case of \texttt{Decrease-Key} + worst case of \texttt{Delete-Min}
+\item{Worst case} $= O(\log n) + O(n) = O(n)$, worst case of \texttt{DECREASE-KEY} + worst case of \texttt{DELETE-MIN}
 \end{itemize}
 
 \begin{align*}
@@ -137,20 +138,113 @@ First we use \texttt{DECREASE-KEY} to set the node $x$ to the lowest value, then
 
 \begin{itemize}
   \item{Worst case} = $O(\log n) + O(\log n) = O(\log n)$, the worst case for \texttt{DECREASE-KEY} + the worst case for \texttt{DELETE-MIN}.
-
+\end{itemize}
 \section*{Experiments - Fibonacci Heap}
 \subsection*{Insert$(H,x,k)$}
-We expect constant running time 
+\subsubsection*{Hypothesis}
+We have that \texttt{FIBONACCI-HEAP-INSERT} performs in $O(1)$ time. This means that when we perform $N$ insertions into a fibonacci-heap we expect to measure a running time that increases linearly with the number of insertions, yielding a running time of $O(N)$ for $N$ insertions.
+
+The experiment consists of inserting $N$ elements into the heap. The element's keys range from $2N$ to $N$, which has no effect on the execution time of \texttt{FIBONACCI-HEAP-INSERT}, but is usefull for later experimentation with \texttt{FIBONACCI-HEAP-DECREASE-KEY}.
+
+Below we present the measured running times for \texttt{FIBONACCI-HEAP-INSERT} for $N$ elements.
+\subsubsection*{Graphs}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r}
+      $N$ & measured insert time(s) & measured insert/N time(s)\\
+      \hline
+      10       & \num{5.971E-7}     & \num{5.971E-8}\\
+      100      & \num{3.424E-6}     & \num{3.424E-8}\\
+      1000     & \num{4.215E-5}     & \num{4.215E-8}\\
+      10000    & \num{5.587E-4}     & \num{5.588E-8}\\
+      100000   & \num{0.0056}       & \num{5.668E-8}\\
+      1000000  & \num{0.0610}       & \num{6.100E-8}\\
+      10000000 & \num{0.6070}       & \num{6.070E-8}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+\begin{figure}
+  \includegraphics{time_per_insert_operation.png}
+  \caption{Time per insert operation}
+\end{figure}
+\begin{figure}
+  \includegraphics{insert_operations_and_theoretic_bound.png}
+  \caption{Comparison - Insert operations and Theoretic Bound}
+\end{figure}
+
+\subsubsection*{Conclusion}
+The time spent per single insert operation hovers around a constant factor. Even though the numbers do not form a horizontal line on the graph, they are in the same order of magnitude, excluding the possibility of an exponential growth. The second graph gives a good impression of \texttt{FIBONACCI-HEAP-INSERT} running in constant time for a single element, as the number of elements to be inserted tenfold, the running time also tenfolds. Thus we can safely assume that the \texttt{FIBONACCI-HEAP-INSERT} method actually runs in constant time.
 
 \subsection*{Decrease-Key$(H,x,k)$}
+\subsubsection*{Hypothesis}
+
+The amortized running time for \texttt{FIBONACCI-HEAP-DECREASE-KEY} is $O(1)$ and the worst case running time is $O(\log n)$.
+
+The experiment consists of a heap with $N$ elements with increasing keys from $N$ to $2N$, where \texttt{FIBONACCI-HEAP-DECREASE-KEY} is called with elements in decreasing order of their key, reducing their key by $N$, which means that the heap updates it's minimum element with each call.
+
+The expectation is, that after some calls to \texttt{FIBONACCI-HEAP-DECREASE-KEY}, the cost of calling \texttt{FIBONACCI-HEAP-DECREASE-KEY} will approach a constant, which implies that $N$ calls to \texttt{FIBONACCI-HEAP-DECREASE-KEY} will have an amortited running time of $O(N)$.
+\subsubsection*{Graphs}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r}
+      $N$ & measured decrease time(s) & measured decrease time(s) /N \\
+      \hline
+      10       & \num{5.492E-7}     & \num{5.492E-8}\\
+      100      & \num{3.590E-6}     & \num{3.589E-8}\\
+      1000     & \num{3.244E-5}     & \num{3.245E-8}\\
+      10000    & \num{3.195E-4}     & \num{3.200E-8}\\
+      100000   & \num{0.0034}       & \num{3.434E-8}\\
+      1000000  & \num{0.0372}       & \num{3.718E-8}\\
+      10000000 & \num{0.3847}       & \num{3.847E-8}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+\begin{figure}
+  \includegraphics{decrease_key_per_element.png}
+  \caption{Decrease Key per element}
+\end{figure}
+
+\subsubsection*{Conclusion}
+The measurement divided by the number of \texttt{FIBONACCI-HEAP-DECREASE-KEY} calls approach a factor of \num{3.786E-8}, within a small margin of error, when we ignore the first measurement of size 10, as this is easily inflated due to its very short running time.
+
+We can safely conclude that the cost of each \texttt{FIBONACCI-HEAP-DECREASE-KEY} call converges to a constant factor, after a number of calls to the method, though one could still take measurements to find after how many calls in succession \texttt{FIBONACCI-HEAP-DECREASE-KEY} comes close to constant running time.
 
 \subsection*{Delete-Min$(H)$}
+
+\subsubsection*{Hypothesis}
+
+\subsubsection*{Graphs}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r}
+      $N$ & expected running time(s) & measured running time(s) \\
+      \hline
+      10       & \num{5.492E-7}     & \num{5.492E-8}\\
+      100      & \num{3.590E-6}     & \num{3.589E-8}\\
+      1000     & \num{3.244E-5}     & \num{3.245E-8}\\
+      10000    & \num{3.195E-4}     & \num{3.200E-8}\\
+      100000   & \num{0.0034}       & \num{3.434E-8}\\
+      1000000  & \num{0.0372}       & \num{3.718E-8}\\
+      10000000 & \num{0.3847}       & \num{3.847}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+\begin{figure}
+  \includegraphics{decrease_key_per_element.png}
+  \caption{Decrease Key per element}
+\end{figure}
+
+\subsubsection*{Conclusion}
+
 
 \section*{Experiments - Binary Heap}
 \subsection*{Insert$(H,x,k)$}
 In this section will we explore the running time of Binary-Heaps insert method. The running time is analyzed in two different ways. At first, we run a number of inserts accumulative and observe the total running time of $N$ \texttt{BINARY-HEAP-INSERT} operations. Then we analyze \texttt{BINARY-HEAP-INSERT} operations relative to the height of the heap.
 \subsubsection*{Hypothesis}
-To measure the running, $N=10^k$ randomly generated elements are inserted into the heap in succession. This is done 50 times to compute an average time. The elements inserted into the heap are randomly generated before we start timing the \texttt{BINARY-HEAP-INSERT} method $N$ times.
+To measure the running time, $N=10^k$ elements with decreasing key are inserted into the heap in succession to achieve worst-case behaviour. This is done 50 times to compute an average.
 
 Because the \texttt{BINARY-HEAP-INSERT} operation is done $N$ times in succession, we expect the running time to be the sum over the individual insert operation at any given size of the heap, which is called $n$.
 Thus, we expect to measure a running time of the form: \[\sum^N_{n=1}\lg n.\]
@@ -161,6 +255,8 @@ We have that:
   &=\lg(1*2*3*\cdots *N)\\
   &=\lg(N!)
 \end{align*}
+
+The numbers for f(N) in the graph section are only approximate, as computing the faculty of numbers bigger than 100 is troublesome.
 
 In the second experiment, an emtpy heap is used, and elements are inserted layer by layer. To increase the height of the heap by one every time, we insert $2^k$ elements, where k is the height of the heap. Each element is inserted with a key that is smaller than the smallest key currently in the heap, which means that the element has to travel through the $k$ layers in the heap to reach the top. This is the worst case scenario for \texttt{BINARY-HEAP-INSERT}.
 
@@ -173,47 +269,109 @@ In the table below, we present the measured running times, and the computed func
     \begin{tabular}{l|r|r}
       $N$ & $f(N)$ & measured running time(s)\\
       \hline
-      10       & 6         & \num{5.60E-6}\\
-      100      & 157       & \num{2.34E-5}\\
-      1000     & 2560      & \num{1.93E-4}\\
-      10000    & 35600     & \num{2.25E-3}\\
-      100000   & 456500    & \num{2.54E-2}\\
-      1000000  & 5565700   & \num{0.279}\\
-      10000000 & 65657000  & \num{2.770}
+      10       & 20         & \num{1.6487E-6}\\
+      100      & 522        & \num{2.3691E-5}\\
+      1000     & 8504       & \num{2.6033E-4}\\
+      10000    & 118261     & \num{3.4728E-3}\\
+      100000   & 1516460    & \num{4.1341E-2}\\
+      1000000  & 18488855   & \num{0.4934}\\
+      10000000 & 218107833  & \num{5.5171}
     \end{tabular}
-    \caption{Expected and measured running time}
+    \caption{Bounds and measured running time}
   \end{center}
 \end{table}
 \begin{figure}
   \includegraphics{binary_insert_runningtime.png}
-  \caption{Running time compared to expected time}
+  \caption{Running time compared to theoretical bound}
 \end{figure}
 
 \subsubsection*{Conclusion}
-If we plot the graph for the proposed and measured running time on a doubly logarithmic graph, then we see they have the same tendency. We can safely discard the measured running times for 10 elements, as running times this close to single microseconds may easiliy be inflated when not using a high-performance timing API.
-This means that our measured running time conforms to the expected running time $O(\log N!)$. Hereby the running time of binary heap's insert conforms to the expected asymptotic running time $O(\log n)$.
+If we plot the graph for the proposed function and the measured running time on a doubly logarithmic graph, then we see they have the same tendency. We can safely discard the measured running times for 10 elements, as running times this close to single microseconds may easiliy be inflated. We observe that the running time increase at the same rate as the theoretical bound, this means that our measured running time conforms to the expected running time $O(\log N!)$. Hereby the running time of binary heap's insert conforms to the expected asymptotic running time $O(\log n)$.
 
 \subsection*{Decrease Key$(H,x,k)$}
-
 \subsubsection*{Hypothesis}
-The \texttt{BINARY-HEAP-DECREASE-KEY} method has a worst case running time of $O(\log n)$ where n is the current size of the heap. This means, when we run \texttt{BINARY-HEAP-DECREASE-KEY} on every element, the asymptotic running is expected to be $O(n\log n)$ 
+The \texttt{BINARY-HEAP-DECREASE-KEY} method has a worst case running time of $O(\log n)$ where $n$ is the current size of the heap. This means, when we run \texttt{BINARY-HEAP-DECREASE-KEY} on every element, the asymptotic running is expected to be $O(n\log n)$ in the worst case.
 
-Our experiment consists of a Binary Heap where $N$ random elements were inserted and we measure the time it takes to call \texttt{BINARY-HEAP-DECREASE-KEY} on every element once. The elements keys are halved. This is done 50 times and we present the average running time.
+Our experiment consists of a Binary Heap where $N$ elements were inserted with decreasing keys from $2N$ to $N+1$ and we measure the time it takes to call \texttt{BINARY-HEAP-DECREASE-KEY} on every element once. We start with the element with the biggest key, $2N$, and decrease its key to $N$. This gives us the worst case for the \texttt{BINARY-HEAP-DECREASE-KEY} methods, as $N$ is the smallest key at this point. We repeat this process for the next biggest element, which has key $2N-1$ and decrease its key to $N-1$, again giving rise to the worst case scenario. We repeat this process for all remaining elements, decreasing the key of the element with key $2N-i$ to $N-i$.
+
+As we repeat this process for $N$ elements, the total running time for $N$ \texttt{BINARY-HEAP-DECREASE-KEY} operations is $O(N\log N)$.
+
+In the table below, we present the measured running times, and the function $O(N\log N)$.
 \subsubsection*{Graphs}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r|r}
+      $N$ & $O(N\log N)$ & measured running time(s)\\
+      \hline
+      10       & 33         & \num{7.506E-7}\\
+      100      & 644        & \num{1.0843E-5}\\
+      1000     & 9966       & \num{0.000141}\\
+      10000    & 132877     & \num{0.001805}\\
+      100000   & 1660964    & \num{0.0242}\\
+      1000000  & 19931569   & \num{0.3163}\\
+      10000000 & 232534967  & \num{3.7488}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+\begin{figure}
+    \includegraphics{binary_decreasetime.png}
+    \caption{Decrease-Key running time compared to theoretical bound.}
+\end{figure}
 
 \subsubsection*{Conclusion}
-Observe that the graph shows the same inclination for the measured data and the $n\log n$ function, when we discard the measurements for 10 elements. The measured running time increases proportionally just as much as the $n\log n$ function, thereby a single \texttt{BINARY-HEAP-DECREASE-KEY} performs in $O(\log n)$ time.
+Observe that the graph shows the same inclination for the measured data and the $n\log n$ function. The measured running time increases proportionally just as much as the $n\log n$ theoretical bound, thereby a single \texttt{BINARY-HEAP-DECREASE-KEY} performs in $O(\log n)$ time.
 
 \subsection*{Delete Min$(H)$}
-
-It shows the same running time as insert on the graphs.
-
 \subsubsection*{Hypothesis}
-The \texttt{BINARY-HEAP-DELETE-MIN} method has a worst case running time of $O(\log n)$ where n is the current size of the heap.
+The \texttt{BINARY-HEAP-DELETE-MIN} method has a worst case running time of $O(\log n)$ where $n$ is the current size of the heap. If we call \texttt{BINARY-HEAP-DELETE-MIN} as many times as there are elements in the heap, we would have a running of $O(\log N!)$, exactly like \texttt{BINARY-HEAP-INSERT}.
+
+The experiment consists of calling \texttt{BINARY-HEAP-DELETE-MIN} until the heap of size $N$ is empty.
+
+In the table below, we present the measured running times, and the function $O(N\log N)$. The second table shows the running times for insertion divided by the running times for deletion.
 \subsubsection*{Graphs}
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r|r}
+      $N$ & $O(N\log N)$ & measured running time(s)\\
+      \hline
+      10       & 33         & \num{1.8486E-6}\\
+      100      & 644        & \num{2.3476E-5}\\
+      1000     & 9966       & \num{2.8870E-4}\\
+      10000    & 132877     & \num{3.4556E-3}\\
+      100000   & 1660964    & \num{0.0410}\\
+      1000000  & 19931569   & \num{0.4842}\\
+      10000000 & 232534967  & \num{5.7055}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}{l|r}
+      $N$ & $\dfrac{\text{insert}}{\text{delete}}$\\
+      \hline
+      10       & \num{0.89}\\
+      100      & \num{1.01}\\
+      1000     & \num{0.90}\\
+      10000    & \num{1.00}\\
+      100000   & \num{1.01}\\
+      1000000  & \num{1.02}\\
+      10000000 & \num{0.97}
+    \end{tabular}
+    \caption{Bounds and measured running time}
+  \end{center}
+\end{table}
+\begin{figure}
+    \includegraphics{binary_delete_min.png}
+    \caption{Decrease-Key running time compared to theoretical bound.}
+\end{figure}
 
 \subsubsection*{Conclusion}
+Observe that the measurements for \texttt{BINARY-HEAP-DELETE-MIN} increase at most as fast as the theoretical bound, but also are very close to the measured running times of \texttt{BINARY-HEAP-INSERT}. When we divide the running time of \texttt{BINARY-HEAP-INSERT} with the runnning time of \texttt{BINARY-HEAP-DELETE-MIN} for every given size, we find that the average factor is 0.97 within a small margin of error. We can conclude that the running time for deletion increases at the same rate as those for insertion, which gives us that our implementation of \texttt{BINARY-HEAP-DELETE-MIN} performs within $O(\log n)$ bounds, just like insertion.
 
 \section*{Experiments - Comparison}
 
 \end{document}
+
