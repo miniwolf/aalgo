@@ -34,14 +34,7 @@ class BinaryHeap : public Heap<T>{
  BinaryHeap():Heap<T>(){}
  virtual ~BinaryHeap(){
     if(root){
-      cout << "Leftovers in BinaryHeap!" <<  "  size: "<< size << endl;
-     /* while(findMin()){
-        if ( size % 10000 == 0){
-            cout << " left : " << size << endl;
-        }
-        BNode<T>* n = deleteMin();
-        delete n;
-      }*/
+      //cout << "Leftovers in BinaryHeap!" <<  "  size: "<< size << endl;
       delete root;
     }
  }

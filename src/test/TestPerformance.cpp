@@ -235,16 +235,13 @@ void TestPerformance::performLayerInsert(Heap<int>* heap, int layer, ofstream & 
     for(int i = 0; i < layer; i++ ){
         totalElements += myPow(2,i);
     }
-    cout << totalElements << endl;
 
     // total elements is total elements +1.
     int total = 0;
     for(int i = 0; i < layer; i++ ){
-    cout << "layer: " << i << endl;
         double totalTime = 0.0;
 
         int layerElements = myPow(2,i);
-       // keys = generateKeySet(layerElements,keys);
         startClock();
         for(int j = 0; j < layerElements ; j++){
             // key is total-i, so this will be the smallest key yet!

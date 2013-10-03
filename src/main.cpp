@@ -38,7 +38,7 @@ void testPerformance(){
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
   for(int size = 10; size<=10000000  ; size = size*10){
-    cout << size << endl;
+    //cout << size << endl;
     for(int i = 0; i<50; i++){
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
@@ -70,7 +70,7 @@ void testWorstPerformance(){
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
   for(int size = 10; size<=10000000  ; size = size*10){
-    cout << size << endl;
+    //cout << size << endl;
     for(int i = 0; i<50; i++){
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
@@ -166,8 +166,13 @@ void performSingleInsertBHeap(){
 
 void performLayerInsertBHeap(){
     ofstream file;
+    ofstream file2;
     string filename = "binary_layer_inserts.csv";
+    string fname2 = "binary_layer_deletes.csv";
+
     file.open(filename.c_str());
+    file2.open(fname2.c_str());
+
     TestPerformance* tPerf = new TestPerformance();
 
     int layers = 26;
@@ -186,9 +191,12 @@ void performLayerInsertBHeap(){
 }
 
 int main() {
+  cout << "Performing worst case performance test." << endl;
   testWorstPerformance();
-  //performLayerInsertBHeap();
-  //performSingleInsertBHeap();
+  cout << "Performing layered insertions for Binary Heap" << endl;
+  performLayerInsertBHeap();
+  cout << "Performing singular insertions" << endl;
+  performSingleInsertBHeap();
   //computeRandomGraphDecreaseRelation(5);
 
   //testNTagram();
