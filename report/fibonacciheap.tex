@@ -53,7 +53,7 @@ Lets suppose we start with $k$ trees in our doubly linked list of roots, and per
 
 The worst case for linking the heap would be $n$ elements in our doubly-linked list of roots, with none of these combined in a tree.
 \begin{itemize}
-\item{$t(H)$ is reduces by $k/2$, m($H$) is not changed as we mark no nodes}
+\item{$t(H)$ is reduces by $k/2$, $m(H)$ is not changed as we mark no nodes}
 \item{Worst case} $= O(n)$
 \end{itemize}
 
@@ -66,13 +66,13 @@ But $k - l\leq d_n + 1$ (Because we can have at most one tree of each rank)
 So, $\hat{c_i}\leq 3d_n + 3 = O(\log n)$.
 
 \subsection*{Decrease Key$(H, x, k_x)$}
-We decrease the key of the node $n$ to the new key $k$, and if the heap property becomes violated, the node is cut from its parent.
+We decrease the key of the node $x$ to the new key $k_x$, and if the heap property becomes violated, the node is cut from its parent.
 We also mark up the tree untill we hit a node or an unmarked node. For each cut we unmark a node when making the node a root.
 \begin{itemize}
 \item{$t(H)$ is increased by $k$, the number of cuts. $m(H)$ can at most be increased 1}
 \item{$t(D_i)-t(D_{i-1}) = 1 + k$, $m(D_i)-m(D_{i-1})\leq -k+1$}
 \item{Overall cost} = $c_i = 1 + k = O(k)$ each cut operation takes $O(1)$
-\item{Worst case} = $O(n)$, where we have $n$ number of nodes we need to make a new root.
+\item{Worst case} = $O(\log n)$, where we have $\log n$ number of nodes we need to cut.
 \end{itemize}
 
 \begin{align*}
@@ -91,7 +91,7 @@ We also mark up the tree untill we hit a node or an unmarked node. For each cut 
 We delete by first decreasing the key of $x$ to the lowest value of our heap and then \texttt{Delete-Min} to remove it.
 
 \begin{itemize}
-\item{Worst case} $= O(n) + O(n) = O(n)$, worst case of \texttt{Decrease-Key} + worst case of \texttt{Delete-Min}
+\item{Worst case} $= O(\log n) + O(n) = O(n)$, worst case of \texttt{Decrease-Key} + worst case of \texttt{Delete-Min}
 \end{itemize}
 
 \begin{align*}
@@ -104,15 +104,39 @@ We delete by first decreasing the key of $x$ to the lowest value of our heap and
 \section*{Worst Case Analysis - Binary Heap}
 \subsection*{Make-heap}
 
+
 \subsection*{Find-Min$(H)$}
+Because of the heap property, the minimum element will always be present at the root of the heap.
+
+\begin{itemize}
+\item{Worst case} = $O(1)$.
+\end{itemize}
 
 \subsection*{Insert$(H,x,k)$}
+The worst case complexity for inserts will be having to insert in the case of inserting the yet smallest element into the tree of height $h$ as this would make us bubble up the tree all the way into root this would give a running time of $O(h)$.
 
-\subsection*{Meld$(H_1, H_2)$}
+\begin{itemize}
+  \item{Worst case} = $O(\log n)$.
+\end{itemize}
 
+\subsection*{Delete-Min$(H)$}
+We start by deleting the minimum, we place the last element in the hole created at the root. This will leave the heap property possibly violated at the root level. So we bubble down until the violation is stopped.
+
+\begin{itemize}
+  \item{Worst case} = $O(\log n)$, the longest we have to bubble down to stop the violation.
+\end{itemize}
 \subsection*{Decrease Key$(H, x, k_x)$}
+Lowers the current value of the item $x$, to new priority value $k_x$. Now the heap property could possibly be violated for the parent and node $x$. So we need to bubble $x$ up untill the violation is stopped.
+
+\begin{itemize}
+  \item{Worst case} = $O(\log n$, the longest we have to bubble up to stop the violation.
+\end{itemize}
 
 \subsection*{Delete($H, x$)}
+First we use \texttt{DECREASE-KEY} to set the node $x$ to the lowest value, then we use \texttt{DELETE-MIN} to remove this node, because this is now the smallest.
+
+\begin{itemize}
+  \item{Worst case} = $O(\log n) + O(\log n) = O(\log n)$, the worst case for \texttt{DECREASE-KEY} + the worst case for \texttt{DELETE-MIN}.
 
 \section*{Experiments - Fibonacci Heap}
 \subsection*{Insert$(H,x,k)$}
@@ -181,6 +205,8 @@ Our experiment consists of a Binary Heap where $N$ random elements were inserted
 Observe that the graph shows the same inclination for the measured data and the $n\log n$ function, when we discard the measurements for 10 elements. The measured running time increases proportionally just as much as the $n\log n$ function, thereby a single \texttt{BINARY-HEAP-DECREASE-KEY} performs in $O(\log n)$ time.
 
 \subsection*{Delete Min$(H)$}
+
+It shows the same running time as insert on the graphs.
 
 \subsubsection*{Hypothesis}
 The \texttt{BINARY-HEAP-DELETE-MIN} method has a worst case running time of $O(\log n)$ where n is the current size of the heap.
