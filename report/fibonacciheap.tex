@@ -212,33 +212,35 @@ The measurement divided by the number of \texttt{FIBONACCI-HEAP-DECREASE-KEY} ca
 We can safely conclude that the cost of each \texttt{FIBONACCI-HEAP-DECREASE-KEY} call converges to a constant factor, after a number of calls to the method, though one could still take measurements to find after how many calls in succession \texttt{FIBONACCI-HEAP-DECREASE-KEY} comes close to constant running time.
 
 \subsection*{Delete-Min$(H)$}
-
 \subsubsection*{Hypothesis}
+The worst case running time for \texttt{FIBONACCI-HEAP-DELETE-MIN} is $O(n)$ and the amortized running time is $O(\log n)$. In this experiment, we start out with a heap of size $N$ and call \texttt{FIBONACCI-HEAP-DELETE-MIN} until the heap is empty. For this amount of delete-min operations, the total running time is expected to be $O(\log(N!))$.
+
+Due to the amortized running time, we expect $N$ \texttt{FIBONACCI-HEAP-DELETE-MIN} operations to perform much better than $G(N) =$ \[\sum^N_{n=1} n.\] $ = N*(N-1)/2$.
 
 \subsubsection*{Graphs}
 \begin{table}
   \begin{center}
     \begin{tabular}{l|r}
-      $N$ & expected running time(s) & measured running time(s) \\
+      $N$ & expected running time(s) & measured running time(s) & $G(N)$\\
       \hline
-      10       & \num{5.492E-7}     & \num{5.492E-8}\\
-      100      & \num{3.590E-6}     & \num{3.589E-8}\\
-      1000     & \num{3.244E-5}     & \num{3.245E-8}\\
-      10000    & \num{3.195E-4}     & \num{3.200E-8}\\
-      100000   & \num{0.0034}       & \num{3.434E-8}\\
-      1000000  & \num{0.0372}       & \num{3.718E-8}\\
-      10000000 & \num{0.3847}       & \num{3.847}
+      10       & \num{20}           & \num{1.981E-6} & \num{45}\\ 
+      100      & \num{522}          & \num{2.523E-5} & \num{4950}\\
+      1000     & \num{8504}         & \num{0.000254} & \num{499500}\\
+      10000    & \num{118261}       & \num{0.00383}  & \num{49995000}\\
+      100000   & \num{1516460}      & \num{0.04043}  & \num{5E+9}\\
+      1000000  & \num{18488855}     & \num{0.43195}  & \num{5E+11}\\
+      10000000 & \num{218107833}    & \num{3.71978}  & \num{5E+13}
     \end{tabular}
     \caption{Bounds and measured running time}
   \end{center}
 \end{table}
 \begin{figure}
-  \includegraphics{decrease_key_per_element.png}
-  \caption{Decrease Key per element}
+  \includegraphics{ghj}
+  \caption{ghj}
 \end{figure}
 
 \subsubsection*{Conclusion}
-
+The measured running times show that the running time increases at most at the same rate as the theoretical bound we expected and increases not at all like the worst-case bound for $N$ insertions. We can conclude that this implementation of \texttt{FIBONACCI-HEAP-DELETE-MIN} operates in the expected amortized bound of $O(\log n)$.
 
 \section*{Experiments - Binary Heap}
 \subsection*{Insert$(H,x,k)$}
@@ -372,6 +374,6 @@ In the table below, we present the measured running times, and the function $O(N
 Observe that the measurements for \texttt{BINARY-HEAP-DELETE-MIN} increase at most as fast as the theoretical bound, but also are very close to the measured running times of \texttt{BINARY-HEAP-INSERT}. When we divide the running time of \texttt{BINARY-HEAP-INSERT} with the runnning time of \texttt{BINARY-HEAP-DELETE-MIN} for every given size, we find that the average factor is 0.97 within a small margin of error. We can conclude that the running time for deletion increases at the same rate as those for insertion, which gives us that our implementation of \texttt{BINARY-HEAP-DELETE-MIN} performs within $O(\log n)$ bounds, just like insertion.
 
 \section*{Experiments - Comparison}
-
+Comparing the operations for Binary-Heap and Fibonacci heap shows that insertions are always faster in fibonacci heaps, as these can be performed in constant time opposed to the logarithmic worst time performance for binary heaps. Also when purely calling decrease-key many times in a row, a fibonacci heap performs better and better compared to a binary heap, the bigger the heap is. Only the delete-min methods perform compareable with about a factor of one, until heap-sizes of 10.000.000 are used, where fibonacci heaps starts to perform slightly faster.
 \end{document}
 
