@@ -101,8 +101,13 @@ void testNTagram(){
   string filename = "k_graph.csv";
   file.open(filename.c_str());
 
+  int minSize = 10;
+  int maxSize = 12000;
+  int step = 2;
+
+
   TestPerformance* tPerf = new TestPerformance();
-  for( int size = 10; size < 100000; size = size*10){
+  for( int size = minSize; size < maxSize; size = size*step){
     for(int i = 0; i < 10; i++)
       tPerf->testNTagramDijkstra(size,file);
     file.flush();
@@ -236,6 +241,40 @@ void performLayerInsertBHeap(){
     delete tPerf;
 }
 
+void performSingleFileGraph(){
+    ofstream file;
+
+    string filename = "single_file_graph_dijkstra.csv";
+
+    file.open(filename.c_str());
+
+    int minSize = 10;
+    int maxSize = 12000;
+    int step = 2;
+
+    int average = 10;
+
+    TestPerformance* tPerf = new TestPerformance();
+
+    for (int size = minSize ; size < maxSize ; size*=step){
+        double* result = new double[3];
+
+        for( int i = 0; i < average; i++){
+            double* temp = tPerf->testDijkstraLukas(size);
+            result[0]+=temp[0];
+            result[1]+=temp[1];
+            result[2]+=temp[2];
+            delete [] temp;
+        }
+        result[0]/=average;
+        result[1]/=average;
+        result[2]/=average;
+
+        file << size << ", " << result[0] << ", " << result[1] << ", " << result[2] << endl;
+        file.flush();
+    }
+}
+
 int main() {
     // cout << "Performing worst case performance test." << endl;
     // testWorstPerformance();
@@ -244,11 +283,14 @@ int main() {
     // cout << "Performing singular insertions" << endl;
     // performSingleInsertBHeap();
     //computeRandomGraphDecreaseRelation(10);
-    cout << "Running dijkstra on random graphs." << endl;
-    performRandomGraphDijkstra();
-    cout << "Running dijkstra on k-graphs." << endl;
-    testNTagram();
-    //testPerformance();
-    //tPerf->testDijkstra(makeNtagramGraph(20));
+    //cout << "Running dijkstra on random graphs." << endl;
+    //performRandomGraphDijkstra();
+    //cout << "Running dijkstra on k-graphs." << endl;
+    //testNTagram();
+
+    cout << "Running dijkstra on single depth graphs" << endl;
+    performSingleFileGraph();
+
+
 
 }
