@@ -32,6 +32,8 @@ class TestPerformance {
   double testRandomGraphDecreaseKey(int size, int density, int average, ofstream & file);
   double stopClock();
 
+  void performRandomGraph(int size, int density,int average, ofstream & binary, ofstream & fib , ofstream & decrease);
+
   double* testDijkstraBudde(int size);
   double* testDijkstraLukas(int size);
   double* testDijkstraNtagram(int size);

@@ -98,7 +98,7 @@ void testFib() {
 
 void testNTagram(){
   ofstream file;
-  string filename = "ntagram";
+  string filename = "k_graph.csv";
   file.open(filename.c_str());
 
   TestPerformance* tPerf = new TestPerformance();
@@ -107,8 +107,57 @@ void testNTagram(){
       tPerf->testNTagramDijkstra(size,file);
     file.flush();
   }
-
   delete tPerf;
+}
+
+void performRandomGraphDijkstra(){
+    ofstream ffile,bfile,dfile;
+    string bfilename = "random_graph_binary.csv";
+    string ffilename = "random_graph_fibonacci.csv";
+    string decrease = "random_graph_decrease_key.csv";
+    bfile.open(bfilename.c_str());
+    ffile.open(ffilename.c_str());
+    dfile.open(decrease.c_str());
+
+    int minSize = 10;
+    int maxSize = 12000;
+    int step = 2;
+
+    bfile << " , ";
+    ffile << " , ";
+    dfile << " , ";
+
+    for( int i = minSize; i <=maxSize ; i = i*step){
+      bfile << i << " , ";
+      ffile << i << " , ";
+      dfile << i << " , ";
+    }
+
+    bfile << endl;
+    ffile << endl;
+    dfile << endl;
+
+    TestPerformance* tPerf = new TestPerformance();
+    for( double density = 0.001; density < 1.1 ; density += 0.05){
+        bfile << density << " , ";
+        ffile << density << " , ";
+        dfile << density << " , ";
+        for( int size = minSize; size <= maxSize; size = size*step){
+                cout << "Density: " << density << "  Size: " << size << endl;
+                tPerf->performRandomGraph(size, density*size, 20, bfile, ffile, dfile);
+        }
+        bfile << endl;
+        ffile << endl;
+        dfile << endl;
+        bfile.flush();
+        ffile.flush();
+        dfile.flush();
+    }
+
+    bfile.close();
+    ffile.close();
+    dfile.close();
+    delete tPerf;
 }
 
 void computeRandomGraphDecreaseRelation(int average){
@@ -188,16 +237,18 @@ void performLayerInsertBHeap(){
 }
 
 int main() {
-  cout << "Performing worst case performance test." << endl;
-  testWorstPerformance();
-  cout << "Performing layered insertions for Binary Heap" << endl;
-  performLayerInsertBHeap();
-  cout << "Performing singular insertions" << endl;
-  performSingleInsertBHeap();
-  //computeRandomGraphDecreaseRelation(5);
-
-  //testNTagram();
-  //testPerformance();
-  //tPerf->testDijkstra(makeNtagramGraph(20));
+    // cout << "Performing worst case performance test." << endl;
+    // testWorstPerformance();
+    // cout << "Performing layered insertions for Binary Heap" << endl;
+    // performLayerInsertBHeap();
+    // cout << "Performing singular insertions" << endl;
+    // performSingleInsertBHeap();
+    //computeRandomGraphDecreaseRelation(10);
+    cout << "Running dijkstra on random graphs." << endl;
+    performRandomGraphDijkstra();
+    cout << "Running dijkstra on k-graphs." << endl;
+    testNTagram();
+    //testPerformance();
+    //tPerf->testDijkstra(makeNtagramGraph(20));
 
 }

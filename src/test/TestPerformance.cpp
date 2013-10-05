@@ -104,21 +104,51 @@ void TestPerformance::testNTagramDijkstra(int size, ofstream & file){
     delete gs;
 }
 
+void TestPerformance::performRandomGraph(int size, int density,int average, ofstream & binary, ofstream & fib , ofstream & decrease){
+    double* sum = new double[3];
+
+    for ( int i = 0; i < 3 ; i++){
+        sum[i] = 0.0;
+    }
+
+    for(int i = 0; i < average ; i++){
+        GraphSource* gs = makeRandomGraph(size,density);
+        double* result = testDijkstra(gs);
+        sum[0] += result[0]; // fib
+        sum[1] += result[1]; // bin
+        sum[2] += result[2]; // dec
+        delete gs->graph;
+        delete gs;
+        delete [] result;
+    }
+
+    sum[0] /= average;
+    sum[1] /= average;
+    sum[2] /= average;
+
+    binary << sum[1] << ", ";
+    fib << sum[0] << ", ";
+    decrease << sum[2] << ", ";
+
+    delete [] sum;
+}
+
 double* TestPerformance::testDijkstra(GraphSource* gs){
-  double* result = new double[2];
+  double* result = new double[3];
   Heap<Vertex*>* fheap = new FibonacciHeap<Vertex*>();
 
   startClock();
   gs->graph->dijkstra(gs->source,fheap);
   result[0] = stopClock();
-
-  cout << "Fibonacci - decrease key calls: " << gs->graph->countDecreaseKey << " Time: " << result[0] << endl;
+  result[2] = gs->graph->countDecreaseKey;
 
   Heap<Vertex*>* bheap = new BinaryHeap<Vertex*>();
   startClock();
   gs->graph->dijkstra(gs->source, bheap);
   result[1] = stopClock();
-  cout << " Binary - decrease key calls: " << gs->graph->countDecreaseKey <<  " Time: " << result[1] <<endl;
+  result[2] += gs->graph->countDecreaseKey;
+  result[2] /= 2;
+
   delete fheap;
   delete bheap;
   return result;

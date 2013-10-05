@@ -32,7 +32,7 @@ public:
 
   virtual ~FibonacciHeap() {
     if(minRoot){
-      cout << "Leftovers in FHeap!" <<  "  size: "<< size << endl;
+      //cout << "Leftovers in FHeap!" <<  "  size: "<< size << endl;
 
       while(findMin()){
         FNode<T>* n = deleteMin();
