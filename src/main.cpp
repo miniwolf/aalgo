@@ -285,11 +285,11 @@ int main() {
     //computeRandomGraphDecreaseRelation(10);
     //cout << "Running dijkstra on random graphs." << endl;
     //performRandomGraphDijkstra();
-    //cout << "Running dijkstra on k-graphs." << endl;
-    //testNTagram();
+    cout << "Running dijkstra on k-graphs." << endl;
+    testNTagram();
 
-    cout << "Running dijkstra on single depth graphs" << endl;
-    performSingleFileGraph();
+   // cout << "Running dijkstra on single depth graphs" << endl;
+    //performSingleFileGraph();
 
 
 
