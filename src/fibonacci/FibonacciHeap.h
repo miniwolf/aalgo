@@ -94,7 +94,7 @@ public:
       return result;
     }
     // 2. Build proper tree
-    int i = ceil(log2(size)*4);
+    int i = ceil(log2(size)*2);
 
     FNode<T>** rank = new FNode<T>*[i];
     for(int slap = 0; slap < i ; slap++){

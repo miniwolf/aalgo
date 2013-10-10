@@ -165,6 +165,56 @@ void performRandomGraphDijkstra(){
     delete tPerf;
 }
 
+void performRandomGraphDijkstra2(){
+    ofstream ffile,bfile,dfile;
+    string bfilename = "random_graph_binary2.csv";
+    string ffilename = "random_graph_fibonacci2.csv";
+    string decrease = "random_graph_decrease_key2.csv";
+    bfile.open(bfilename.c_str());
+    ffile.open(ffilename.c_str());
+    dfile.open(decrease.c_str());
+
+    int minSize = 10;
+    int maxSize = 12000;
+    int step = 2;
+
+    bfile << " , ";
+    ffile << " , ";
+    dfile << " , ";
+
+    for( int i = minSize; i <=maxSize ; i = i*step){
+      bfile << i << " , ";
+      ffile << i << " , ";
+      dfile << i << " , ";
+    }
+
+    bfile << endl;
+    ffile << endl;
+    dfile << endl;
+
+    TestPerformance* tPerf = new TestPerformance();
+    for( double density = 0.0001; density < 0.01 ; density += 0.001){
+        bfile << density << " , ";
+        ffile << density << " , ";
+        dfile << density << " , ";
+        for( int size = minSize; size <= maxSize; size = size*step){
+                cout << "Density: " << density << "  Size: " << size << endl;
+                tPerf->performRandomGraph(size, density*size, 20, bfile, ffile, dfile);
+        }
+        bfile << endl;
+        ffile << endl;
+        dfile << endl;
+        bfile.flush();
+        ffile.flush();
+        dfile.flush();
+    }
+
+    bfile.close();
+    ffile.close();
+    dfile.close();
+    delete tPerf;
+}
+
 void computeRandomGraphDecreaseRelation(int average){
     ofstream file;
     string filename = "decrease_relation.csv";
@@ -276,21 +326,17 @@ void performSingleFileGraph(){
 }
 
 int main() {
-    // cout << "Performing worst case performance test." << endl;
-    // testWorstPerformance();
-    // cout << "Performing layered insertions for Binary Heap" << endl;
-    // performLayerInsertBHeap();
-    // cout << "Performing singular insertions" << endl;
-    // performSingleInsertBHeap();
-    //computeRandomGraphDecreaseRelation(10);
-    //cout << "Running dijkstra on random graphs." << endl;
-    //performRandomGraphDijkstra();
+    cout << "Performing worst case performance test." << endl;
+    testWorstPerformance();
+    cout << "Performing layered insertions for Binary Heap" << endl;
+    performLayerInsertBHeap();
+    cout << "Performing singular insertions" << endl;
+    performSingleInsertBHeap();
+    computeRandomGraphDecreaseRelation(10);
+    cout << "Running dijkstra on random graphs." << endl;
+    performRandomGraphDijkstra();
     cout << "Running dijkstra on k-graphs." << endl;
     testNTagram();
-
-   // cout << "Running dijkstra on single depth graphs" << endl;
-    //performSingleFileGraph();
-
-
-
+    cout << "Running dijkstra on single depth graphs" << endl;
+    performSingleFileGraph();
 }
