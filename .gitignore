@@ -24,3 +24,12 @@ src/.project
 src/test_b_file
 src/test_f_file
 
+aflevere/
+q
+
+*.aux
+*.log
+src/OLD/*
+src/*.csv
+src/*.gz
+
