@@ -104,7 +104,7 @@ void vEB::insert(int x){
         if(x < min){
             int temp = x;
             x = min;
-            min = x;
+            min = temp;
         }
         if (u > 2){
             if ( cluster[high(x)]->min == NIL ){
