@@ -75,7 +75,7 @@ int vEB::predecessor(int x){
             int offset = cluster[high(x)]->predecessor(low(x));
             return index(high(x),offset);
         } else {
-            int predCluster = summary->predecessor((high(x)));
+            int predCluster = summary->predecessor(high(x));
             if ( predCluster == NIL ){
                 if ( min != NIL and x > min){
                     return min;
@@ -88,4 +88,9 @@ int vEB::predecessor(int x){
             }
         }
     }
+}
+
+void vEB::emptyInsert(int x){
+    min = x;
+    max = x;
 }
