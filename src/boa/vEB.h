@@ -12,7 +12,8 @@ public:
     int min = -1;
     int max = -1;
     int u = 0;
-    int lsqr = 0;//TODO initialise in constructor
+    int lsqr = 0; //lower square root
+    int usqr = 0; //upper square root
 
     vEB*[] cluster;
     vEB* summary;
