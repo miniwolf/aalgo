@@ -94,3 +94,28 @@ void vEB::emptyInsert(int x){
     min = x;
     max = x;
 }
+
+void vEB::insert(int x){
+    assert(x > NIL);
+    assert(x < u);
+    if (min == NIL){
+        emptyInsert(x);
+    } else {
+        if(x < min){
+            int temp = x;
+            x = min;
+            min = x;
+        }
+        if (u > 2){
+            if ( cluster[high(x)]->min == NIL ){
+                summary->insert(high(x));
+                cluster[high(x)]->insert(low(x));
+            } else {
+                cluster[high(x)]->insert(low(x));
+            }
+        }
+        if (x > max){
+            max = x;
+        }
+    }
+}
