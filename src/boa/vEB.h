@@ -9,13 +9,15 @@
 class vEB{
 // we use -1 as NIL
 public:
+    int NIL = -1;
     int min = -1;
     int max = -1;
     int u = 0;
     int lsqr = 0; //lower square root
     int usqr = 0; //upper square root
 
-    vEB*[] cluster;
+
+    vEB** cluster;
     vEB* summary;
 
     vEB(int universe);
@@ -28,7 +30,7 @@ public:
     }
 
     double upperSquareRoot(int v){
-        return pow(2.0,ceil(log2(v)/2))
+        return pow(2.0,ceil(log2(v)/2));
     }
 
     int high(int x){
@@ -52,7 +54,7 @@ public:
     }
 
     bool member(int x);
-
-}
+    int successor(int x);
+};
 
 #endif
