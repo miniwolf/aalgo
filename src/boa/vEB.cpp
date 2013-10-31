@@ -156,3 +156,13 @@ void vEB::remove(int x){
         }
     }
 }
+
+int vEB::deleteMin(){
+    if ( min != NIL){
+        int temp = min;
+        remove(min);
+        return temp;
+    } else {
+        return NIL;
+    }
+}

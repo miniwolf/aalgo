@@ -59,6 +59,7 @@ public:
     void emptyInsert(int x);
     void insert(int x);
     void remove(int x);
+    int deleteMin();
 };
 
 #endif
