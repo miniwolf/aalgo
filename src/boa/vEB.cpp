@@ -63,7 +63,7 @@ int vEB::successor(int x){
 int vEB::predecessor(int x){
     if( u == 2){
         if( x == 1 and min == 0){
-            return min;
+            return 0;
         } else {
             return NIL;
         }
