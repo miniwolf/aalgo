@@ -109,7 +109,7 @@ void vEB::insert(int x){
         if (u > 2){
             if ( cluster[high(x)]->min == NIL ){
                 summary->insert(high(x));
-                cluster[high(x)]->insert(low(x));
+                cluster[high(x)]->emptyInsert(low(x));
             } else {
                 cluster[high(x)]->insert(low(x));
             }
