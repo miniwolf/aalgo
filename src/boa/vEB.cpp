@@ -14,3 +14,13 @@ vEB::vEB(int universe){
         cluster[i] = new vEB(lsqr);
     }
 }
+
+vEB::member(int x){
+    if (x == min or x == max){
+        return true;
+    } else if( u == 2 ){
+        return false;
+    } else {
+        return cluster[high(x)]->member(low(x));
+    }
+}

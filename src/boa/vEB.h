@@ -51,6 +51,8 @@ public:
         return max;
     }
 
+    bool member(int x);
+
 }
 
 #endif
