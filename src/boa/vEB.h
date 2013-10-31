@@ -26,6 +26,10 @@ public:
         return pow(2.0,floor(log2(v)/2));
     }
 
+    double upperSquareRoot(int v){
+        return pow(2.0,ceil(log2(v)/2))
+    }
+
     int high(int x){
         return floor(x / lsqr);
     }
