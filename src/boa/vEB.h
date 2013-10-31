@@ -58,6 +58,7 @@ public:
     int predecessor(int x);
     void emptyInsert(int x);
     void insert(int x);
+    void remove(int x);
 };
 
 #endif
