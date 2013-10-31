@@ -119,3 +119,40 @@ void vEB::insert(int x){
         }
     }
 }
+
+void vEB::remove(int x){
+    if(min == max){
+        min = NIL;
+        max = NIL;
+    } else if(u == 2){
+        if (x == 0){
+            min = 1;
+        } else {
+            min = 0;
+        }
+        max = min;
+    } else {
+        if (x == min){
+            // summary->min is the index of the leftmost non-emtpy cluster.
+            int firstCluster = summary->min;
+            x = index(firstCluster, cluster[firstCluster]->min);
+            min = x;
+        }
+        cluster[high(x)]->remove(low(x));
+        if ( cluster[high(x)]->min == NIL){
+            summary->remove(high(x));
+            if ( x == max ){
+                int summaryMax = summary->max;
+                // is the summary empty -> all clusters are empty.
+                if ( summaryMax == NIL) {
+                    max = min;
+                } else {
+                    // highest value of the rightmost non empty cluster.
+                    max = index(summaryMax, cluster[summaryMax]->max);
+                }
+            }
+        } else if (x == max){
+            max = index( high(x), cluster[high(x)]->max);
+        }
+    }
+}
