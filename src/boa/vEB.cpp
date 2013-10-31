@@ -46,7 +46,7 @@ int vEB::successor(int x){
     } else {
         int maxLow = cluster[high(x)]->max;
         if ( maxLow != NIL and low(x) < maxLow){
-            int offset = cluster[high(x)]->low(x);
+            int offset = cluster[high(x)]->successor(low(x));
             return index(high(x),offset);
         } else {
             int succCluster = summary->successor(high(x));
