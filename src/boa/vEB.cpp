@@ -59,3 +59,33 @@ int vEB::successor(int x){
         }
     }
 }
+
+int vEB::predecessor(int x){
+    if( u == 2){
+        if( x == 1 and min == 0){
+            return min;
+        } else {
+            return NIL;
+        }
+    } else if ( max != NIL and x > max){
+        return max;
+    } else {
+        int minLow = cluster[high(x)]->min;
+        if ( minLow != NIL and low(x) > minLow ){
+            int offset = cluster[high(x)]->predecessor(low(x));
+            return index(high(x),offset);
+        } else {
+            int predCluster = summary->predecessor((high(x)));
+            if ( predCluster == NIL ){
+                if ( min != NIL and x > min){
+                    return min;
+                } else {
+                    return NIL;
+                }
+            } else {
+                int offset  = cluster[predCluster]->max;
+                return index(predCluster,offset);
+            }
+        }
+    }
+}

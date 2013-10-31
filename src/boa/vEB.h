@@ -55,6 +55,7 @@ public:
 
     bool member(int x);
     int successor(int x);
+    int predecessor(int x);
 };
 
 #endif
