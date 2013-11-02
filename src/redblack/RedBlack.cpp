@@ -19,3 +19,21 @@ RedBlack::~RedBlack()
 {
     //dtor
 }
+
+void RedBlack::leftRotate(RBNode* x){
+    RBNode* y = x->right;
+    x->right = y->left;
+    if (y->left != NIL){
+        y->left->p = x;
+    }
+    y->p = x->p;
+    if (x->p == NIL){
+        root = y;
+    } else if(x == x->p->left){
+        x->p->right = y;
+    } else {
+        x->p->right = y;
+    }
+    y->left = x;
+    x->p = y;
+}

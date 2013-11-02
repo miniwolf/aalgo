@@ -18,6 +18,7 @@ class RedBlack
         virtual ~RedBlack();
     protected:
     private:
+        void leftRotate(RBNode* x);
 };
 
 #endif // REDBLACK_H
