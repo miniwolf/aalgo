@@ -16,6 +16,9 @@ class RedBlack
         const bool BLACK = true;
         RedBlack();
         virtual ~RedBlack();
+        int treeSearch(RBNode* x, int k);
+        RBNode* minimum(RBNode* x);
+        RBNode* maximum(RBNode* x);
     protected:
     private:
         void leftRotate(RBNode* x);

@@ -20,6 +20,31 @@ RedBlack::~RedBlack()
     //dtor
 }
 
+int RedBlack::treeSearch(RBNode* x, int k){
+    while (x != NIL and k != x->key){
+        if( k < x->key ) {
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    return x;
+}
+
+RBNode* RedBlack::minimum(RBNode* x){
+    while ( x->left != nil){
+        x = x->left;
+    }
+    return x;
+}
+
+RBNode* RedBlack::maximum(RBNode* x){
+    while ( x->right != nil){
+        x = x->right;
+    }
+    return x;
+}
+
 void RedBlack::leftRotate(RBNode* x){
     RBNode* y = x->right;
     x->right = y->left;
