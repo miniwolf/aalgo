@@ -13,11 +13,12 @@ vEB::vEB(int universe){
     u = universe;
     lsqr = lowerSquareRoot(universe);
     usqr = upperSquareRoot(universe);
-
-    summary = new vEB(usqr);
-    cluster = new vEB*[usqr];
-    for ( int i = 0; i < usqr ; i++){
-        cluster[i] = new vEB(lsqr);
+    if(universe > 2){
+        summary = new vEB(usqr);
+        cluster = new vEB*[usqr];
+        for ( int i = 0; i < usqr ; i++){
+            cluster[i] = new vEB(lsqr);
+        }
     }
 
 }
