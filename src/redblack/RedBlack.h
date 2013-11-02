@@ -21,6 +21,10 @@ class RedBlack
         void leftRotate(RBNode* x);
         void rightRotate(RBNode* x);
         void insertFixup(RBNode* z);
+        void insertNode(int z); // CLRS insert page 315
+        void transplant(RBNode* u, RBNode* v);
+        void remove(RBNode z*);
+        void deleteFixub(RBNode* x);
     };
 
 #endif // REDBLACK_H
