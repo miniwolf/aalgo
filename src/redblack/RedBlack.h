@@ -20,6 +20,7 @@ class RedBlack
     private:
         void leftRotate(RBNode* x);
         void rightRotate(RBNode* x);
+        void insertFixup(RBNode* z);
     };
 
 #endif // REDBLACK_H
