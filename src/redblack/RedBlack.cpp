@@ -20,6 +20,13 @@ RedBlack::~RedBlack()
     //dtor
 }
 
+RBNode* RedBlack::insert(int key){
+    RBNode* n = new RBNode();
+    n->key = key;
+    insertNode(n);
+    return n;
+}
+
 int RedBlack::treeSearch(RBNode* x, int k){
     while (x != NIL and k != x->key){
         if( k < x->key ) {
