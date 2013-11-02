@@ -1,8 +1,13 @@
 #include "RBNode.h"
 
+
 RBNode::RBNode()
 {
-    //ctor
+    color = true;
+    key = 0;
+    left = NULL;
+    right = NULL;
+    p = NULL;
 }
 
 RBNode::~RBNode()

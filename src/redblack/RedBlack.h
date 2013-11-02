@@ -10,7 +10,10 @@
 class RedBlack
 {
     public:
-
+        RBNode* NIL;
+        RBNode* root = NULL;
+        const bool RED = false;
+        const bool BLACK = true;
         RedBlack();
         virtual ~RedBlack();
     protected:
