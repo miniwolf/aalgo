@@ -19,6 +19,7 @@ class RedBlack
     protected:
     private:
         void leftRotate(RBNode* x);
-};
+        void rightRotate(RBNode* x);
+    };
 
 #endif // REDBLACK_H

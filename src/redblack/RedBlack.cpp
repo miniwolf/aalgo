@@ -37,3 +37,21 @@ void RedBlack::leftRotate(RBNode* x){
     y->left = x;
     x->p = y;
 }
+
+void RedBlack::rightRotate(RBNode* x){
+    RBNode* y = x->left;
+    x->left = y->right;
+    if (y->right != NIL){
+        y->right->p = x;
+    }
+    y->p = x->p;
+    if ( x->p == NIL){
+        root = y;
+    } else if (x == x->p->right){
+        x->p->right = y;
+    } else {
+        x->p->left = y;
+    }
+    y->right = x;
+    x->p = y;
+}
