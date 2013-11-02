@@ -19,6 +19,8 @@ class RedBlack
         int treeSearch(RBNode* x, int k);
         RBNode* minimum(RBNode* x);
         RBNode* maximum(RBNode* x);
+        RBNode* successor(RBNode* x);
+        RBNode* predecessor(RBNode* x);
     protected:
     private:
         void leftRotate(RBNode* x);

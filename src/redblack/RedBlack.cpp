@@ -45,6 +45,30 @@ RBNode* RedBlack::maximum(RBNode* x){
     return x;
 }
 
+RBNode* RedBlack::successor(RBNode* x){
+    if (x->right != NIL){
+        return minimum(x->right);
+    }
+    RBNode* y = x->p;
+    while ( y != NIL and x == y->right){
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
+
+RBNode* RedBlack::predecessor(RBNode* x){
+    if (x->left != NIL){
+        return maximum(x->left);
+    }
+    RBNode* y = x->p;
+    while ( y != NIL and x == y->left){
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
+
 void RedBlack::leftRotate(RBNode* x){
     RBNode* y = x->right;
     x->right = y->left;
