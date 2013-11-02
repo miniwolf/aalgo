@@ -16,7 +16,7 @@ class RedBlack
         const bool BLACK = true;
         RedBlack();
         virtual ~RedBlack();
-        int treeSearch(RBNode* x, int k);
+        RBNode* treeSearch(RBNode* x, int k);
         RBNode* minimum(RBNode* x);
         RBNode* maximum(RBNode* x);
         RBNode* successor(RBNode* x);
@@ -29,8 +29,8 @@ class RedBlack
         void insertFixup(RBNode* z);
         void insertNode(RBNode* z); // CLRS insert page 315
         void transplant(RBNode* u, RBNode* v);
-        void remove(RBNode z*);
-        void deleteFixub(RBNode* x);
+        void deleteFixup(RBNode* x);
+        void remove(RBNode* z);
     };
 
 #endif // REDBLACK_H

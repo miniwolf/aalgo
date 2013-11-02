@@ -27,7 +27,7 @@ RBNode* RedBlack::insert(int key){
     return n;
 }
 
-int RedBlack::treeSearch(RBNode* x, int k){
+RBNode* RedBlack::treeSearch(RBNode* x, int k){
     while (x != NIL and k != x->key){
         if( k < x->key ) {
             x = x->left;
@@ -39,14 +39,14 @@ int RedBlack::treeSearch(RBNode* x, int k){
 }
 
 RBNode* RedBlack::minimum(RBNode* x){
-    while ( x->left != nil){
+    while ( x->left != NIL){
         x = x->left;
     }
     return x;
 }
 
 RBNode* RedBlack::maximum(RBNode* x){
-    while ( x->right != nil){
+    while ( x->right != NIL){
         x = x->right;
     }
     return x;
@@ -164,7 +164,7 @@ void RedBlack::insertNode(RBNode* z){
     }
     z->p = y;
     if (y == NIL){
-        root = z
+        root = z;
     } else if (x->key < y->key){
         y->left = z;
     } else {
@@ -187,11 +187,12 @@ void RedBlack::transplant(RBNode* u, RBNode* v){
     v->p = u->p;
 }
 
-void RedBlack::remove(RBNode z*){
+void RedBlack::remove(RBNode* z){
+    RBNode* x = NIL;
     RBNode* y = z;
     bool yOriginalColor = y->color;
     if(z->left == NIL){
-        RBNode* x = z->right;
+        x = z->right;
         transplant(z,z->right);
     } else if(z->right == NIL){
         x = z->left;
@@ -217,7 +218,7 @@ void RedBlack::remove(RBNode z*){
     }
 }
 
-void RedBlack::deleteFixub(RBNode* x){
+void RedBlack::deleteFixup(RBNode* x){
     while( x != root and x->color == BLACK){
         if (x == x->p->left){
             RBNode* w = x->p->right;
