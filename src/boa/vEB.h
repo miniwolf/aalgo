@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <cmath>
+#include <bitset>
+
+#define CUTOFF 8
+using namespace std;
 
 class vEB{
 // we use -1 as NIL
@@ -12,10 +16,13 @@ public:
     int NIL = -1;
     int min = -1;
     int max = -1;
-    int u = 0;
+    int u = 0; // universe size
     int lsqr = 0; //lower square root
     int usqr = 0; //upper square root
 
+    bool useBitset = false;
+
+    bitset<CUTOFF>* bits = new bitset<CUTOFF>();
 
     vEB** cluster;
     vEB* summary;
