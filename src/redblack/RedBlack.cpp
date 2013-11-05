@@ -64,6 +64,42 @@ RBNode* RedBlack::successor(RBNode* x){
     return y;
 }
 
+RBNode* RedBlack::successor(int x){
+    RBNode* current = root;
+    RBNode* succ = NIL;
+
+    while (current != NIL){
+        if ( x == current->key){
+            return successor(current);
+        }
+        if ( x < current->key){
+            succ = current;
+            current = current->left;
+        } else if ( x > current->key){
+            current = current->right;
+        }
+    }
+    return succ;
+}
+
+RBNode* RedBlack::predecessor(int x){
+    RBNode* current = root;
+    RBNode* pre = NIL;
+
+    while (current != NIL){
+        if ( x == current->key){
+            return predecessor(current);
+        }
+        if ( x < current->key){
+            current = current->left;
+        } else if ( x > current->key){
+            pre = current;
+            current = current->right;
+        }
+    }
+    return pre;
+}
+
 RBNode* RedBlack::predecessor(RBNode* x){
     if (x->left != NIL){
         return maximum(x->left);

@@ -20,7 +20,9 @@ class RedBlack
         RBNode* minimum(RBNode* x);
         RBNode* maximum(RBNode* x);
         RBNode* successor(RBNode* x);
+        RBNode* successor(int x);
         RBNode* predecessor(RBNode* x);
+        RBNode* predecessor(int x)
         RBNode* insert(int key);
     protected:
     private:
