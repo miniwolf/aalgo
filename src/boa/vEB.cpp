@@ -239,3 +239,9 @@ int vEB::deleteMin(){
         return NIL;
     }
 }
+
+void vEB::decreaseKey(int x, int target){
+    assert(member(x));
+    remove(x);
+    insert(target);
+}

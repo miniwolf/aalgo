@@ -67,6 +67,7 @@ public:
     void insert(int x);
     void remove(int x);
     int deleteMin();
+    void decreaseKey(int x, int target);
 };
 
 #endif
