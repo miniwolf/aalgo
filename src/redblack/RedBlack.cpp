@@ -1,15 +1,15 @@
-#include "RedBlack.h"
-
 #include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "RedBlack.h"
+
 using namespace std;
 
 RedBlack::RedBlack()
 {
-    // CĹRS Page 309
+    // CLRS Page 309
     NIL = new RBNode();
     NIL->color = BLACK;
     root = NIL;
@@ -17,7 +17,9 @@ RedBlack::RedBlack()
 
 RedBlack::~RedBlack()
 {
-    //dtor
+    NIL->key = -1;
+    delete root;
+    delete NIL;
 }
 
 RBNode* RedBlack::insert(int key){

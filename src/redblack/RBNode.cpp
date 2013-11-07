@@ -1,6 +1,5 @@
 #include "RBNode.h"
 
-
 RBNode::RBNode()
 {
     color = true;
@@ -12,5 +11,8 @@ RBNode::RBNode()
 
 RBNode::~RBNode()
 {
-    //dtor
+    if ( left && left->key != -1 )
+        delete left;
+    if ( right && right->key != -1 )
+        delete right;
 }

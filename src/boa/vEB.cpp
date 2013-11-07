@@ -7,6 +7,17 @@
 #define CUTOFF 8
 using namespace std;
 
+vEB::~vEB() {
+    delete bits;
+    if ( !useBitset ) {
+        for ( int i = 0; i < usqr; i++ ) {
+            delete cluster[i];
+        }
+        delete[] cluster;
+        delete summary;
+    }
+}
+
 /**
  * This implementation currently uses -1 as NIL, until we switch to an item-based
  * implementation, where items contain a key and a payload.

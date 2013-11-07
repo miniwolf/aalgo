@@ -22,4 +22,4 @@ class RBNode
     private:
 };
 
-#endif // RBNODE_H
+#endif

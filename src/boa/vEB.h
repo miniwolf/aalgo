@@ -28,6 +28,7 @@ public:
     vEB* summary;
 
     vEB(int universe);
+    virtual ~vEB();
 
     // page 546 CLRS
 
