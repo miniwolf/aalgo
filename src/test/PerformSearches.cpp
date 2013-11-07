@@ -1,15 +1,11 @@
 #include "PerformSearches.h"
-#include "../redblack/RBTree.h"
+#include "../redblack/RedBlack.h"
 #include "../boa/vEB.h"
 #include "../timespec/timespec.h"
 
-PerformSearches::PerformSearches(){
-    //ctor
-}
+PerformSearches::PerformSearches(){}
 
-PerformSearches::~PerformSearches(){
-    //dtor
-}
+PerformSearches::~PerformSearches(){}
 
 void PerformSearches::shuffle(int* array, int size) {
     srand(time(NULL));
@@ -28,6 +24,46 @@ int* PerformSearches::makeSet(int size) {
         a[i] = i;
     }
     return a;
+}
+
+
+
+double* PerformSearches::performDeletes(int universe) {
+    // insert
+    RedBlack* rbInOrder = new RedBlack();
+    vEB* vbInOrder = new vEB(universe);
+
+    int* ordered  = makeSet(universe);
+    RBNode** rbInserted = new RBNode*[universe];
+
+    double* times = new double[2];
+
+    for ( int i = 0; i < universe; i++ ) {
+        rbInserted[i] = rbInOrder->insert(ordered[i]);
+        vbInOrder->insert(ordered[i]);
+    }
+
+    shuffle(ordered,universe);
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        rbInOrder->remove(rbInserted[i]);
+    }
+    times[0] = stopClock();
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        vbInOrder->remove(ordered[i]);
+    }
+    times[1] = stopClock();
+
+    delete rbInOrder;
+    delete vbInOrder;
+    delete ordered;
+
+    delete[] rbInserted;
+
+    return times;
 }
 
 double* PerformSearches::performInserts(int universe) {

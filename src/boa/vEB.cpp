@@ -27,7 +27,6 @@ vEB::vEB(int universe){
             cluster[i] = new vEB(lsqr);
         }
     } else {
-        cout << "using bits" << endl;
         bits->reset();
         useBitset = true;
     }

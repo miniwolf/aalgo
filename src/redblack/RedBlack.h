@@ -22,8 +22,9 @@ class RedBlack
         RBNode* successor(RBNode* x);
         RBNode* successor(int x);
         RBNode* predecessor(RBNode* x);
-        RBNode* predecessor(int x)
+        RBNode* predecessor(int x);
         RBNode* insert(int key);
+        void remove(RBNode* z);
     protected:
     private:
         void leftRotate(RBNode* x);
@@ -32,7 +33,6 @@ class RedBlack
         void insertNode(RBNode* z); // CLRS insert page 315
         void transplant(RBNode* u, RBNode* v);
         void deleteFixup(RBNode* x);
-        void remove(RBNode* z);
     };
 
 #endif // REDBLACK_H
