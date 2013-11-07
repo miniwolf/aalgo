@@ -12,10 +12,10 @@ run: $(PROGRAM_NAME)
 	 ./$(PROGRAM_NAME)
 
 $(PROGRAM_NAME): $(OBJS)
-	$(CXX) -std=c++11 -O3 -O2 -O -fexpensive-optimizations -Wall -Wextra $(OBJS) -o $@
+	$(CXX) -std=c++11 -g -O2 -fexpensive-optimizations -Wall -Wextra $(OBJS) -o $@
 
 .cpp.o:
-	$(CXX) -std=c++11 -O3 -O2 -O -fexpensive-optimizations -Wall -Wextra -c $< -o $@
+	$(CXX) -std=c++11 -g -O2 -fexpensive-optimizations -Wall -Wextra -c $< -o $@
 
 clean:		
 	rm -rf .deps

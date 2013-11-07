@@ -32,4 +32,9 @@ q
 src/OLD/*
 src/*.csv
 src/*.gz
+src/graphs/
 
+*~
+*.diff
+*#
+*.pdf

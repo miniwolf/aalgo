@@ -26,12 +26,12 @@ int* PerformSearches::makeSet(int size) {
     return a;
 }
 
-double* PerformSearches::performDeletes(int universe) {
+double* PerformSearches::performRemoves(int universe) {
     // insert
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
 
-    int* ordered  = makeSet(universe);
+    int* ordered = makeSet(universe);
     RBNode** rbInserted = new RBNode*[universe];
 
     double* times = new double[2];
@@ -57,8 +57,8 @@ double* PerformSearches::performDeletes(int universe) {
 
     delete rbInOrder;
     delete vbInOrder;
-    delete ordered;
 
+    delete[] ordered;
     delete[] rbInserted;
 
     return times;
