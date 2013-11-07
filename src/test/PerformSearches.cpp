@@ -26,8 +26,6 @@ int* PerformSearches::makeSet(int size) {
     return a;
 }
 
-
-
 double* PerformSearches::performDeletes(int universe) {
     // insert
     RedBlack* rbInOrder = new RedBlack();

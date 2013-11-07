@@ -12,12 +12,12 @@ RedBlack::RedBlack()
     // CLRS Page 309
     NIL = new RBNode();
     NIL->color = BLACK;
+    NIL->key = -1;
     root = NIL;
 }
 
 RedBlack::~RedBlack()
 {
-    NIL->key = -1;
     delete root;
     delete NIL;
 }
