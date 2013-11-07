@@ -3,36 +3,34 @@
 #include "../boa/vEB.h"
 #include "../timespec/timespec.h"
 
-PerformSearches::PerformSearches()
-{
+PerformSearches::PerformSearches(){
     //ctor
 }
 
-PerformSearches::~PerformSearches()
-{
+PerformSearches::~PerformSearches(){
     //dtor
 }
 
-void PerformSearches::shuffle(int* array, int size){
+void PerformSearches::shuffle(int* array, int size) {
     srand(time(NULL));
-    for ( int i = size-1 ; i > 0 ; i--){
+    for ( int i = size-1 ; i > 0 ; i-- ) {
         int j = rand() % (i+1);
-        assert( 0 <= j && j <= i);
+        assert(0 <= j && j <= i);
         int temp = array[i];
         array[i] = array[j];
         array[j] = temp;
     }
 }
 
-int* PerformSearches::makeSet(int size){
+int* PerformSearches::makeSet(int size) {
     int* a = new int[size];
-    for (int i = 0; i < size; i++){
+    for ( int i = 0; i < size; i++ ) {
         a[i] = i;
     }
     return a;
 }
 
-double* PerformSearches::performInserts(int universe){
+double* PerformSearches::performInserts(int universe) {
     // insert
     RedBlack* rbShuffle = new RedBlack();
     RedBlack* rbInOrder = new RedBlack();
@@ -46,25 +44,25 @@ double* PerformSearches::performInserts(int universe){
     double* times = new double[4];
 
     startClock();
-    for( int i = 0; i < universe ; i++ ){
+    for ( int i = 0; i < universe ; i++ ) {
         rbShuffle->insert(shuffled[i]);
     }
     times[0] = stopClock();
 
     startClock();
-    for( int i = 0; i < universe ; i++ ){
+    for ( int i = 0; i < universe ; i++ ) {
         rbInOrder->insert(ordered[i]);
     }
     times[1] = stopClock();
 
     startClock();
-    for( int i = 0; i < universe ; i++ ){
+    for ( int i = 0; i < universe ; i++ ) {
         vbShuffle->insert(shuffled[i]);
     }
     times[2] = stopClock();
 
     startClock();
-    for( int i = 0; i < universe ; i++ ){
+    for ( int i = 0; i < universe ; i++ ) {
         vbInOrder->insert(ordered[i]);
     }
     times[3] = stopClock();
@@ -80,11 +78,11 @@ double* PerformSearches::performInserts(int universe){
     return times;
 }
 
-void PerformSearches::getTime(){
+void PerformSearches::getTime() {
    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &mStartTime);
 }
 
-double PerformSearches::stopClock(){
+double PerformSearches::stopClock() {
   timespec currentTime;
   clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &currentTime);
 
@@ -93,6 +91,6 @@ double PerformSearches::stopClock(){
   return double(result.tv_sec) + 0.000000001*double(result.tv_nsec);
 }
 
-void PerformSearches::startClock(){
+void PerformSearches::startClock() {
   getTime();
 }

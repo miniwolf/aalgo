@@ -19,4 +19,4 @@ class PerformSearches
         double stopClock();
 };
 
-#endif // PERFORMSEARCHES_H
+#endif
