@@ -166,6 +166,7 @@ void vEB::insert(int x){
         }
         bits->set(x,true);
     }
+    count++;
 }
 
 void vEB::remove(int x){
@@ -228,6 +229,7 @@ void vEB::remove(int x){
             bits->set(x,false);
         }
     }
+    count--;
 }
 
 int vEB::deleteMin(){
@@ -238,6 +240,7 @@ int vEB::deleteMin(){
     } else {
         return NIL;
     }
+    count--;
 }
 
 void vEB::decreaseKey(int x, int target){
