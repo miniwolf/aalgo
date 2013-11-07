@@ -13,6 +13,7 @@ RBNode::~RBNode()
 {
     if ( left && left->key != -1 )
         delete left;
-    if ( right && right->key != -1 )
-        delete right;
+    if ( right )
+        if ( right->key != -1 )
+            delete right;
 }
