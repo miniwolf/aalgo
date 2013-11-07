@@ -16,6 +16,7 @@ public:
     int NIL = -1;
     int min = -1;
     int max = -1;
+    int count = 0;
     int u = 0; // universe size
     int lsqr = 0; //lower square root
     int usqr = 0; //upper square root
@@ -69,6 +70,7 @@ public:
     void remove(int x);
     int deleteMin();
     void decreaseKey(int x, int target);
+
 };
 
 #endif
