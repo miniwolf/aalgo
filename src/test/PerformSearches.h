@@ -10,7 +10,7 @@ class PerformSearches
         virtual ~PerformSearches();
         void shuffle(int* array, int size);
         int* makeSet(int size);
-        double* performDeletes(int universe);
+        double* performRemoves(int universe);
         double* performInserts(int universe);
     protected:
     private:

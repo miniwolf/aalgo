@@ -18,12 +18,14 @@ RedBlack::RedBlack()
 
 RedBlack::~RedBlack()
 {
-    delete root;
+    if ( root != NIL ) {
+        delete root;
+    }
     delete NIL;
 }
 
 RBNode* RedBlack::insert(int key) {
-    RBNode* n = new RBNode();
+    RBNode* n = new RBNode(); // possible memory leak
     n->key = key;
     insertNode(n);
     return n;
