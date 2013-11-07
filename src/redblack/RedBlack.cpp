@@ -22,79 +22,75 @@ RedBlack::~RedBlack()
     delete NIL;
 }
 
-RBNode* RedBlack::insert(int key){
+RBNode* RedBlack::insert(int key) {
     RBNode* n = new RBNode();
     n->key = key;
     insertNode(n);
     return n;
 }
 
-RBNode* RedBlack::treeSearch(RBNode* x, int k){
-    while (x != NIL and k != x->key){
-        if( k < x->key ) {
-            x = x->left;
-        } else {
-            x = x->right;
-        }
+RBNode* RedBlack::treeSearch(RBNode* x, int k) {
+    while ( x != NIL and k != x->key ) {
+        x = k < x->key ? x->left : x->right;
     }
     return x;
 }
 
 RBNode* RedBlack::minimum(RBNode* x){
-    while ( x->left != NIL){
+    while ( x->left != NIL ) {
         x = x->left;
     }
     return x;
 }
 
-RBNode* RedBlack::maximum(RBNode* x){
-    while ( x->right != NIL){
+RBNode* RedBlack::maximum(RBNode* x) {
+    while ( x->right != NIL ) {
         x = x->right;
     }
     return x;
 }
 
-RBNode* RedBlack::successor(RBNode* x){
-    if (x->right != NIL){
+RBNode* RedBlack::successor(RBNode* x) {
+    if ( x->right != NIL )
         return minimum(x->right);
-    }
+
     RBNode* y = x->p;
-    while ( y != NIL and x == y->right){
+    while ( y != NIL and x == y->right ) {
         x = y;
         y = y->p;
     }
     return y;
 }
 
-RBNode* RedBlack::successor(int x){
+RBNode* RedBlack::successor(int x) {
     RBNode* current = root;
     RBNode* succ = NIL;
 
-    while (current != NIL){
-        if ( x == current->key){
+    while ( current != NIL ) {
+        if ( x == current->key )
             return successor(current);
-        }
-        if ( x < current->key){
+
+        if ( x < current->key ) {
             succ = current;
             current = current->left;
-        } else if ( x > current->key){
+        } else if ( x > current->key ) {
             current = current->right;
         }
     }
     return succ;
 }
 
-RBNode* RedBlack::predecessor(int x){
+RBNode* RedBlack::predecessor(int x) {
     RBNode* current = root;
     RBNode* pre = NIL;
 
-    while (current != NIL){
-        if ( x == current->key){
+    while (current != NIL ) {
+        if ( x == current->key )
             return predecessor(current);
-        }
-        if ( x < current->key){
+
+        if ( x < current->key ) {
             current = current->left;
-        } else if ( x > current->key){
+        } else if ( x > current->key ) {
             pre = current;
             current = current->right;
         }
@@ -102,12 +98,12 @@ RBNode* RedBlack::predecessor(int x){
     return pre;
 }
 
-RBNode* RedBlack::predecessor(RBNode* x){
-    if (x->left != NIL){
+RBNode* RedBlack::predecessor(RBNode* x) {
+    if ( x->left != NIL )
         return maximum(x->left);
-    }
+
     RBNode* y = x->p;
-    while ( y != NIL and x == y->left){
+    while ( y != NIL and x == y->left ) {
         x = y;
         y = y->p;
     }
@@ -117,17 +113,10 @@ RBNode* RedBlack::predecessor(RBNode* x){
 void RedBlack::leftRotate(RBNode* x){
     RBNode* y = x->right;
     x->right = y->left;
-    if (y->left != NIL){
+    if ( y->left != NIL )
         y->left->p = x;
-    }
     y->p = x->p;
-    if (x->p == NIL){
-        root = y;
-    } else if(x == x->p->left){
-        x->p->right = y;
-    } else {
-        x->p->right = y;
-    }
+    (x->p == NIL ? root : (x == x->p->left ? x->p->left : x->p->right)) = y;
     y->left = x;
     x->p = y;
 }
@@ -135,32 +124,25 @@ void RedBlack::leftRotate(RBNode* x){
 void RedBlack::rightRotate(RBNode* x){
     RBNode* y = x->left;
     x->left = y->right;
-    if (y->right != NIL){
+    if ( y->right != NIL )
         y->right->p = x;
-    }
     y->p = x->p;
-    if ( x->p == NIL){
-        root = y;
-    } else if (x == x->p->right){
-        x->p->right = y;
-    } else {
-        x->p->left = y;
-    }
+    (x->p == NIL ? root : (x == x->p->right ? x->p->right : x->p->left)) = y;
     y->right = x;
     x->p = y;
 }
 
 void RedBlack::insertFixup(RBNode *z){
-    while(z->p->color == RED){
-        if(z->p == z->p->p->left){
+    while ( z->p->color == RED ) {
+        if ( z->p == z->p->p->left ) {
             RBNode* y = z->p->p->right;
-            if (y->color == RED){
+            if ( y->color == RED ) {
                 z->p->color = BLACK;
                 y->color = BLACK;
                 z->p->p->color = RED;
                 z = z->p->p;
             } else {
-                if(z == z->p->right){
+                if ( z == z->p->right ) {
                     z = z->p;
                     leftRotate(z);
                 }
@@ -169,14 +151,14 @@ void RedBlack::insertFixup(RBNode *z){
                 rightRotate(z->p->p);
             }
         } else {
-           RBNode* y = z->p->p->left;
-            if (y->color == RED){
+            RBNode* y = z->p->p->left;
+            if ( y->color == RED ) {
                 z->p->color = BLACK;
                 y->color = BLACK;
                 z->p->p->color = RED;
                 z = z->p->p;
             } else {
-                if(z == z->p->left){
+                if ( z == z->p->left ) {
                     z = z->p;
                     rightRotate(z);
                 }
@@ -192,22 +174,12 @@ void RedBlack::insertFixup(RBNode *z){
 void RedBlack::insertNode(RBNode* z){
     RBNode* y = NIL;
     RBNode* x = root;
-    while (x != NIL){
+    while ( x != NIL ) {
         y = x;
-        if(z->key < x->key){
-            x = x->left;
-        } else {
-            x = x->right;
-        }
+        x = z->key < x->key ? x->left : x->right;
     }
     z->p = y;
-    if (y == NIL){
-        root = z;
-    } else if (x->key < y->key){
-        y->left = z;
-    } else {
-        y->right = z;
-    }
+    (y == NIL ? root : (z->key < y->key ? y->left : y->right)) = z;
     z->left = NIL;
     z->right = NIL;
     z->color = RED;
@@ -215,13 +187,7 @@ void RedBlack::insertNode(RBNode* z){
 }
 
 void RedBlack::transplant(RBNode* u, RBNode* v){
-    if (u->p == NIL){
-        root = v;
-    } else if( u == u->p->left){
-        u->p->left = v;
-    } else {
-        u->p->right = v;
-    }
+    (u->p == NIL ? root : (u == u->p->left ? u->p->left : u->p->right)) = v;
     v->p = u->p;
 }
 
@@ -229,17 +195,17 @@ void RedBlack::remove(RBNode* z){
     RBNode* x = NIL;
     RBNode* y = z;
     bool yOriginalColor = y->color;
-    if(z->left == NIL){
+    if ( z->left == NIL ) {
         x = z->right;
         transplant(z,z->right);
-    } else if(z->right == NIL){
+    } else if ( z->right == NIL ) {
         x = z->left;
         transplant(z,z->left);
     } else {
         y = minimum(z->right);
         yOriginalColor = y->color;
         x = y->right;
-        if (y->p == z){
+        if ( y->p == z ) {
             x->p = y;
         } else {
             transplant(y,y->right);
@@ -251,26 +217,26 @@ void RedBlack::remove(RBNode* z){
         y->left->p = y;
         y->color = z->color;
     }
-    if (yOriginalColor == BLACK){
+    if ( yOriginalColor == BLACK ) {
         deleteFixup(x);
     }
 }
 
 void RedBlack::deleteFixup(RBNode* x){
-    while( x != root and x->color == BLACK){
-        if (x == x->p->left){
+    while ( x != root and x->color == BLACK ) {
+        if ( x == x->p->left ) {
             RBNode* w = x->p->right;
-            if (w->color == RED){
+            if ( w->color == RED ) {
                 w->color = BLACK;
                 x->p->color = RED;
                 leftRotate(x->p);
                 w = x->p->right;
             }
-            if (w->left->color == BLACK and w->right->color == BLACK){
+            if ( w->left->color == BLACK and w->right->color == BLACK ) {
                 w->color = RED;
                 x = x->p;
             } else {
-                if (w->right->color == BLACK){
+                if ( w->right->color == BLACK ) {
                     w->left->color = BLACK;
                     w->color = RED;
                     rightRotate(w);
@@ -284,17 +250,17 @@ void RedBlack::deleteFixup(RBNode* x){
             }
         } else {
             RBNode* w = x->p->left;
-            if (w->color == RED){
+            if ( w->color == RED ) {
                 w->color = BLACK;
                 x->p->color = RED;
                 rightRotate(x->p);
                 w = x->p->left;
             }
-            if (w->right->color == BLACK and w->left->color == BLACK){
+            if ( w->right->color == BLACK and w->left->color == BLACK ) {
                 w->color = RED;
                 x = x->p;
             } else {
-                if (w->left->color == BLACK){
+                if ( w->left->color == BLACK ) {
                     w->right->color = BLACK;
                     w->color = RED;
                     leftRotate(w);
