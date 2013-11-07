@@ -1,5 +1,5 @@
-#ifndef FNODE_H
-#define FNODE_H
+#ifndef VEBNODE_H
+#define VEBNODE_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,9 +10,9 @@ using namespace std;
 template <class T>
 class vEBNode : public Node<T>{
 public:
-    vEBNode(int key) : Node<T>(key, NULL){}
+    vEBNode(int key) : Node<T>(key, 0){}
 
-  virtual void makePlot(ofstream &file) {
+  virtual void makePlot(ofstream &) {
 
     }
 

@@ -11,8 +11,8 @@
 #include <stdlib.h>
 
 #include "../Heap.h"
-#include "vEB.h"
 #include "vEBNode.h"
+#include "vEB.h"
 
 
 using namespace std;
@@ -33,7 +33,7 @@ public:
     return 0;
   }
 
-  virtual vEBNode<T>* insert(vEBNode<T> *node) {
+  virtual vEBNode<T>* insert(vEBNode<T>* node) {
       tree->insert(node->key);
     return setNode(node->key, node->payload);
 
@@ -57,10 +57,10 @@ public:
     tree->decreaseKey(node->key, newKey);
     removeNode(node->key);
     node->key = newKey;
-    setNode(newKey, node);
+    setNode(newKey, node->payload);
   }
 
-  virtual void makePlot(string filename) {  }
+  virtual void makePlot(string) {  }
 
   virtual void remove(Node<T>* node){
     removeNode(node->key);
@@ -75,7 +75,7 @@ private:
       return new vEBNode<T>(key);
   }
 
-  vEBNode<T>* setNode(int key, T payload){
+  vEBNode<T>* setNode(int key, T ){
       return getNode(key);
 
   }

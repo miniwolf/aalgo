@@ -7,6 +7,7 @@
 #include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
+#include "boa/vEBHeap.h"
 #include "test/TestFibHeap.h"
 #include <cstdlib>
 
@@ -65,25 +66,32 @@ void testPerformance(){
 
 void testWorstPerformance(){
   TestPerformance* tPerf = new TestPerformance();
-  ofstream ffile, bfile;
-  string ffilename = "test_worst_f_file.csv", bfilename = "test_worst_b_file.csv";
+  ofstream ffile, bfile, vfile;
+  string ffilename = "test_worst_f_file.csv", bfilename = "test_worst_b_file.csv", vfilename = "test_worst_v_file.csv";
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
+  vfile.open(vfilename.c_str());
   for(int size = 10; size<=10000000  ; size = size*10){
     //cout << size << endl;
     for(int i = 0; i<50; i++){
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
+      Heap<int>* vebHeap = new vEBHeap<int>(10000000);
       ffile << size << ", ";
       bfile << size << ", ";
+      vfile << size << ", ";
       tPerf->performWorstTest(fHeap, size, ffile);
       tPerf->performWorstTest(bHeap, size, bfile);
+      tPerf->performWorstTest(vebHeap, size, vfile);
       ffile << endl;
       bfile << endl;
+      vfile << endl;
       ffile.flush();
       bfile.flush();
+      vfile.flush();
       delete fHeap;
       delete bHeap;
+      delete vebHeap;
     }
   }
   ffile.close();
