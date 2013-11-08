@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include "test/TestPerformance.h"
+#include "test/PerformSearches.h"
 #include "binary/BinaryHeap.h"
 #include "dijkstra/Vertex.h"
 #include "dijkstra/Graph.h"
@@ -33,35 +34,53 @@ void writeSetFile(int* set, int size){
 }
 
 void testPerformance(){
-  TestPerformance* tPerf = new TestPerformance();
-  ofstream ffile, bfile;
-  string ffilename = "test_f_file.csv", bfilename = "test_b_file.csv";
-  ffile.open(ffilename.c_str());
-  bfile.open(bfilename.c_str());
-  for(int size = 10; size<=10000000  ; size = size*10){
-    //cout << size << endl;
-    for(int i = 0; i<50; i++){
-      Heap<int>* bHeap = new BinaryHeap<int>();
-      Heap<int>* fHeap = new FibonacciHeap<int>();
-      int* keyset = new int[size];
-      tPerf->generateKeySet(size, keyset);
-      //writeSetFile(set,size);
-      ffile << size << ", ";
-      bfile << size << ", ";
-      tPerf->runTest(fHeap, size, keyset, ffile);
-      tPerf->runTest(bHeap, size, keyset, bfile);
-      ffile << endl;
-      bfile << endl;
-      ffile.flush();
-      bfile.flush();
-      delete []keyset;
-      delete fHeap;
-      delete bHeap;
+    PerformSearches* pSearch = new PerformSearches();
+    ofstream insert_testfile, remove_testfile, member_testfile, predec_testfile;
+    string insert = "testinsert_tree_file.csv";
+    string remove = "testremove_tree_file.csv";
+    string member = "testmember_tree_file.csv";
+    string predec = "testpredec_tree_file.csv";
+    insert_testfile.open(insert.c_str());
+    remove_testfile.open(remove.c_str());
+    member_testfile.open(member.c_str());
+    predec_testfile.open(predec.c_str());
+    for ( int size = 1024; size <= 10000; size *= 2 ) {
+        for ( int i = 0; i < 50; i++ ) {
+            insert_testfile << size << ", ";
+            remove_testfile << size << ", ";
+            member_testfile << size << ", ";
+            predec_testfile << size << ", ";
+            double* insert_times = pSearch->performInserts(size);
+            double* remove_times = pSearch->performRemoves(size);
+            double* member_times = pSearch->performMember(size);
+            double* predec_times = pSearch->performPre(size);
+            for ( int i = 0; i < 4; i++ ) {
+                insert_testfile << insert_times[i] << ", ";
+            }
+            for ( int i = 0; i < 2; i++ ) {
+                remove_testfile << remove_times[i] << ", ";
+                member_testfile << member_times[i] << ", ";
+                predec_testfile << predec_times[i] << ", ";
+            }
+            insert_testfile << endl;
+            remove_testfile << endl;
+            member_testfile << endl;
+            predec_testfile << endl;
+            insert_testfile.flush();
+            remove_testfile.flush();
+            member_testfile.flush();
+            predec_testfile.flush();
+            delete[] insert_times;
+            delete[] remove_times;
+            delete[] member_times;
+            delete[] predec_times;
+        }
     }
-  }
-  ffile.close();
-  bfile.close();
-  delete tPerf;
+    insert_testfile.close();
+    remove_testfile.close();
+    member_testfile.close();
+    predec_testfile.close();
+    delete pSearch;
 }
 
 void testWorstPerformance(){
@@ -334,6 +353,8 @@ void performSingleFileGraph(){
 }
 
 int main() {
+    testPerformance();
+    /*
     cout << "Performing worst case performance test." << endl;
     testWorstPerformance();
     cout << "Performing layered insertions for Binary Heap" << endl;
@@ -346,5 +367,5 @@ int main() {
     cout << "Running dijkstra on k-graphs." << endl;
     testNTagram();
     cout << "Running dijkstra on single depth graphs" << endl;
-    performSingleFileGraph();
+    performSingleFileGraph();*/
 }

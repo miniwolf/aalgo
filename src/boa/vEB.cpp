@@ -43,18 +43,17 @@ vEB::vEB(int universe){
     }
 }
 
-bool vEB::member(int x){
+bool vEB::member(int x) {
     assert(x > NIL);
-    if (!useBitset){
-        if (x == min or x == max){
+    if ( !useBitset ) {
+        if ( x == min or x == max )
             return true;
-        } else if( u == 2 ){
+        else if ( u == 2 )
             return false;
-        } else {
+        else
             return cluster[high(x)]->member(low(x));
-        }
     } else {
-        assert(x  < CUTOFF);
+        assert(x < CUTOFF);
         return bits->test(x);
     }
 }

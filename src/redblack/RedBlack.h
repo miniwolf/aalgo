@@ -16,6 +16,7 @@ class RedBlack
         const bool BLACK = true;
         RedBlack();
         virtual ~RedBlack();
+        bool member(int key);
         RBNode* treeSearch(RBNode* x, int k);
         RBNode* minimum(RBNode* x);
         RBNode* maximum(RBNode* x);

@@ -10,8 +10,10 @@ class PerformSearches
         virtual ~PerformSearches();
         void shuffle(int* array, int size);
         int* makeSet(int size);
+        double* performPre(int universe);
         double* performRemoves(int universe);
         double* performInserts(int universe);
+        double* performMember(int universe);
     protected:
     private:
         timespec mStartTime;

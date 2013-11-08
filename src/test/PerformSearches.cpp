@@ -26,8 +26,79 @@ int* PerformSearches::makeSet(int size) {
     return a;
 }
 
+double* PerformSearches::performPre(int universe) {
+    RedBlack* rbInOrder = new RedBlack();
+    vEB* vbInOrder = new vEB(universe);
+
+    int* ordered = makeSet(universe);
+    RBNode** rbInserted = new RBNode*[universe];
+
+    double* times = new double[2];
+
+    for ( int i = 0; i < universe; i++ ) {
+        rbInserted[i] = rbInOrder->insert(ordered[i]);
+        vbInOrder->insert(ordered[i]);
+    }
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        rbInOrder->predecessor(i);
+    }
+    times[0] = stopClock();
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        vbInOrder->predecessor(i);
+    }
+    times[1] = stopClock();
+
+    delete rbInOrder;
+    delete vbInOrder;
+
+    delete[] ordered;
+    delete[] rbInserted;
+
+    return times;
+}
+
+double* PerformSearches::performMember(int universe) {
+    int half_universe = universe * 0.5;
+
+    RedBlack* rbInOrder = new RedBlack();
+    vEB* vbInOrder = new vEB(universe);
+
+    int* ordered = makeSet(half_universe);
+    RBNode** rbInserted = new RBNode*[half_universe];
+
+    double* times = new double[2];
+
+    for ( int i = 0; i < half_universe; i++ ) {
+        rbInserted[i] = rbInOrder->insert(ordered[i]);
+        vbInOrder->insert(ordered[i]);
+    }
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        rbInOrder->member(i);
+    }
+    times[0] = stopClock();
+
+    startClock();
+    for ( int i = 0; i < universe; i++ ) {
+        vbInOrder->member(i);
+    }
+    times[1] = stopClock();
+
+    delete rbInOrder;
+    delete vbInOrder;
+
+    delete[] ordered;
+    delete[] rbInserted;
+
+    return times;
+}
+
 double* PerformSearches::performRemoves(int universe) {
-    // insert
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
 
@@ -59,6 +130,11 @@ double* PerformSearches::performRemoves(int universe) {
     delete vbInOrder;
 
     delete[] ordered;
+    for ( int i = 0; i < universe; i++ ) {
+        rbInserted[i]->left = NULL;
+        rbInserted[i]->right = NULL;
+        delete rbInserted[i];
+    }
     delete[] rbInserted;
 
     return times;

@@ -31,6 +31,10 @@ RBNode* RedBlack::insert(int key) {
     return n;
 }
 
+bool RedBlack::member(int k) {
+    return treeSearch(root, k) != NIL;
+}
+
 RBNode* RedBlack::treeSearch(RBNode* x, int k) {
     while ( x != NIL and k != x->key ) {
         x = k < x->key ? x->left : x->right;
