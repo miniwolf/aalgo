@@ -44,8 +44,8 @@ void testPerformance(){
     remove_testfile.open(remove.c_str());
     member_testfile.open(member.c_str());
     predec_testfile.open(predec.c_str());
-    for ( int size = 1024; size <= 10000; size *= 2 ) {
-        for ( int i = 0; i < 50; i++ ) {
+    for ( int size = 64; size <= pow(2,25); size *= 2 ) {
+        for ( int i = 0; i < 25; i++ ) {
             insert_testfile << size << ", ";
             remove_testfile << size << ", ";
             member_testfile << size << ", ";
