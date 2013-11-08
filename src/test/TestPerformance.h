@@ -11,13 +11,14 @@ class TestPerformance {
  private:
   timespec mStartTime;
   void getTime();
+  void shuffle(Node<int>** array, int size);
  public:
   TestPerformance(){  }
   int* generateKeySet(int i, int* ar);
   Node<int>** testInsert(Heap<int>* heap, int* set, int size, Node<int>** array);
   void testDeleteMin(Heap<int>* heap);
   void testDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
-
+    void testRemove(Heap<int>* heap, int size, Node<int>** nodes);
   Node<int>** testWorstInsert(Heap<int>* heap, int size, Node<int>** array);
   void testWorstDecreaseKey(Heap<int>* heap, Node<int>** array, int size );
   void performWorstTest(Heap<int>* heap, int size, ofstream &file);

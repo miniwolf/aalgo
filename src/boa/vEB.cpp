@@ -144,6 +144,7 @@ void vEB::emptyInsert(int x){
 void vEB::insert(int x){
     assert(x > NIL);
     assert(x < u);
+
     if (!useBitset){
         if (min == NIL){
             emptyInsert(x);
@@ -254,6 +255,7 @@ int vEB::deleteMin(){
 
 void vEB::decreaseKey(int x, int target){
     assert(member(x));
+    assert(target < u);
     remove(x);
     insert(target);
 }

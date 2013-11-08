@@ -9,10 +9,23 @@
 
 using namespace std;
 
+void TestPerformance::shuffle(Node<int>** array, int size){
+    srand(time(NULL));
+    for ( int i = size-1 ; i > 0 ; i--){
+        int j = rand() % (i+1);
+        assert( 0 <= j && j <= i);
+        Node<int>* temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+
+
 int* TestPerformance::generateKeySet(int i, int* ar ){
   srand(time(NULL));
   for(int j = 0; j < i; j++){
-    ar[j] = rand();
+    ar[j] = j;
   }
   return ar;
 }
@@ -32,6 +45,13 @@ void TestPerformance::testDeleteMin(Heap<int>* heap){
   };
 }
 
+void TestPerformance::testRemove(Heap<int>* heap, int size, Node<int>** nodes){
+    for(int i = 0; i < size; i ++  ){
+        heap->remove(nodes[i]);
+        delete nodes[i];
+    }
+}
+
 void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
   for(int i = 0; i < size; i++){
     heap->decreaseKey(array[i], (array[i]->key)/2 );
@@ -40,14 +60,14 @@ void TestPerformance::testDecreaseKey(Heap<int>* heap, Node<int>** array, int si
 
 Node<int>** TestPerformance::testWorstInsert(Heap<int>* heap, int size, Node<int>** array){
   for(int i = 0;  i< size; i++){
-    array[i] = heap->insert(2*size - i, 2*size - i);
+    array[i] = heap->insert(2*size - i-1, 2*size - i-1);
   }
   return array;
 }
 
 void TestPerformance::testWorstDecreaseKey(Heap<int>* heap, Node<int>** array, int size ){
   for(int i = 0; i < size; i++){
-    heap->decreaseKey(array[i], size-i);
+    heap->decreaseKey(array[i], size-i-1);
   }
 }
 
@@ -234,7 +254,7 @@ void TestPerformance::performWorstTest(Heap<int>* heap, int size, ofstream &file
   file << stopClock() << ", " ;
   //
 
-  Node<int>* n = heap->insert(500,500);
+  Node<int>* n = heap->insert(1,1);
   heap->remove(n);
   delete n;
 
@@ -245,8 +265,15 @@ void TestPerformance::performWorstTest(Heap<int>* heap, int size, ofstream &file
   startClock();
   testDeleteMin(heap);
   file << stopClock()  << ", ";
-
   delete []nodes;
+  Node<int>** nodes2 = new Node<int>*[size];
+
+  testWorstInsert(heap, size, nodes2);
+  shuffle(nodes2, size);
+  startClock();
+  testRemove(heap, size, nodes2);
+  file << stopClock();
+  delete []nodes2;
 }
 
 
