@@ -71,12 +71,12 @@ void testWorstPerformance(){
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
   vfile.open(vfilename.c_str());
-  for(int size = 10; size<=10000000  ; size = size*10){
+  for(int size = 64; size<=pow(2, 20)  ; size = size*2){
     //cout << size << endl;
-    for(int i = 0; i<50; i++){
+    for(int i = 0; i<25; i++){
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
-      Heap<int>* vebHeap = new vEBHeap<int>(10000000);
+      Heap<int>* vebHeap = new vEBHeap<int>(size*2);
       ffile << size << ", ";
       bfile << size << ", ";
       vfile << size << ", ";
@@ -96,6 +96,7 @@ void testWorstPerformance(){
   }
   ffile.close();
   bfile.close();
+  vfile.close();
   delete tPerf;
 }
 
@@ -334,17 +335,8 @@ void performSingleFileGraph(){
 }
 
 int main() {
+
     cout << "Performing worst case performance test." << endl;
     testWorstPerformance();
-    cout << "Performing layered insertions for Binary Heap" << endl;
-    performLayerInsertBHeap();
-    cout << "Performing singular insertions" << endl;
-    performSingleInsertBHeap();
-    computeRandomGraphDecreaseRelation(10);
-    cout << "Running dijkstra on random graphs." << endl;
-    performRandomGraphDijkstra();
-    cout << "Running dijkstra on k-graphs." << endl;
-    testNTagram();
-    cout << "Running dijkstra on single depth graphs" << endl;
-    performSingleFileGraph();
+
 }

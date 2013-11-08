@@ -23,65 +23,87 @@ template <class T>
 class vEBHeap : public Heap<T> {
 public:
   vEB* tree;
-  vEBHeap(int universe) {
-      tree = new vEB(universe);
+  vEBHeap(int universe):mUniverse(universe) {
+    tree = new vEB(universe);
+    mNodeArray = new Node<T>*[universe];
+    for(int i = 0; i<universe; i ++){
+      mNodeArray[i] = NULL;
+    }
   }
-
-  virtual ~vEBHeap() {  }
-
+  
+  virtual ~vEBHeap() {
+    for(int i = 0; i < mUniverse; i ++){
+      delete mNodeArray[i];
+    }
+    delete[] mNodeArray;
+    delete tree;
+  }
+  
   virtual int getComparisons(){
     return 0;
   }
-
-  virtual vEBNode<T>* insert(vEBNode<T>* node) {
-      tree->insert(node->key);
+  
+  virtual Node<T>* insert(Node<T>* node) {
+    tree->insert(node->key);
     return setNode(node->key, node->payload);
-
+    
   }
-
-  virtual vEBNode<T>* insert(int key, T payload) {
-        tree->insert(key);
-      return setNode(key, payload);
+  
+  virtual Node<T>* insert(int key, T payload) {
+    tree->insert(key);
+    return setNode(key, payload);
   }
-
-  virtual vEBNode<T>* findMin() {
-    return getNode(tree->min);
+  
+  virtual Node<T>* findMin() {
+    return tree->min == tree->NIL?NULL:getNode(tree->min);
   }
-
-  virtual vEBNode<T>* deleteMin() {
-      vEBNode<T>* node = removeNode(tree->deleteMin());
-      return node;
+  
+  virtual Node<T>* deleteMin() {
+    int res = tree->deleteMin();
+    if(res == tree->NIL){
+      return NULL;
+    }
+    Node<T>* node = removeNode(res);
+    return node;
   }
-
+  
   void decreaseKey(Node<T> *node, int newKey){
     tree->decreaseKey(node->key, newKey);
     removeNode(node->key);
     node->key = newKey;
-    setNode(newKey, node->payload);
+    setNode(node);
   }
-
+  
   virtual void makePlot(string) {  }
-
+  
   virtual void remove(Node<T>* node){
     removeNode(node->key);
   }
-
+  
   virtual int getSize() {
-      return tree->count;
+    return tree->count;
   }
-
+  
 private:
-  vEBNode<T>* getNode(int key){
-      return new vEBNode<T>(key);
+  int mUniverse;
+  Node<T>** mNodeArray;
+
+  Node<T>* getNode(int key){
+      return mNodeArray[key];
   }
 
-  vEBNode<T>* setNode(int key, T ){
-      return getNode(key);
-
+  Node<T>* setNode(int key, T payload){
+    return mNodeArray[key]? mNodeArray[key]:mNodeArray[key] = new vEBNode<T>(key, payload);
   }
 
-  vEBNode<T>* removeNode(int key){
-      return getNode(key);
+  Node<T>* setNode(Node<T>* node){
+    return mNodeArray[node->key]? mNodeArray[node->key]:mNodeArray[node->key] = node;
+  }
+
+  Node<T>* removeNode(int key){
+    Node<T>* n = getNode(key);
+    mNodeArray[key]  = NULL;
+    return n;
   }
 
 };
