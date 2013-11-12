@@ -12,6 +12,11 @@
 #include "test/TestFibHeap.h"
 #include <cstdlib>
 
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <linux/perf_event.h>
+#include <asm/unistd.h>
+
 using namespace std;
 
 string IntToString(int num) {
@@ -353,8 +358,54 @@ void performSingleFileGraph(){
     }
 }
 
+long
+perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
+                int cpu, int group_fd, unsigned long flags){
+    int ret;
+    ret = syscall(__NR_perf_event_open, hw_event, pid, cpu,
+                   group_fd, flags);
+    return ret;
+}
+
+void testPageFaults(){
+struct perf_event_attr pe;
+    long long count;
+    int fd;
+
+    pid_t test= getpid();
+    cout << test << endl;
+
+    memset(&pe, 0, sizeof(struct perf_event_attr));
+    pe.type = PERF_TYPE_SOFTWARE;
+    pe.size = sizeof(struct perf_event_attr);
+    pe.config = PERF_COUNT_SW_PAGE_FAULTS;
+    pe.disabled = 1;
+    pe.exclude_kernel = 1;
+    pe.exclude_hv = 1;
+
+    fd = perf_event_open(&pe, 0, 0, -1, 0);
+    if (fd == -1) {
+       fprintf(stderr, "Error opening leader %llx\n", pe.config);
+       exit(EXIT_FAILURE);
+    }
+
+    ioctl(fd, PERF_EVENT_IOC_RESET, 0);
+    ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+
+    printf("Measuring pagefaults printf\n");
+
+    ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
+    read(fd, &count, sizeof(long long));
+
+    printf("Had %lld Pagefaults\n", count);
+
+    close(fd);
+}
+
 int main() {
-    testPerformance();    
-    cout << "Performing worst case performance test." << endl;
-    testWorstPerformance();
+    //testPerformance();
+    //cout << "Performing worst case performance test." << endl;
+    //testWorstPerformance();
+
+
 }
