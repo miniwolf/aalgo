@@ -1,21 +1,20 @@
-#include "main.h"
+#include <asm/unistd.h>
+#include <linux/perf_event.h>
+#include <sys/ioctl.h>
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
-#include "test/TestPerformance.h"
-#include "test/PerformSearches.h"
-#include "binary/BinaryHeap.h"
-#include "dijkstra/Vertex.h"
-#include "dijkstra/Graph.h"
-#include "boa/vEBHeap.h"
-#include "test/TestFibHeap.h"
-#include <cstdlib>
-
 #include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/perf_event.h>
-#include <asm/unistd.h>
+#include "binary/BinaryHeap.h"
+#include "boa/vEBHeap.h"
+#include "dijkstra/Graph.h"
+#include "dijkstra/Vertex.h"
+#include "test/PerformSearches.h"
+#include "test/TestFibHeap.h"
+#include "test/TestPerformance.h"
+#include "main.h"
 
 using namespace std;
 
@@ -38,19 +37,19 @@ void writeSetFile(int* set, int size){
     setfile.close();
 }
 
-void testPerformance(){
+void testPerformance(int repeats){
     PerformSearches* pSearch = new PerformSearches();
     ofstream insert_testfile, remove_testfile, member_testfile, predec_testfile;
-    string insert = "testinsert_tree_file.csv";
-    string remove = "testremove_tree_file.csv";
-    string member = "testmember_tree_file.csv";
-    string predec = "testpredec_tree_file.csv";
+    string insert = "1_testinsert_tree_file.csv";
+    string remove = "1_testremove_tree_file.csv";
+    string member = "1_testmember_tree_file.csv";
+    string predec = "1_testpredec_tree_file.csv";
     insert_testfile.open(insert.c_str());
     remove_testfile.open(remove.c_str());
     member_testfile.open(member.c_str());
     predec_testfile.open(predec.c_str());
     for ( int size = 64; size <= pow(2,25); size *= 2 ) {
-        for ( int i = 0; i < 25; i++ ) {
+        for ( int i = 0; i < repeats; i++ ) {
             insert_testfile << size << ", ";
             remove_testfile << size << ", ";
             member_testfile << size << ", ";
@@ -59,10 +58,10 @@ void testPerformance(){
             double* remove_times = pSearch->performRemoves(size);
             double* member_times = pSearch->performMember(size);
             double* predec_times = pSearch->performPre(size);
-            for ( int i = 0; i < 4; i++ ) {
+            for ( int i = 0; i < 8; i++ ) {
                 insert_testfile << insert_times[i] << ", ";
             }
-            for ( int i = 0; i < 2; i++ ) {
+            for ( int i = 0; i < 4; i++ ) {
                 remove_testfile << remove_times[i] << ", ";
                 member_testfile << member_times[i] << ", ";
                 predec_testfile << predec_times[i] << ", ";
@@ -353,59 +352,14 @@ void performSingleFileGraph(){
         result[1]/=average;
         result[2]/=average;
 
+
         file << size << ", " << result[0] << ", " << result[1] << ", " << result[2] << endl;
         file.flush();
     }
 }
 
-long
-perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
-                int cpu, int group_fd, unsigned long flags){
-    int ret;
-    ret = syscall(__NR_perf_event_open, hw_event, pid, cpu,
-                   group_fd, flags);
-    return ret;
-}
-
-void testPageFaults(){
-struct perf_event_attr pe;
-    long long count;
-    int fd;
-
-    pid_t test= getpid();
-    cout << test << endl;
-
-    memset(&pe, 0, sizeof(struct perf_event_attr));
-    pe.type = PERF_TYPE_SOFTWARE;
-    pe.size = sizeof(struct perf_event_attr);
-    pe.config = PERF_COUNT_SW_PAGE_FAULTS;
-    pe.disabled = 1;
-    pe.exclude_kernel = 1;
-    pe.exclude_hv = 1;
-
-    fd = perf_event_open(&pe, 0, 0, -1, 0);
-    if (fd == -1) {
-       fprintf(stderr, "Error opening leader %llx\n", pe.config);
-       exit(EXIT_FAILURE);
-    }
-
-    ioctl(fd, PERF_EVENT_IOC_RESET, 0);
-    ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
-
-    printf("Measuring pagefaults printf\n");
-
-    ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
-    read(fd, &count, sizeof(long long));
-
-    printf("Had %lld Pagefaults\n", count);
-
-    close(fd);
-}
-
 int main() {
-    //testPerformance();
+    testPerformance(5);
     //cout << "Performing worst case performance test." << endl;
     //testWorstPerformance();
-
-
 }
