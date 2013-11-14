@@ -14,6 +14,8 @@
 
 using namespace std;
 
+struct perf_event_attr pe;
+
 PerformSearches::PerformSearches(){}
 
 PerformSearches::~PerformSearches(){}
@@ -24,18 +26,18 @@ long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
                    group_fd, flags);
 }
 
-int testPageFaultsReset(struct perf_event_attr *pe) {
-    memset(pe, 0, sizeof(struct perf_event_attr));
-    pe->type = PERF_TYPE_SOFTWARE;
-    pe->size = sizeof(struct perf_event_attr);
-    pe->config = PERF_COUNT_SW_PAGE_FAULTS;
-    pe->disabled = 1;
-    pe->exclude_kernel = 1;
-    pe->exclude_hv = 1;
+int testPageFaultsReset() {
+    memset(&pe, 0, sizeof(struct perf_event_attr));
+    pe.type = PERF_TYPE_SOFTWARE;
+    pe.size = sizeof(struct perf_event_attr);
+    pe.config = PERF_COUNT_SW_PAGE_FAULTS;
+    pe.disabled = 1;
+    pe.exclude_kernel = 1;
+    pe.exclude_hv = 1;
 
-    int fd = perf_event_open(pe, 0, 0, -1, 0);
+    int fd = perf_event_open(&pe, 0, -1, -1, 0);
     if ( fd == -1 ) {
-       fprintf(stderr, "Error opening leader %llx\n", pe->config);
+       fprintf(stderr, "Error opening leader %llx\n", pe.config);
        exit(EXIT_FAILURE);
     }
 
@@ -74,21 +76,20 @@ int* PerformSearches::makeSet(int size) {
 }
 
 double* PerformSearches::performPre(int universe) {
-    struct perf_event_attr pe;
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
 
     int* ordered = makeSet(universe);
     RBNode** rbInserted = new RBNode*[universe];
 
-    double* times = new double[4];
+    double* times = new double[2];
 
     for ( int i = 0; i < universe; i++ ) {
         rbInserted[i] = rbInOrder->insert(ordered[i]);
         vbInOrder->insert(ordered[i]);
     }
 
-    int fd = testPageFaultsReset(&pe);
+    int fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
@@ -97,7 +98,7 @@ double* PerformSearches::performPre(int universe) {
     times[0] = stopClock();
     times[2] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset(&pe);
+    fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
@@ -116,7 +117,6 @@ double* PerformSearches::performPre(int universe) {
 }
 
 double* PerformSearches::performMember(int universe) {
-    struct perf_event_attr pe;
     int half_universe = universe * 0.5;
 
     RedBlack* rbInOrder = new RedBlack();
@@ -132,7 +132,7 @@ double* PerformSearches::performMember(int universe) {
         vbInOrder->insert(ordered[i]);
     }
 
-    int fd = testPageFaultsReset(&pe);
+    int fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
@@ -141,11 +141,11 @@ double* PerformSearches::performMember(int universe) {
     times[0] = stopClock();
     times[2] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset(&pe);
+    fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
-        vbInOrder->member(i);
+       vbInOrder->member(i);
     }
     times[1] = stopClock();
     times[3] = double(testPageFaultsDisable(fd));
@@ -160,7 +160,6 @@ double* PerformSearches::performMember(int universe) {
 }
 
 double* PerformSearches::performRemoves(int universe) {
-    struct perf_event_attr pe;
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
 
@@ -176,22 +175,24 @@ double* PerformSearches::performRemoves(int universe) {
 
     shuffle(ordered,universe);
 
-    int fd = testPageFaultsReset(&pe);
+    int fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
         rbInOrder->remove(rbInserted[i]);
     }
     times[0] = stopClock();
+
     times[2] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset(&pe);
+    fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
         vbInOrder->remove(ordered[i]);
     }
     times[1] = stopClock();
+
     times[3] = double(testPageFaultsDisable(fd));
 
     delete rbInOrder;
@@ -209,7 +210,6 @@ double* PerformSearches::performRemoves(int universe) {
 }
 
 double* PerformSearches::performInserts(int universe) {
-    struct perf_event_attr pe;
     RedBlack* rbShuffle = new RedBlack();
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbShuffle = new vEB(universe);
@@ -221,9 +221,7 @@ double* PerformSearches::performInserts(int universe) {
 
     double* times = new double[8];
 
-    int fd = 0;
-    fd = testPageFaultsReset(&pe);
-
+    int fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         rbShuffle->insert(shuffled[i]);
@@ -231,24 +229,23 @@ double* PerformSearches::performInserts(int universe) {
     times[0] = stopClock();
     times[4] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset(&pe);
-
+    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         rbInOrder->insert(ordered[i]);
     }
     times[1] = stopClock();
     times[5] = double(testPageFaultsDisable(fd));
-    fd = testPageFaultsReset(&pe);
 
+    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         vbShuffle->insert(shuffled[i]);
     }
     times[2] = stopClock();
     times[6] = double(testPageFaultsDisable(fd));
-    fd = testPageFaultsReset(&pe);
 
+    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         vbInOrder->insert(ordered[i]);

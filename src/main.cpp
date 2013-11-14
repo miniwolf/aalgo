@@ -54,17 +54,17 @@ void testPerformance(int repeats){
             remove_testfile << size << ", ";
             member_testfile << size << ", ";
             predec_testfile << size << ", ";
-            double* insert_times = pSearch->performInserts(size);
-            double* remove_times = pSearch->performRemoves(size);
+//            double* insert_times = pSearch->performInserts(size);
+//            double* remove_times = pSearch->performRemoves(size);
             double* member_times = pSearch->performMember(size);
-            double* predec_times = pSearch->performPre(size);
-            for ( int i = 0; i < 8; i++ ) {
-                insert_testfile << insert_times[i] << ", ";
-            }
+//            double* predec_times = pSearch->performPre(size);
+//            for ( int i = 0; i < 8; i++ ) {
+//                insert_testfile << insert_times[i] << ", ";
+            //           }
             for ( int i = 0; i < 4; i++ ) {
-                remove_testfile << remove_times[i] << ", ";
+                //    remove_testfile << remove_times[i] << ", ";
                 member_testfile << member_times[i] << ", ";
-                predec_testfile << predec_times[i] << ", ";
+                // predec_testfile << predec_times[i] << ", ";
             }
             insert_testfile << endl;
             remove_testfile << endl;
@@ -74,10 +74,10 @@ void testPerformance(int repeats){
             remove_testfile.flush();
             member_testfile.flush();
             predec_testfile.flush();
-            delete[] insert_times;
-            delete[] remove_times;
+//            delete[] insert_times;
+//            delete[] remove_times;
             delete[] member_times;
-            delete[] predec_times;
+//            delete[] predec_times;
         }
     }
     insert_testfile.close();
