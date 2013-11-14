@@ -26,7 +26,7 @@ long perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
                    group_fd, flags);
 }
 
-int testPageFaultsReset() {
+int testPageFaults() {
     memset(&pe, 0, sizeof(struct perf_event_attr));
     pe.type = PERF_TYPE_SOFTWARE;
     pe.size = sizeof(struct perf_event_attr);
@@ -40,19 +40,19 @@ int testPageFaultsReset() {
        fprintf(stderr, "Error opening leader %llx\n", pe.config);
        exit(EXIT_FAILURE);
     }
-
-    ioctl(fd, PERF_EVENT_IOC_RESET, 0);
-    ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
     return fd;
 }
 
-long long testPageFaultsDisable(int fd) {
+void resetEnableFD(int fd) {
+    ioctl(fd, PERF_EVENT_IOC_RESET, 0);
+    ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+}
+
+long long disableCount(int fd) {
     long long count;
 
     ioctl(fd, PERF_EVENT_IOC_DISABLE, 0);
     read(fd, &count, sizeof(long long));
-
-    close(fd);
     return count;
 }
 
@@ -89,23 +89,26 @@ double* PerformSearches::performPre(int universe) {
         vbInOrder->insert(ordered[i]);
     }
 
-    int fd = testPageFaultsReset();
+    int fd = testPageFaults();
+    resetEnableFD(fd);
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
         rbInOrder->predecessor(i);
     }
     times[0] = stopClock();
-    times[2] = double(testPageFaultsDisable(fd));
+    times[2] = double(disableCount(fd));
 
-    fd = testPageFaultsReset();
+    resetEnableFD(fd);
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
         vbInOrder->predecessor(i);
     }
     times[1] = stopClock();
-    times[3] = double(testPageFaultsDisable(fd));
+    times[3] = double(disableCount(fd));
+
+    close(fd);
 
     delete rbInOrder;
     delete vbInOrder;
@@ -132,23 +135,24 @@ double* PerformSearches::performMember(int universe) {
         vbInOrder->insert(ordered[i]);
     }
 
-    int fd = testPageFaultsReset();
+    int fd = testPageFaults();
+    resetEnableFD(fd);
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
         rbInOrder->member(i);
     }
     times[0] = stopClock();
-    times[2] = double(testPageFaultsDisable(fd));
+    times[2] = double(disableCount(fd));
 
-    fd = testPageFaultsReset();
-
+    resetEnableFD(fd);
     startClock();
     for ( int i = 0; i < universe; i++ ) {
        vbInOrder->member(i);
     }
     times[1] = stopClock();
-    times[3] = double(testPageFaultsDisable(fd));
+    times[3] = double(disableCount(fd));
+    close(fd);
 
     delete rbInOrder;
     delete vbInOrder;
@@ -175,7 +179,7 @@ double* PerformSearches::performRemoves(int universe) {
 
     shuffle(ordered,universe);
 
-    int fd = testPageFaultsReset();
+//    int fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
@@ -183,9 +187,9 @@ double* PerformSearches::performRemoves(int universe) {
     }
     times[0] = stopClock();
 
-    times[2] = double(testPageFaultsDisable(fd));
+//    times[2] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset();
+//    fd = testPageFaultsReset();
 
     startClock();
     for ( int i = 0; i < universe; i++ ) {
@@ -193,7 +197,7 @@ double* PerformSearches::performRemoves(int universe) {
     }
     times[1] = stopClock();
 
-    times[3] = double(testPageFaultsDisable(fd));
+//    times[3] = double(testPageFaultsDisable(fd));
 
     delete rbInOrder;
     delete vbInOrder;
@@ -221,37 +225,37 @@ double* PerformSearches::performInserts(int universe) {
 
     double* times = new double[8];
 
-    int fd = testPageFaultsReset();
+//    int fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         rbShuffle->insert(shuffled[i]);
     }
     times[0] = stopClock();
-    times[4] = double(testPageFaultsDisable(fd));
+//    times[4] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset();
+//    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         rbInOrder->insert(ordered[i]);
     }
     times[1] = stopClock();
-    times[5] = double(testPageFaultsDisable(fd));
+//    times[5] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset();
+//    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         vbShuffle->insert(shuffled[i]);
     }
     times[2] = stopClock();
-    times[6] = double(testPageFaultsDisable(fd));
+//    times[6] = double(testPageFaultsDisable(fd));
 
-    fd = testPageFaultsReset();
+//    fd = testPageFaultsReset();
     startClock();
     for ( int i = 0; i < universe ; i++ ) {
         vbInOrder->insert(ordered[i]);
     }
     times[3] = stopClock();
-    times[7] = double(testPageFaultsDisable(fd));
+//    times[7] = double(testPageFaultsDisable(fd));
 
     delete rbShuffle;
     delete rbInOrder;
