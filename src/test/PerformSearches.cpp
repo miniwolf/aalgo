@@ -82,7 +82,7 @@ double* PerformSearches::performPre(int universe) {
     int* ordered = makeSet(universe);
     RBNode** rbInserted = new RBNode*[universe];
 
-    double* times = new double[2];
+    double* times = new double[4];
 
     for ( int i = 0; i < universe; i++ ) {
         rbInserted[i] = rbInOrder->insert(ordered[i]);
@@ -218,13 +218,12 @@ double* PerformSearches::performInserts(int universe) {
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbShuffle = new vEB(universe);
     vEB* vbInOrder = new vEB(universe);
-
     int* shuffled = makeSet(universe);
     int* ordered  = makeSet(universe);
+
     shuffle(shuffled,universe);
 
     double* times = new double[8];
-
     int fd = testPageFaults();
 
     resetEnableFD(fd);

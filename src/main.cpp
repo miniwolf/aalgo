@@ -37,7 +37,7 @@ void writeSetFile(int* set, int size){
     setfile.close();
 }
 
-void testPerformance(int repeats){
+void testPerformance(int repeats) {
     PerformSearches* pSearch = new PerformSearches();
     ofstream insert_testfile, remove_testfile, member_testfile, predec_testfile;
     string insert = "1_testinsert_tree_file.csv";
