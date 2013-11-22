@@ -75,6 +75,15 @@ int* PerformSearches::makeSet(int size) {
     return a;
 }
 
+int* makeEqualSet(int size) {
+    int* a = new int[size];
+    for ( int i = 0; i < size; i += 2 )
+        a[i] = i;
+    for ( int i = 1; i < size; i += 2 )
+        a[i] = 0;
+    return a;
+}
+
 double* PerformSearches::performPre(int universe) {
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
@@ -125,31 +134,30 @@ double* PerformSearches::performMember(int universe) {
     RedBlack* rbInOrder = new RedBlack();
     vEB* vbInOrder = new vEB(universe);
 
-    int* ordered = makeSet(half_universe);
-    RBNode** rbInserted = new RBNode*[half_universe];
+    int* ordered = makeEqualSet(universe);
+    RBNode** rbInserted = new RBNode*[universe];
 
     double* times = new double[4];
 
-    for ( int i = 0; i < half_universe; i++ ) {
+    for ( int i = 0; i < universe; i++ ) {
         rbInserted[i] = rbInOrder->insert(ordered[i]);
         vbInOrder->insert(ordered[i]);
     }
+    shuffle(ordered, universe);
 
     int fd = testPageFaults();
     resetEnableFD(fd);
 
     startClock();
-    for ( int i = 0; i < universe; i++ ) {
+    for ( int i = 0; i < universe; i++ )
         rbInOrder->member(i);
-    }
     times[0] = stopClock();
     times[2] = double(disableCount(fd));
 
     resetEnableFD(fd);
     startClock();
-    for ( int i = 0; i < universe; i++ ) {
+    for ( int i = 0; i < universe; i++ )
        vbInOrder->member(i);
-    }
     times[1] = stopClock();
     times[3] = double(disableCount(fd));
     close(fd);
