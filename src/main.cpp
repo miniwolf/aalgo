@@ -94,9 +94,9 @@ void testWorstPerformance(){
   ffile.open(ffilename.c_str());
   bfile.open(bfilename.c_str());
   vfile.open(vfilename.c_str());
-  for(int size = 64; size<=pow(2, 20)  ; size = size*2){
+  for(int size = 64; size<=pow(2, 24)+1  ; size = size*2){
     //cout << size << endl;
-    for(int i = 0; i<25; i++){
+    for(int i = 0; i<5; i++){
       Heap<int>* bHeap = new BinaryHeap<int>();
       Heap<int>* fHeap = new FibonacciHeap<int>();
       Heap<int>* vebHeap = new vEBHeap<int>(size*2);
@@ -359,7 +359,7 @@ void performSingleFileGraph(){
 }
 
 int main() {
-    testPerformance(5);
+    //testPerformance(5);
     //cout << "Performing worst case performance test." << endl;
-    //testWorstPerformance();
+    testWorstPerformance();
 }
