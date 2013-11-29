@@ -147,6 +147,7 @@ void vEB::insert(int x){
 
     if (!useBitset){
         if (min == NIL){
+            assert(max == NIL);
             emptyInsert(x);
         } else {
             if(x < min){
@@ -168,6 +169,7 @@ void vEB::insert(int x){
         }
     } else {
         assert(x < CUTOFF);
+        assert(!bits->test(x));
         if ( x < min or min == NIL){
             min = x;
         }
@@ -199,6 +201,8 @@ void vEB::remove(int x){
                 min = x;
             }
             cluster[high(x)]->remove(low(x));
+
+            assert(!cluster[high(x)]->member(low(x))); // these two assertions are the same thing.
             if ( cluster[high(x)]->min == NIL){
                 summary->remove(high(x));
                 if ( x == max ){
@@ -216,28 +220,29 @@ void vEB::remove(int x){
             }
         }
     } else {
-        if (bits->test(x)){
-            if (min == x){
-                min = NIL;
-                for ( int i = x+1; i < CUTOFF ; i++){
-                    if(bits->test(i)){
-                        min = i;
-                        break;
-                    }
+        assert(bits->test(x));
+        bits->set(x,false);
+        if (min == x){
+            min = NIL;
+            for ( int i = 0; i < CUTOFF ; i++){
+                if(bits->test(i)){
+                    min = i;
+                    break;
                 }
             }
-            if (max == x){
-                max = NIL;
-                for (int i = x-1; i >= 0 ; i--){
-                    if(bits->test(i)){
-                        max = i;
-                        break;
-                    }
-                }
-            }
-            assert( min <= max or (min==NIL and max == NIL));
-            bits->set(x,false);
         }
+        if (max == x){
+            max = NIL;
+            for (int i = CUTOFF-1; i >= 0 ; i--){
+                if(bits->test(i)){
+                    max = i;
+                    break;
+                }
+            }
+        }
+        assert( min <= max or (min==NIL and max == NIL));
+
+
     }
     count--;
 }
@@ -246,6 +251,7 @@ int vEB::deleteMin(){
     if ( min != NIL){
         int temp = min;
         remove(min);
+        assert(temp != min);
         return temp;
     } else {
         return NIL;
@@ -253,7 +259,7 @@ int vEB::deleteMin(){
 }
 
 void vEB::decreaseKey(int x, int target){
-    assert(member(x));
+    //assert(member(x)); // this assertion cost too much performance
     assert(target < u);
     remove(x);
     insert(target);

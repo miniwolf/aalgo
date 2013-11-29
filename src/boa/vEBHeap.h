@@ -30,7 +30,7 @@ public:
       mNodeArray[i] = NULL;
     }
   }
-  
+
   virtual ~vEBHeap() {
     for(int i = 0; i < mUniverse; i ++){
       delete mNodeArray[i];
@@ -38,26 +38,41 @@ public:
     delete[] mNodeArray;
     delete tree;
   }
-  
+
   virtual int getComparisons(){
     return 0;
   }
-  
+
   virtual Node<T>* insert(Node<T>* node) {
-    tree->insert(node->key);
-    return setNode(node->key, node->payload);
-    
+    Node<T>* temp = getNode(node->key);
+    if(temp){
+        return setNode(node->key, node->payload);
+    } else {
+        tree->insert(node->key);
+        return setNode(node->key, node->payload);
+    }
   }
-  
+
   virtual Node<T>* insert(int key, T payload) {
-    tree->insert(key);
-    return setNode(key, payload);
+    Node<T>* temp = getNode(key);
+    if ( temp){
+        return setNode(key, payload);
+    } else {
+        tree->insert(key);
+        return setNode(key, payload);
+    }
   }
-  
+
   virtual Node<T>* findMin() {
-    return tree->min == tree->NIL?NULL:getNode(tree->min);
+    if(tree->min == tree->NIL) {
+        return NULL;
+    } else {
+        Node<T>* node = getNode(tree->min);
+        assert(node);
+        return node;
+    }
   }
-  
+
   virtual Node<T>* deleteMin() {
     int res = tree->deleteMin();
     if(res == tree->NIL){
@@ -66,24 +81,27 @@ public:
     Node<T>* node = removeNode(res);
     return node;
   }
-  
+
   void decreaseKey(Node<T> *node, int newKey){
     tree->decreaseKey(node->key, newKey);
     removeNode(node->key);
     node->key = newKey;
     setNode(node);
   }
-  
+
   virtual void makePlot(string) {  }
-  
+
   virtual void remove(Node<T>* node){
-    removeNode(node->key);
+    if(getNode(node->key)){
+        removeNode(node->key);
+        tree->remove(node->key);
+    }
   }
-  
+
   virtual int getSize() {
     return tree->count;
   }
-  
+
 private:
   int mUniverse;
   Node<T>** mNodeArray;
