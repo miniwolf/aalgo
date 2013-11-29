@@ -250,7 +250,6 @@ int vEB::deleteMin(){
     } else {
         return NIL;
     }
-    count--;
 }
 
 void vEB::decreaseKey(int x, int target){
