@@ -30,7 +30,6 @@ q
 *.aux
 *.log
 src/OLD/*
-src/*.csv
 src/*.gz
 src/graphs/
 
