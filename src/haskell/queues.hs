@@ -1,17 +1,20 @@
 module Main where
 import System.Environment
+import Data.List hiding (insert)
+-- import qualified Data.List (insert)   -- use Data.List.insert when using THAT particular insert.
+-- import qualified Data.List as List
 
 main :: IO()
-main = putStrLn . show . size $ insert 3 $insert 1 (make [1,2,3,4,5]::TripleOfList Int) 
+main = putStrLn . show $ insert 3 $insert 1 (make [1,2,3,4,5]::PairOfList Int) 
 
 class Queue q where
 	empty :: q a
 	size :: q a -> Int
 	insert :: a -> q a -> q a
 	remove :: q a -> ( a, q a )
-	make :: [a] -> q a
-
-
+	make :: [a] -> q a 
+	make = foldr insert empty
+	
 -- queues from lists
 instance Queue [] where
 	empty = []
@@ -27,6 +30,13 @@ instance Queue [] where
 -- queues from simple pairs
 	-- this defines a constructor for a pair of lists, and is used to disambiguate other pairs of lists.
 newtype PairOfList a = POL { unPOL :: ([a],[a]) }
+
+--instance Show a => Show(PairOfList a)
+	--where show (POL (xs,ys)) = (show xs) ++ ", " ++ (show ys)
+
+instance Show a => Show(PairOfList a) where	
+	show (POL (xs, ys)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where 
+		brackets = (++"]") . ("["++)
 
 instance Queue PairOfList where
 	empty = POL ([],[])
@@ -61,11 +71,5 @@ instance Queue TripleOfList where
 	empty = TOL ([],[],[])
 	size (TOL (ls, rs, ls')) = length ls + length rs
 	insert x (TOL (ls, rs, ts)) = makeq (TOL (ls, x:rs, ts))
-	remove (TOL (ls, rs, ts)) = (head ls, makeq (TOL (tail ls, rs, ts))) 
-	make xs = case xs of
-		[] -> empty
-		[a] -> insert a empty
-		x:xs' -> insert x $ make xs'
-	
-	
+	remove (TOL (ls, rs, ts)) = (head ls, makeq (TOL (tail ls, rs, ts)))
 
