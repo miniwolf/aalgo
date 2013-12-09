@@ -35,7 +35,7 @@ qRemove (PairQ (l,r)) =
 	if length l > 0 then 
 		 (head l,PairQ (tail l,r)) 
 	else 
-		qremove(PairQ(reverse r, []))
+		qRemove(PairQ(reverse r, []))
 
 
 listLength l = length l
