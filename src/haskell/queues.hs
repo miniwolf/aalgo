@@ -49,7 +49,7 @@ instance Queue PairOfList where
 			remove (POL (reverse ys, []))
 	make xs = POL ([],xs)
 
--- okasaki queue
+-- okasaki queue.
 newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
 
 rotate :: TripleOfList a -> [a]
@@ -73,3 +73,5 @@ instance Queue TripleOfList where
 	insert x (TOL (ls, rs, ts)) = makeq (TOL (ls, x:rs, ts))
 	remove (TOL (ls, rs, ts)) = (head ls, makeq (TOL (tail ls, rs, ts)))
 
+-- constant time worst case queues.
+newtype RealTime a = RT { unRT :: (Int,Int,[a],[a],[a],[a],[a]) }
