@@ -15,6 +15,13 @@
 # Compiled executables
 fibheap
 
+# Haskell intermediates
+*.hi
+
+# Haskell executables
+src/haskell/queues
+src/haskell/main
+
 src/.cproject
 src/.project
 
