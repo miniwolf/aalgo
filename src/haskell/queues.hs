@@ -11,11 +11,10 @@ class Queue q where
 	empty :: q a
 	size :: q a -> Int
 	insert :: a -> q a -> q a
-	remove :: q a -> ( a, q a )
+	remove :: q a -> q a
 	make :: [a] -> q a 
 	make = foldr insert empty -- default implementation
-	peek :: q a -> a
-	peek q = fst $ remove q -- default implementation
+	peek :: q a -> Maybe a
 
 -- queues from lists
 instance Queue [] where
@@ -24,11 +23,13 @@ instance Queue [] where
 	insert x xs = case xs of
 		[] -> [x]
 		(y:xs') -> y : insert x xs'
-	remove xs = 
-		let x:xs' = xs in
-		(x, xs')
-	make xs = xs
-	peek xs = head xs
+	remove xs = case xs of
+		[] -> []
+		x:xs' -> xs'
+	make xs = reverse xs
+	peek xs = case xs of
+		[] -> Nothing
+		x:xs -> Just x
 
 -- queues from simple pairs
 	-- this defines a constructor for a pair of lists, and is used to disambiguate other pairs of lists.
@@ -45,11 +46,21 @@ instance Queue PairOfList where
 	empty = POL ([],[])
 	size (POL (xs, ys)) = length xs + length ys
 	insert x (POL (xs, ys)) = (POL ( xs, x:ys))
-	remove (POL (xs,ys))
-		| size xs > 0 = (head xs, (POL (tail xs, ys)))
-		| otherwise   = remove (POL (reverse ys, []))
+	remove (POL (xs,ys)) = case xs of
+		x:xs' -> POL ( xs', ys)
+		[] -> case ys of
+			y:ys' -> remove( POL ( reverse  ys, []))
+			[] -> empty
+	peek (POL (xs, ys)) = case xs of
+		[] -> Nothing
+		x:xs -> Just x
+
 -- okasaki queue.
 newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
+
+instance Show a => Show(TripleOfList a) where
+	show q | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
+	show _ = " "
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) =
@@ -70,39 +81,59 @@ instance Queue TripleOfList where
 	empty = TOL ([],[],[])
 	size (TOL (ls, rs, ls')) = length ls + length rs
 	insert x (TOL (ls, rs, ts)) = makeq (TOL (ls, x:rs, ts))
-	remove (TOL (ls, rs, ts)) = (head ls, makeq (TOL (tail ls, rs, ts)))
+	remove (TOL (ls, rs, ts)) = case ls of
+		l:ls' -> makeq (TOL (ls', rs, ts))
+		[] -> empty
+	peek (TOL (ls,rs,ts)) = case ls of
+		(x:_) -> Just x
+		[] -> Nothing
 
--- constant time worst case queues. !!! These are apparently incorrect !!!
+-- constant time worst case queues.
 newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a]) }
 
+instance Show a => Show(RealTimePair a) where
+	show q@(RTP (d, s, fs, as, bs, cs, ds, es)) | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
+	show _ = ""
+
 f:: RealTimePair a -> RealTimePair a
-f(RTP(d, 0, fs, [], bs, x:cs, ds, es)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es)
-f(RTP(d, s, fs, as, x:bs, [], ds, es)) = RTP(d, s+1, fs, x:as, bs, [], ds, es)
-f(RTP(d, s, fs, as, [], [], ds, es)) =
-	if s > d then
-		let x:as' = as in
-		RTP(d, s-1, fs, as', [], [], x:ds, es)
-	else
- 		RTP(0, 0, ds, [], ds, es, [], [])
+f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es)
+f(RTP(d, s, fs,     as, (x:bs),     [], ds, es)) = RTP(d, s+1, fs, x:as, bs, [], ds, es)
+f(RTP(d, s, fs, (x:as),     [],     [], ds, es)) | s > d = RTP(d, s-1, fs, as, [], [], (x:ds), es)
+f(RTP(d, s, fs,     as,     [],     [], ds, es)) | s == d = RTP(0, 0, ds, [], ds, es, [], [])
 
 instance Queue RealTimePair where
 	empty = RTP (0,0, [], [], [], [], [], [])
 	size (RTP (d, s, fs, as, bs, cs, ds, es)) = length fs + length cs + length ds + length es 
 	insert x (RTP (d, s, fs, as, bs, cs, ds, es)) = f(f(f(RTP(d, s, fs, as, bs, cs, ds, x:es))))
-	remove (RTP (d, s, fs, as, bs, cs , ds, es)) =
-		if d == s && length fs == 0 && length bs == 0 && length cs == 0 then
-			let x:ds' = ds in
-			(x,f(f(f(f(RTP(0, 0, ds', [], ds', es, [], []))))))
-		else
-			let x:fs' = fs in
-			(x, f(f(f(f(RTP( d+1, s, fs', as, bs, cs, ds, es))))))
+	remove q@(RTP (d, s, fs, as, bs, cs , ds, es)) =
+		case fs of
+			[] -> q
+			(_:fs') -> case f q of
+				q@(RTP (d, s, _, _, _, _, _, _)) | d == s -> remove q
+				_ -> f ( f ( f ( f (RTP(d+1, s, fs', as, bs, cs, ds, es)))))
+
+	peek (RTP (d, s, [], _, [], [], (x:_), _)) | d == s = Just x
+	peek (RTP (_, _, (x:_), _, _, _, _, _)) = Just x
+	peek _ = Nothing
 
 -- Real time queue 2, paper : http://ecommons.library.cornell.edu/handle/1813/6273
 -- 	Real Time Queue Operations in Pure LISP
 
--- we implement size in constant time
+-- we implement size in constant time !!! this implementation has apparently an error too... !!!
 
 newtype RealTimePair2 a = RTP2 { unRTP2 :: (Bool, Int, Int, [a], [a], [a], [a], [a], [a], Int) }
+
+instance Show a => Show(RealTimePair2 a) where
+	{-show q
+		| size q == 0 = ""
+		| size q > 1  =
+			let (e,qs) = remove q in
+			show e ++ ", " ++ show qs
+		| size q == 1 =
+			let (e,qs) = remove q in
+			show e
+	-}
+	show (RTP2(recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size)) = "(" ++ show recopy ++ ", " ++ show lendiff ++ ", " ++ show nrcopy ++ ", " ++ show hS ++ ", " ++ show tS ++ ", " ++ show hS' ++ ", " ++ show tS' ++ ", " ++ show hr ++ ", " ++ show size ++ ")"
 
 onestep :: RealTimePair2 a -> RealTimePair2 a
 onestep q
@@ -122,9 +153,13 @@ instance Queue RealTimePair2 where
 	insert v (RTP2( recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size))
 		| not recopy && lendiff > 0  = RTP2( False, lendiff-1, 0, hS, v:tS, [], [], [], [], size+1)
 		| not recopy && lendiff == 0 = onestep( onestep( RTP2 (True, 0, 0, hS, v:tS, hS, [], [], [], size+1)))
-		| recopy 		     = onestep( onestep( RTP2 (True, lendiff -1, nrcopy, hS, tS, hs, hS', v:tS, hr, size+1)))
+		| recopy 		     						 = onestep( onestep( RTP2 (True, lendiff -1, nrcopy, hS, tS, hs, hS', v:tS, hr, size+1)))
 	remove (RTP2( recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size))
-		| not recopy && lendiff > 0  = ( head hS, RTP2 (False, lendiff-1, 0, tail hS, tS, [], [], [], [], size-1))
-		| not recopy && lendiff == 0 = ( head hS, onestep $ onestep (RTP2 (True, 0, 0, tail hS, tS, tail hS, [], [], [], size-1)))
-		| recopy		     = ( head hs, onestep $ onestep (RTP2 (True, lendiff-1,nrcopy, hS, tS, tail hs, hS', tS', hr, size-1)))
+		| not recopy && lendiff > 0  = RTP2 (False, lendiff-1, 0, tail hS, tS, [], [], [], [], size-1)
+		| not recopy && lendiff == 0 = onestep $ onestep (RTP2 (True, 0, 0, tail hS, tS, tail hS, [], [], [], size-1))
+		| recopy		     = onestep $ onestep (RTP2 (True, lendiff-1,nrcopy, hS, tS, tail hs, hS', tS', hr, size-1))
 	size (RTP2( _, _, _, _, _, _, _, _, _, size')) = size'
+	peek (RTP2( recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size))
+		| not recopy && lendiff > 0  = Just $ head hS
+		| not recopy && lendiff == 0 = Just $ head hS
+		| recopy		     = Just $ head hs
