@@ -89,31 +89,31 @@ instance Queue TripleOfList where
 		[] -> Nothing
 
 -- constant time worst case queues.
-newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a]) }
+newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a], Int) }
 
 instance Show a => Show(RealTimePair a) where
-	show q@(RTP (d, s, fs, as, bs, cs, ds, es)) | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
+	show q@(RTP (d, s, fs, as, bs, cs, ds, es ,_)) | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
 	show _ = ""
 
 f:: RealTimePair a -> RealTimePair a
-f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es)
-f(RTP(d, s, fs,     as, (x:bs),     [], ds, es)) = RTP(d, s+1, fs, x:as, bs, [], ds, es)
-f(RTP(d, s, fs, (x:as),     [],     [], ds, es)) | s > d = RTP(d, s-1, fs, as, [], [], (x:ds), es)
-f(RTP(d, s, fs,     as,     [],     [], ds, es)) | s == d = RTP(0, 0, ds, [], ds, es, [], [])
+f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es , length)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es, length)
+f(RTP(d, s, fs,     as, (x:bs),     [], ds, es , length)) = RTP(d, s+1, fs, x:as, bs, [], ds, es, length)
+f(RTP(d, s, fs, (x:as),     [],     [], ds, es , length)) | s > d = RTP(d, s-1, fs, as, [], [], (x:ds), es , length)
+f(RTP(d, s, fs,     as,     [],     [], ds, es , length)) | s == d = RTP(0, 0, ds, [], ds, es, [], [], length)
 
 instance Queue RealTimePair where
-	empty = RTP (0,0, [], [], [], [], [], [])
-	size (RTP (d, s, fs, as, bs, cs, ds, es)) = length fs + length cs + length ds + length es 
-	insert x (RTP (d, s, fs, as, bs, cs, ds, es)) = f(f(f(RTP(d, s, fs, as, bs, cs, ds, x:es))))
-	remove q@(RTP (d, s, fs, as, bs, cs , ds, es)) =
+	empty = RTP (0,0, [], [], [], [], [], [], 0)
+	size (RTP (d, s, fs, as, bs, cs, ds, es, length)) = length
+	insert x (RTP (d, s, fs, as, bs, cs, ds, es, length)) = f(f(f(RTP(d, s, fs, as, bs, cs, ds, x:es, length +1))))
+	remove q@(RTP (d, s, fs, as, bs, cs , ds, es, length)) =
 		case fs of
 			[] -> q
 			(_:fs') -> case f q of
-				q@(RTP (d, s, _, _, _, _, _, _)) | d == s -> remove q
-				_ -> f ( f ( f ( f (RTP(d+1, s, fs', as, bs, cs, ds, es)))))
+				q@(RTP (d, s, _, _, _, _, _, _, _)) | d == s -> remove q
+				_ -> f ( f ( f ( f (RTP(d+1, s, fs', as, bs, cs, ds, es, length-1)))))
 
-	peek (RTP (d, s, [], _, [], [], (x:_), _)) | d == s = Just x
-	peek (RTP (_, _, (x:_), _, _, _, _, _)) = Just x
+	peek (RTP (d, s, [], _, [], [], (x:_), _, _)) | d == s = Just x
+	peek (RTP (_, _, (x:_), _, _, _, _, _, _)) = Just x
 	peek _ = Nothing
 
 -- Real time queue 2, paper : http://ecommons.library.cornell.edu/handle/1813/6273
