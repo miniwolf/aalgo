@@ -1,5 +1,6 @@
 module Main where
 import System.Environment
+import Queues
 
 main :: IO ()
 main = do

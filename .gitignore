@@ -21,6 +21,7 @@ fibheap
 # Haskell executables
 src/haskell/queues
 src/haskell/main
+src/haskell/performance
 
 src/.cproject
 src/.project
