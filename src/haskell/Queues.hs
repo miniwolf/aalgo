@@ -7,7 +7,7 @@ import Data.List hiding (insert)
 --main :: IO()
 --main = putStrLn . show $ insert 3 $insert 1 (make [1,2,3,4,5]::PairOfList Int)
 
-emptyQueues = (empty ::[Int], empty ::PairOfList Int, empty :: TripleOfList Int, empty::RealTimePair Int)
+emptyQueues = (empty :: ListQueue Int, empty ::PairOfList Int, empty :: TripleOfList Int, empty::RealTimePair Int)
 
 class Queue q where
 	empty :: q a
@@ -23,17 +23,19 @@ class Queue q where
 		Nothing -> []
 
 -- queues from lists
-instance Queue [] where
-	empty = []
-	size = length
-	insert x xs = case xs of
-		[] -> [x]
-		(y:xs') -> y : insert x xs'
-	remove xs = case xs of
-		[] -> []
-		x:xs' -> xs'
-	make xs = reverse xs
-	peek xs = case xs of
+newtype ListQueue a = LQ { unLQ :: ([a],Int) }
+
+instance Queue ListQueue where
+	empty = LQ ([],0)
+	size (LQ(xs,l)) = l
+	insert x (LQ(xs,l)) = case xs of
+		[] -> LQ ([x],1)
+		(y:xs') ->  insert x (LQ(y :xs',l-1))
+	remove (LQ(xs,l)) = case xs of
+		[] -> LQ ([],l)
+		x:xs' -> LQ(xs',l-1)
+	make xs = LQ(reverse xs, length xs)
+	peek (LQ(xs, l)) = case xs of
 		[] -> Nothing
 		x:xs -> Just x
 
@@ -70,19 +72,15 @@ instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
 
 rotate :: TripleOfList a -> [a]
-rotate (TOL (ls, rs, as)) =
-	if size ls == 0 then
-		head rs : as
-	else
-		head ls : rotate (TOL (tail ls, tail rs, head rs : as))
+rotate (TOL (ls, rs, as)) = case ls of
+	[] -> head rs : as
+	l:ls' -> l : rotate (TOL (ls', tail rs, head rs : as))
 
 makeq :: TripleOfList a -> TripleOfList a
-makeq (TOL (xs, ys, zs)) = 
-	if size zs > 0 then
-		TOL (xs, ys, tail zs)
-	else
-		let zs' = rotate (TOL (xs,ys,[])) in
+makeq (TOL (xs, ys, zs)) = case zs of
+	[] -> let zs' = rotate (TOL (xs,ys,[])) in
 		TOL (zs', [] , zs')
+	(z:zs') -> TOL (xs, ys, tail zs')
 
 instance Queue TripleOfList where
 	empty = TOL ([],[],[])
