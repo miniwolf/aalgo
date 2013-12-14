@@ -1,11 +1,13 @@
-module Main where
+module Queues where
 import System.Environment
 import Data.List hiding (insert)
 -- import qualified Data.List (insert)   -- use Data.List.insert when using THAT particular insert.
 -- import qualified Data.List as List
 
-main :: IO()
-main = putStrLn . show $ insert 3 $insert 1 (make [1,2,3,4,5]::PairOfList Int) 
+--main :: IO()
+--main = putStrLn . show $ insert 3 $insert 1 (make [1,2,3,4,5]::PairOfList Int)
+
+emptyQueues = (empty ::[Int], empty ::PairOfList Int, empty :: TripleOfList Int, empty::RealTimePair Int)
 
 class Queue q where
 	empty :: q a
@@ -15,6 +17,10 @@ class Queue q where
 	make :: [a] -> q a 
 	make = foldr insert empty -- default implementation
 	peek :: q a -> Maybe a
+	toList :: q a -> [a]
+	toList queue = case peek queue of
+		Just x -> x : (toList $ remove queue)
+		Nothing -> []
 
 -- queues from lists
 instance Queue [] where
@@ -61,8 +67,7 @@ instance Queue PairOfList where
 newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
 
 instance Show a => Show(TripleOfList a) where
-	show q | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
-	show _ = " "
+	show queue = show(toList queue)
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) =
@@ -94,8 +99,7 @@ instance Queue TripleOfList where
 newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a], Int) }
 
 instance Show a => Show(RealTimePair a) where
-	show q@(RTP (d, s, fs, as, bs, cs, ds, es ,_)) | size q > 0 = (show $ peek q) ++ ", " ++ (show $ remove q)
-	show _ = ""
+	show queue = show(toList queue)
 
 f:: RealTimePair a -> RealTimePair a
 f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es , length)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es, length)
