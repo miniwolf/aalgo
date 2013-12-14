@@ -25,12 +25,15 @@ class Queue q where
 -- queues from lists
 newtype ListQueue a = LQ { unLQ :: ([a],Int) }
 
+instance Show a => Show(ListQueue a) where
+	show (LQ(xs,size)) = show $ reverse xs
+
 instance Queue ListQueue where
 	empty = LQ ([],0)
 	size (LQ(xs,l)) = l
 	insert x (LQ(xs,l)) = case xs of
 		[] -> LQ ([x],1)
-		(y:xs') ->  insert x (LQ(y :xs',l-1))
+		xs' -> LQ( reverse $ x:reverse xs, l+1)
 	remove (LQ(xs,l)) = case xs of
 		[] -> LQ ([],l)
 		x:xs' -> LQ(xs',l-1)
@@ -80,7 +83,7 @@ makeq :: TripleOfList a -> TripleOfList a
 makeq (TOL (xs, ys, zs)) = case zs of
 	[] -> let zs' = rotate (TOL (xs,ys,[])) in
 		TOL (zs', [] , zs')
-	(z:zs') -> TOL (xs, ys, tail zs')
+	(z:zs') -> TOL (xs, ys, zs')
 
 instance Queue TripleOfList where
 	empty = TOL ([],[],[])

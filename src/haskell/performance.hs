@@ -10,7 +10,10 @@ main = do
 	then
 		let (q1,q2,q3,q4) = emptyQueues in case args of
 			[nstring,queue] -> case queue of 
-				"List" -> let q = foldr insert [n,n-1..1] q1 in putStrLn ( (show $ peek q)	++ ", "++ (show $ size q))
+				"list" -> let q = foldr insert q1 [n,n-1..1] in putStrLn ( (show $ peek q)	++ ", "++ (show $ size q))
+				"pair" -> let q = foldr insert q2 [n,n-1..1] in putStrLn ( (show $ peek q)	++ ", "++ (show $ size q))
+				"triple" -> let q = foldr insert q3 [n,n-1..1] in putStrLn ( (show $ peek q)	++ ", "++ (show $ size q))
+				"const" -> let q = foldr insert q4 [n,n-1..1] in putStrLn ( (show $ peek q)	++ ", "++ (show $ size q))
 				where n = read(nstring)	
 			_ -> putStrLn "Something is wrong :/"
 			
