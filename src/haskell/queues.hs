@@ -52,7 +52,9 @@ instance Queue PairOfList where
 			y:ys' -> remove( POL ( reverse  ys, []))
 			[] -> empty
 	peek (POL (xs, ys)) = case xs of
-		[] -> Nothing
+		[] -> case ys of
+			[] -> Nothing
+			ys -> Just $ last ys
 		x:xs -> Just x
 
 -- okasaki queue.
