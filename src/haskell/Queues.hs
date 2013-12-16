@@ -21,6 +21,10 @@ class Queue q where
 	toList queue = case peek queue of
 		Just x -> x : (toList $ remove queue)
 		Nothing -> []
+	removeAll :: q a -> q a
+	removeAll queue = case peek queue of
+		Nothing -> queue
+		Just x -> removeAll queue
 
 -- queues from lists
 newtype ListQueue a = LQ { unLQ :: ([a],Int) }
