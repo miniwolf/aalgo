@@ -3,3 +3,6 @@ brug cabal ->
 sudo apt-get install cabal-install
 cabal-update
 cabal install criterion
+
+ghc --make performance.hs && ./performance > output.txt
+
