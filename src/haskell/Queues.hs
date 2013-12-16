@@ -48,25 +48,25 @@ instance Queue ListQueue where
 
 -- queues from simple pairs
 	-- this defines a constructor for a pair of lists, and is used to disambiguate other pairs of lists.
-newtype PairOfList a = POL { unPOL :: ([a],[a]) }
+newtype PairOfList a = POL { unPOL :: ([a],[a], Int) }
 
 --instance Show a => Show(PairOfList a)
 	--where show (POL (xs,ys)) = (show xs) ++ ", " ++ (show ys)
 
-instance Show a => Show(PairOfList a) where	
-	show (POL (xs, ys)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where 
+instance Show a => Show(PairOfList a) where
+	show (POL (xs, ys, length)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where
 		brackets = (++"]") . ("["++)
 
 instance Queue PairOfList where
-	empty = POL ([],[])
-	size (POL (xs, ys)) = length xs + length ys
-	insert x (POL (xs, ys)) = (POL ( xs, x:ys))
-	remove (POL (xs,ys)) = case xs of
-		x:xs' -> POL ( xs', ys)
+	empty = POL ([],[],0)
+	size (POL (xs, ys, length)) = length
+	insert x (POL (xs, ys, length)) = (POL ( xs, x:ys, length+1))
+	remove (POL (xs,ys, length)) = case xs of
+		x:xs' -> POL ( xs', ys , length -1)
 		[] -> case ys of
-			y:ys' -> remove( POL ( reverse  ys, []))
+			y:ys' -> remove( POL ( reverse  ys, [], length))
 			[] -> empty
-	peek (POL (xs, ys)) = case xs of
+	peek (POL (xs, ys, _)) = case xs of
 		[] -> case ys of
 			[] -> Nothing
 			ys -> Just $ last ys
