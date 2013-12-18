@@ -5,10 +5,4 @@ cabal-update
 cabal install criterion
 
 ghc --make performance.hs && ./performance > output.txt
-
-grep
-sed
-
-cat output2 | sed -e 's/\([0-9.]+)/\1/'
-sed 's/mean:\ \([0-9]\+\.[0-9]\+\).*/\1/' < output2 > output3
-
+cat output.txt | grep mean: | sed 's/mean:\ \([0-9]\+\.[0-9]\+\)\ \([mu]s\).*/\1,\2/' > output.csv
