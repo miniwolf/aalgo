@@ -41,9 +41,9 @@ performInsertTriple n = let (q1,q2,q3,q4) = emptyQueues in
 performInsertConst n = let (q1,q2,q3,q4) = emptyQueues in
   foldr insert q4 [n,n-1..1]
   
-  
+ 
 performDel q n = 
-    foldr (\ x y -> remove x) q [n,n-1..1]
+    foldr (\ x y -> remove y) q [n,n-1..1]
 
 
 performPeekList n = 
@@ -66,6 +66,7 @@ performPeekConst n =
   case peek q of Just x -> x
                  Nothing -> 0
 
+
 performPeekDel qe n = 
   let q = performDel qe n in 
   case peek q of Just x -> x
@@ -80,6 +81,6 @@ generateTest pfk min max
 
 generateTestDel               :: (Int -> a) -> (a -> Int -> Int) -> Int -> Int -> [Benchmark]
 generateTestDel q pfk min max = 
-  let qe = q min in 
+  let qe = q $! min in  -- $! should force the function to strict evaluation instead of lazy 
   case min >= max of True -> [bench ("list-"++show min) $ nf (pfk qe) min]
                      False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel q pfk (min*2) max)
