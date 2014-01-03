@@ -22,6 +22,7 @@ fibheap
 src/haskell/queues
 src/haskell/main
 src/haskell/performance
+src/haskell/output.txt
 
 src/.cproject
 src/.project
