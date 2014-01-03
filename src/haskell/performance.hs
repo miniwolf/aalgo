@@ -59,9 +59,9 @@ performPeekConst = performPeek performInsertConst
 
 performPeekDel qe = performPeek (\ n -> foldr (\ _ -> remove) qe [n,n-1..1])
 
-performPeekDelRepeat qe = performPeek (\ n -> foldr (\ _ _ -> remove qe ) qe [n, n-1..1])
+performPeekDelRepeat qe = performPeek (\ _ -> remove qe )
 
-performPeekInsertRepeat qe  = performPeek (\ n -> foldr (\ _ _ -> insert (n+1) qe ) qe [n, n-1..1])
+performPeekInsertRepeat qe  = performPeek (\ n ->  insert (n+1) qe)
 
 
 generateTest pfk min max
