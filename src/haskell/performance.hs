@@ -23,19 +23,6 @@ main =
                ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performPeekDelRepeat min max
                ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performPeekDelRepeat min max
                ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performPeekDelRepeat min max]
---main :: IO ()
---main = do
-  --putStrLn $ show $ performPeek "list" 8000
-	--putStrLn("empty queues: " ++ (show $emptyQueues))
-	--args <- getArgs
-	{-if length args == 2
-	then
-		let (q1,q2,q3,q4) = emptyQueues in case args of
-			[nstring,queue] -> let q = performInsert queue $ read n in putStrLn $ show $ peek q
-				where n = read(nstring)	
-			_ -> putStrLn "Something is wrong :/"
-	else
-		putStrLn "Not enough arguments, need 2"-}
 
 performInsertList = 
   let (q1,q2,q3,q4) = emptyQueues in
