@@ -62,9 +62,15 @@ performPeekDelRepeat qe = performPeek (\ n -> foldr (\ _ _ -> remove qe ) qe [n,
 
 performPeekInsertRepeat qe  = performPeek (\ n -> foldr (\ _ _ -> insert (n+1) qe ) qe [n, n-1..1])
 
-performDel qe = remove qe
+performDel qe n = 
+	case peek $ remove qe of 
+		Just x -> x
+		Nothing -> 0
 
-performIns qe = insert 1 qe
+performIns qe n = 
+	case peek $ insert 1 qe of 
+		Just x -> x
+		Nothing -> 0
 
 generateTest pfk min max
 	| min >= max = [bench ("list-"++show min) $ nf pfk min]
