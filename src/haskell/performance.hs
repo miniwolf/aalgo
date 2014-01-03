@@ -11,10 +11,18 @@ main =
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
                ,bgroup "insert-triple" $ generateTest performPeekTriple min max
                ,bgroup "insert-const" $ generateTest performPeekConst min max
+               ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performPeekInsertRepeat min max
+               ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performPeekInsertRepeat min max
+               ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performPeekInsertRepeat min max
+               ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performPeekInsertRepeat min max
                ,bgroup "delete-list" $ generateTestDel performInsertList performPeekDel min max
                ,bgroup "delete-pair" $ generateTestDel performInsertPair performPeekDel min max
                ,bgroup "delete-triple" $ generateTestDel performInsertTriple performPeekDel min max
-               ,bgroup "delete-const" $ generateTestDel performInsertConst performPeekDel min max]
+               ,bgroup "delete-const" $ generateTestDel performInsertConst performPeekDel min max
+               ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performPeekDelRepeat min max
+               ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performPeekDelRepeat min max
+               ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performPeekDelRepeat min max
+               ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performPeekDelRepeat min max]
 --main :: IO ()
 --main = do
   --putStrLn $ show $ performPeek "list" 8000
@@ -29,48 +37,44 @@ main =
 	else
 		putStrLn "Not enough arguments, need 2"-}
 
-performInsertList n = let (q1,q2,q3,q4) = emptyQueues in
-  foldr insert q1 [n,n-1..1]
+performInsertList = 
+  let (q1,q2,q3,q4) = emptyQueues in
+  performInsert q1
   
-performInsertPair n = let (q1,q2,q3,q4) = emptyQueues in
-  foldr insert q2 [n,n-1..1]
-  
-performInsertTriple n = let (q1,q2,q3,q4) = emptyQueues in
-  foldr insert q3 [n,n-1..1]
-  
-performInsertConst n = let (q1,q2,q3,q4) = emptyQueues in
-  foldr insert q4 [n,n-1..1]
-  
+performInsertPair = 
+  let (q1,q2,q3,q4) = emptyQueues in
+  performInsert q2
  
-performDel q n = 
-    foldr (\ x y -> remove y) q [n,n-1..1]
+performInsertTriple = 
+  let (q1,q2,q3,q4) = emptyQueues in
+  performInsert q3
+  
+performInsertConst = 
+  let (q1,q2,q3,q4) = emptyQueues in
+  performInsert q4
+  
 
-
-performPeekList n = 
-  let q = performInsertList n in 
+performInsert q n = 
+  foldr insert q [n, n-1..1]
+ 
+performPeek qg n = 
+  let q = qg n in 
   case peek q of Just x -> x
                  Nothing -> 0
 
-performPeekPair n = 
-  let q = performInsertPair n in 
-  case peek q of Just x -> x
-                 Nothing -> 0
+performPeekList = performPeek performInsertList
 
-performPeekTriple n = 
-  let q = performInsertTriple n in 
-  case peek q of Just x -> x
-                 Nothing -> 0
+performPeekPair = performPeek performInsertPair
 
-performPeekConst n = 
-  let q = performInsertConst n in 
-  case peek q of Just x -> x
-                 Nothing -> 0
+performPeekTriple = performPeek performInsertTriple 
 
+performPeekConst = performPeek performInsertConst
 
-performPeekDel qe n = 
-  let q = performDel qe n in 
-  case peek q of Just x -> x
-                 Nothing -> 0
+performPeekDel qe = performPeek (\ n -> foldr (\ _ -> remove) qe [n,n-1..1])
+
+performPeekDelRepeat qe = performPeek (\ n -> foldr (\ _ _ -> remove qe ) qe [n, n-1..1])
+
+performPeekInsertRepeat qe  = performPeek (\ n -> foldr (\ _ _ -> insert (n+1) qe ) qe [n, n-1..1])
 
 
 generateTest pfk min max
@@ -78,9 +82,8 @@ generateTest pfk min max
 	| otherwise  = (bench ("list-"++show min) $ nf pfk min) : (generateTest pfk (min*2) max)
 
 
-
-generateTestDel               :: (Int -> a) -> (a -> Int -> Int) -> Int -> Int -> [Benchmark]
-generateTestDel q pfk min max = 
-  let qe = q $! min in  -- $! should force the function to strict evaluation instead of lazy 
+generateTestDel :: (Int -> a) -> (a -> Int -> Int) -> Int -> Int -> [Benchmark]
+generateTestDel qg pfk min max = 
+  let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy 
   case min >= max of True -> [bench ("list-"++show min) $ nf (pfk qe) min]
-                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel q pfk (min*2) max)
+                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (min*2) max)
