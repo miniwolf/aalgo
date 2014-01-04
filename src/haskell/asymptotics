@@ -1,0 +1,17 @@
+asymptotic running times.
+
+List:
+insert -> takes reverse of n elements twice -> 2 * n
+remove -> simply removes 1 elements -> 1
+
+queues as paired lists
+insert -> insert takes constant times, only adds one element to right list
+remove -> might take n time, but is amortized to constant time
+	when only calling remove once, it takes n time
+
+//queues as lazy paired lists
+//insert and remove -> constant amortized, but worst case log n
+
+with triple pair with pre evaluation
+insert and remove -> constant time worst case
+
