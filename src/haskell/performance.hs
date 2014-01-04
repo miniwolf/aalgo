@@ -5,21 +5,22 @@ import Queues
 
 main =
   let min = 128
-      max = 4096
+      max = 16384
+      max2 = 4096
   in
-   defaultMain [bgroup "insert-list" $ generateTest performPeekList min max
+   defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
                ,bgroup "insert-triple" $ generateTest performPeekTriple min max
                ,bgroup "insert-const" $ generateTest performPeekConst min max
-               ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performIns min max
+               ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performIns min max2
                ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
                ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
                ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
-               ,bgroup "delete-list" $ generateTestDel performInsertList performPeekDel min max
+               ,bgroup "delete-list" $ generateTestDel performInsertList performPeekDel min max2
                ,bgroup "delete-pair" $ generateTestDel performInsertPair performPeekDel min max
                ,bgroup "delete-triple" $ generateTestDel performInsertTriple performPeekDel min max
                ,bgroup "delete-const" $ generateTestDel performInsertConst performPeekDel min max
-               ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performDel min max
+               ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performDel min max2
                ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
                ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
                ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
