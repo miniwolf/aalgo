@@ -1,2 +1,5 @@
 #! /bin/bash 
-cat $1 | grep mean: | sed -e "s/mean: \([0-9]\+\.[0-9]\+\) \([mun]s\).*/\1$2 \2/"
+
+O=`cat $1 | grep 'mean:\|benchmarking' | sed -e "s/mean: \([0-9]\+\.[0-9]\+\) \([mun]s\).*/\1, \2/"`
+O=`echo "$O" | sed -e "s/benchmarking \([a-zA-Z-]*\)[^0-9]*\([0-9]*\).*/\1, \2, /"`
+echo "$O" | sed ':a;N;$!ba;s/,[ ]*\n/, /g'
