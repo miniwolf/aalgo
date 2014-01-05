@@ -75,27 +75,24 @@ performIns qe n =
 
 generateTest pfk min max
 	| min >= max = [bench ("list-"++show min) $ nf pfk min]
-	| otherwise  = (bench ("list-"++show min) $ nf pfk min) : (generateTest pfk (min*1.5) max)
+	| otherwise  = (bench ("list-"++show min) $ nf pfk min) : (generateTest pfk (round (fromIntegral min * 1.5)) max)
 
 generateTest2 pfk min max =
   let fun min max acc = 
         case min >= max of True -> acc
-                           False ->  (fun (min*2) max ((bench ("list-"++show min) $ nf pfk  min) : acc))
+                           False ->  (fun (round (fromIntegral min * 1.5)) max ((bench ("list-"++show min) $ nf pfk  min) : acc))
   in fun min max []
-
-
-generateTestDel :: (Int -> a) -> (a -> Int -> Int) -> Int -> Int -> [Benchmark]
 
 
 
 generateTestDel qg pfk min max =
   let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
   case min >= max of True -> [bench ("list-"++show min) $ nf (pfk qe) min]
-                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (min*2) max)
+                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (round (fromIntegral min * 1.5)) max)
 
 generateTestDel2 qg pfk min max =
   let fun min max acc = 
         let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
         case min >= max of True -> acc
-                           False ->  (fun (min*2) max ((bench ("list-"++show min) $ nf (pfk qe) min) : acc))
+                           False ->  (fun (round (fromIntegral min * 1.5)) max ((bench ("list-"++show min) $ nf (pfk qe) min) : acc))
   in fun min max []
