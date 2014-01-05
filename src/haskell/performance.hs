@@ -4,9 +4,9 @@ import Criterion.Main
 import Queues
 
 main =
-  let min = 128
-      max = 131072
-      max2 = 4096
+  let min = 256
+      max = 65536
+      max2 = 8192
   in
    defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
@@ -75,10 +75,10 @@ performIns qe n =
 
 generateTest pfk min max
 	| min >= max = [bench ("list-"++show min) $ nf pfk min]
-	| otherwise  = (bench ("list-"++show min) $ nf pfk min) : (generateTest pfk (min*2) max)
+	| otherwise  = (bench ("list-"++show min) $ nf pfk min) : (generateTest pfk (round (fromIntegral min*1.5)) max)
 
 generateTestDel :: (Int -> a) -> (a -> Int -> Int) -> Int -> Int -> [Benchmark]
 generateTestDel qg pfk min max =
   let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
   case min >= max of True -> [bench ("list-"++show min) $ nf (pfk qe) min]
-                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (min*2) max)
+                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (round (fromIntegral min*1.5)) max)
