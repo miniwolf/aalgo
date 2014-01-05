@@ -6,7 +6,7 @@ import Queues
 main =
   let min = 256
       max = 500000
-      max2 = 4000
+      max2 = 10000
   in
    defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
