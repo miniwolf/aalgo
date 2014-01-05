@@ -45,7 +45,7 @@ performInsertConst =
   performInsert q4
 
 performInsert q n =
-  foldl' (\ q i -> insert i q) q [n, n-1..1]
+  foldl' (\ i q-> insert q i ) q [n, n-1..1]
 
 performPeek qg n =
   let q = qg n in
@@ -60,7 +60,7 @@ performPeekTriple = performPeek performInsertTriple
 
 performPeekConst = performPeek performInsertConst
 
-performPeekDel qe = performPeek (\ n -> foldr (\ _ -> remove) qe [n,n-1..1])
+performPeekDel qe = performPeek (\ n -> foldl' (\ q _ -> remove q) qe [n,n-1..1])
 
 performPeekDelRepeat qe = performPeek (\ _ -> remove qe )
 
