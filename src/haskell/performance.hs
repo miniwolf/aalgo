@@ -5,8 +5,8 @@ import Queues
 
 main =
   let min = 256
-      max = 65536
-      max2 = 8192
+      max = 500000
+      max2 = 4000
   in
    defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
@@ -25,6 +25,9 @@ main =
                ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
                ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
 
+foldl' f z [] = z
+foldl' f z (x:xs) = (foldl' f $! f z x) xs
+
 performInsertList =
   let (q1,q2,q3,q4) = emptyQueues in
   performInsert q1
@@ -42,7 +45,7 @@ performInsertConst =
   performInsert q4
 
 performInsert q n =
-  foldl (\ q i -> insert i q) q [n, n-1..1]
+  foldl' (\ q i -> insert i q) q [n, n-1..1]
 
 performPeek qg n =
   let q = qg n in
@@ -82,7 +85,6 @@ generateTest2 pfk min max =
         case min >= max of True -> acc
                            False ->  (fun (round (fromIntegral min * 1.5)) max ((bench ("list-"++show min) $ nf pfk  min) : acc))
   in fun min max []
-
 
 
 generateTestDel qg pfk min max =
