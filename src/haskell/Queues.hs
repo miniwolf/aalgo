@@ -37,7 +37,7 @@ instance Queue ListQueue where
 	size (LQ(xs,l)) = l
 	insert x (LQ(xs,l)) = case xs of
 		[] -> LQ ([x],1)
-		xs' -> LQ( reverse $ x:reverse xs, l+1)
+		xs' -> LQ( xs ++ [x], l+1)
 	remove (LQ(xs,l)) = case xs of
 		[] -> LQ ([],l)
 		x:xs' -> LQ(xs',l-1)
