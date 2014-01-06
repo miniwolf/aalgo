@@ -15,11 +15,15 @@ main =
   let min = 256
       max = 500000
       max2 = 10000
-      llist = a_fun  min max2 $! performInsertList 
-      lpair = a_fun  min max $! performInsertPair 
-      ltriple = a_fun  min max $! performInsertTriple 
-      lconst = a_fun  min max $! performInsertConst
-   in
+      llist' _ = a_fun  min max2 $! performInsertList 
+      lpair' _ = a_fun  min max $! performInsertPair 
+      ltriple' _ =  a_fun  min max $! performInsertTriple 
+      lconst' _ =  a_fun  min max $! performInsertConst
+      llist = llist' $ 1
+      lpair = lpair' $ 1 
+      ltriple = ltriple' $ 1
+      lconst = lconst' $ 1
+ in
    defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
                ,bgroup "insert-triple" $ generateTest performPeekTriple min max
