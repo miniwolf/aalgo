@@ -3,27 +3,39 @@ import System.Environment
 import Criterion.Main
 import Queues
 
+
+map' f l = case l of [] -> []
+                     x:xs -> (f $! x) : (map' f $! xs)
+  
+list_gen min max = if min >= max then [] else min:list_gen (round (fromIntegral min * 1.5)) max
+a_fun min max generator = map generator (list_gen min max)
+
+
 main =
   let min = 256
       max = 500000
       max2 = 10000
-  in
+      llist = a_fun  min max2 $! performInsertList 
+      lpair = a_fun  min max $! performInsertPair 
+      ltriple = a_fun  min max $! performInsertTriple 
+      lconst = a_fun  min max $! performInsertConst
+   in
    defaultMain [bgroup "insert-list" $ generateTest performPeekList min max2
                ,bgroup "insert-pair" $ generateTest performPeekPair min max
                ,bgroup "insert-triple" $ generateTest performPeekTriple min max
                ,bgroup "insert-const" $ generateTest performPeekConst min max
-               ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performIns min max2
-               ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
-               ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
-               ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
-               ,bgroup "delete-list" $ generateTestDel performInsertList performPeekDel min max2
-               ,bgroup "delete-pair" $ generateTestDel performInsertPair performPeekDel min max
-               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performPeekDel min max
-               ,bgroup "delete-const" $ generateTestDel performInsertConst performPeekDel min max
-               ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performDel min max2
-               ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
-               ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
-               ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
+               ,bgroup "insert-list-repeat" $ generateTestDel llist performIns min
+               ,bgroup "insert-pair-repeat" $ generateTestDel lpair performIns min 
+               ,bgroup "insert-triple-repeat" $ generateTestDel ltriple performIns min
+               ,bgroup "insert-const-repeat" $ generateTestDel  lconst performIns min
+               ,bgroup "delete-list" $ generateTestDel llist performPeekDel min
+               ,bgroup "delete-pair" $ generateTestDel lpair performPeekDel min
+               ,bgroup "delete-triple" $ generateTestDel ltriple performPeekDel min
+               ,bgroup "delete-const" $ generateTestDel lconst performPeekDel min
+               ,bgroup "delete-list-repeat" $ generateTestDel llist performDel min
+               ,bgroup "delete-pair-repeat" $ generateTestDel lpair performDel min
+               ,bgroup "delete-triple-repeat" $ generateTestDel ltriple performDel min
+               ,bgroup "delete-const-repeat" $ generateTestDel lconst performDel min]
 
 foldl' f z [] = z
 foldl' f z (x:xs) = (foldl' f $! f z x) xs
@@ -87,14 +99,6 @@ generateTest2 pfk min max =
   in fun min max []
 
 
-generateTestDel qg pfk min max =
-  let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
-  case min >= max of True -> [bench ("list-"++show min) $ nf (pfk qe) min]
-                     False -> (bench ("list-"++show min) $ nf (pfk qe) min) : (generateTestDel qg pfk (round (fromIntegral min * 1.5)) max)
-
-generateTestDel2 qg pfk min max =
-  let fun min max acc = 
-        let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
-        case min >= max of True -> acc
-                           False ->  (fun (round (fromIntegral min * 1.5)) max ((bench ("list-"++show min) $ nf (pfk qe) min) : acc))
-  in fun min max []
+generateTestDel ql pfk min =
+  case ql of [] -> []
+             x:xs -> (bench ("list-"++show min) $ nf (pfk x) min): (generateTestDel xs pfk (round (fromIntegral min * 1.5)))
