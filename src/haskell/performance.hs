@@ -4,15 +4,15 @@ import Criterion.Main
 import Queues
 
 main =
-  let min = 1276934
-      max = 5000000
-      min2 = 1
-      max2 = 2
+  let min = 1
+      max = 1
+      min2 = 100000
+      max2 = 1000000
 	in
-   defaultMain [bgroup "insert-list" $ generateTest performPeekList min2 max2
-               ,bgroup "insert-pair" $ generateTest performPeekPair min max
-               ,bgroup "insert-triple" $ generateTest performPeekTriple min max
-               ,bgroup "insert-const" $ generateTest performPeekConst min max
+   defaultMain [bgroup "insert-list" $ generateTest performInsertList min2 max2
+               ,bgroup "insert-pair" $ generateTest performInsertPair min max
+               ,bgroup "insert-triple" $ generateTest performInsertTriple min max
+               ,bgroup "insert-const" $ generateTest performInsertConst min max
                ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performIns min2 max2
                ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
                ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
@@ -53,14 +53,6 @@ performPeek qg n =
   case peek q of Just x -> x
                  Nothing -> 0
 
-performPeekList = performPeek performInsertList
-
-performPeekPair = performPeek performInsertPair
-
-performPeekTriple = performPeek performInsertTriple
-
-performPeekConst = performPeek performInsertConst
-
 performPeekDel qe = performPeek (\ n -> foldl' (\ q _ -> remove q) qe [n,n-1..1])
 
 performPeekDelRepeat qe = performPeek (\ _ -> remove qe )
@@ -68,14 +60,10 @@ performPeekDelRepeat qe = performPeek (\ _ -> remove qe )
 performPeekInsertRepeat qe  = performPeek (\ n ->  insert (n+1) qe)
 
 performDel qe n = 
-	case peek $ remove qe of 
-		Just x -> x
-		Nothing -> 0
+	remove qe
 
 performIns qe n = 
-	case peek $ insert 1 qe of 
-		Just x -> x
-		Nothing -> 0
+	insert 1 qe
 
 generateTest pfk min max
 	| min >= max = [bench ("list-"++show min) $ nf pfk min]
