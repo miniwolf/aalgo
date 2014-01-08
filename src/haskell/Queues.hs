@@ -1,6 +1,7 @@
 module Queues where
 import System.Environment
 import Data.List hiding (insert)
+import Control.DeepSeq
 -- import qualified Data.List (insert)   -- use Data.List.insert when using THAT particular insert.
 -- import qualified Data.List as List
 
@@ -32,6 +33,9 @@ newtype ListQueue a = LQ { unLQ :: ([a],Int) }
 instance Show a => Show(ListQueue a) where
 	show (LQ(xs,size)) = show $ reverse xs
 
+instance NFData (ListQueue a) where
+	rnf a = a `seq` ()
+
 instance Queue ListQueue where
 	empty = LQ ([],0)
 	size (LQ(xs,l)) = l
@@ -57,6 +61,9 @@ instance Show a => Show(PairOfList a) where
 	show (POL (xs, ys, length)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where
 		brackets = (++"]") . ("["++)
 
+instance NFData (PairOfList a) where
+	rnf a = a `seq` ()
+
 instance Queue PairOfList where
 	empty = POL ([],[],0)
 	size (POL (xs, ys, length)) = length
@@ -77,6 +84,9 @@ newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
 
 instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
+
+instance NFData (TripleOfList a) where
+	rnf a = a `seq` ()
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) = case ls of
@@ -105,6 +115,9 @@ newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a], 
 
 instance Show a => Show(RealTimePair a) where
 	show queue = show(toList queue)
+
+instance NFData (RealTimePair a) where
+	rnf a = a `seq` ()
 
 f:: RealTimePair a -> RealTimePair a
 f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es , length)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es, length)
@@ -145,6 +158,9 @@ instance Show a => Show(RealTimePair2 a) where
 			show e
 	-}
 	show (RTP2(recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size)) = "(" ++ show recopy ++ ", " ++ show lendiff ++ ", " ++ show nrcopy ++ ", " ++ show hS ++ ", " ++ show tS ++ ", " ++ show hS' ++ ", " ++ show tS' ++ ", " ++ show hr ++ ", " ++ show size ++ ")"
+
+instance NFData (RealTimePair2 a) where
+	rnf a = a `seq` ()
 
 onestep :: RealTimePair2 a -> RealTimePair2 a
 onestep q
