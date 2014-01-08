@@ -53,11 +53,11 @@ performPeek qg n =
   case peek q of Just x -> x
                  Nothing -> 0
 
-performPeekDel qe = performPeek (\ n -> foldl' (\ q _ -> remove q) qe [n,n-1..1])
+performPeekDel qe = (\ n -> foldl' (\ q _ -> remove q) qe [n,n-1..1])
 
-performPeekDelRepeat qe = performPeek (\ _ -> remove qe )
+performPeekDelRepeat qe = (\ _ -> remove qe )
 
-performPeekInsertRepeat qe  = performPeek (\ n ->  insert (n+1) qe)
+performPeekInsertRepeat qe  = (\ n ->  insert (n+1) qe)
 
 performDel qe n = 
 	remove qe
@@ -74,7 +74,6 @@ generateTest2 pfk min max =
         case min >= max of True -> acc
                            False ->  (fun (round (fromIntegral min * 1.5)) max ((bench ("list-"++show min) $ nf pfk  min) : acc))
   in fun min max []
-
 
 generateTestDel qg pfk min max =
   let qe = qg $! min in  -- $! should force the function to strict evaluation instead of lazy
