@@ -4,27 +4,27 @@ import Criterion.Main
 import Queues
 
 main =
-  let min = 1
-      max = 1
-      min2 = 100000
-      max2 = 1000000
+  let min = 1000
+      max = 5000000
+      min2 = 100
+      max2 = 100000
 	in
-   defaultMain [bgroup "insert-list" $ generateTest performInsertList min2 max2
-               ,bgroup "insert-pair" $ generateTest performInsertPair min max
-               ,bgroup "insert-triple" $ generateTest performInsertTriple min max
-               ,bgroup "insert-const" $ generateTest performInsertConst min max
-               ,bgroup "insert-list-repeat" $ generateTestDel performInsertList performIns min2 max2
-               ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
-               ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
-               ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
-               ,bgroup "delete-list" $ generateTestDel performInsertList performDel min2 max2
-               ,bgroup "delete-pair" $ generateTestDel performInsertPair performDel min max
-               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performDel min max
-               ,bgroup "delete-const" $ generateTestDel performInsertConst performDel min max
-               ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performDel min2 max2
-               ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
-               ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
-               ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
+   defaultMain --[bgroup "insert-list" $ generateTest performInsertList min2 max2
+               --,bgroup "insert-pair" $ generateTest performInsertPair min max
+               --,bgroup "insert-triple" $ generateTest performInsertTriple min max
+               --,bgroup "insert-const" $ generateTest performInsertConst min max
+                --,bgroup "insert-list-repeat" $ generateTestDel makeListQueue performIns min max
+               --,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
+               --,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
+               --,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
+               --,bgroup "delete-list" $ generateTestDel makeListQueue performDeleteAll min max]
+               --,bgroup "delete-pair" $ generateTestDel performInsertPair performDeleteAll min max
+               --,bgroup "delete-triple" $ generateTestDel performInsertTriple performDeleteAll min max
+               --,bgroup "delete-const" $ generateTestDel performInsertConst performDeleteAll min max
+               --,bgroup "delete-list-repeat" $ generateTestDel makeListQueue performDel min max
+               --,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
+               --,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
+               --,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
 
 foldl' f z [] = z
 foldl' f z (x:xs) = (foldl' f $! f z x) xs
@@ -32,6 +32,9 @@ foldl' f z (x:xs) = (foldl' f $! f z x) xs
 performInsertList =
   let (q1,q2,q3,q4) = emptyQueues in
   performInsert q1
+
+makeListQueue n = -- lets be a little smart here... -.-
+	make [n,n-1..1] ::ListQueue Int
 
 performInsertPair =
   let (q1,q2,q3,q4) = emptyQueues in
@@ -48,11 +51,17 @@ performInsertConst =
 performInsert q n =
   foldl' (\ i q-> insert q i ) q [n, n-1..1]
 
+performDeleteAll qe n =
+	case size qe of
+		0 -> ()
+		otherwise -> let q2 = remove qe in
+								 q2 `seq` performDeleteAll q2 n
+
 performDel qe n = 
 	remove qe
 
 performIns qe n = 
-	insert 1 qe
+	insert n qe
 
 generateTest pfk min max
 	| min >= max = [bench ("list-"++show min) $ nf pfk min]
