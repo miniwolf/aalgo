@@ -33,8 +33,8 @@ newtype ListQueue a = LQ { unLQ :: ([a],Int) }
 instance Show a => Show(ListQueue a) where
 	show (LQ(xs,size)) = show $ reverse xs
 
-instance NFData (ListQueue a) where
-	rnf a = a `seq` ()
+instance NFData a => NFData (ListQueue a) where
+	rnf (LQ(xs,l)) = l `deepseq` xs `deepseq` ()
 
 instance Queue ListQueue where
 	empty = LQ ([],0)
@@ -62,7 +62,7 @@ instance Show a => Show(PairOfList a) where
 		brackets = (++"]") . ("["++)
 
 instance NFData (PairOfList a) where
-	rnf a = a `seq` ()
+	rnf (POL (xs, ys, length)) = ys `seq` length `seq` ()
 
 instance Queue PairOfList where
 	empty = POL ([],[],0)
@@ -86,7 +86,7 @@ instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
 
 instance NFData (TripleOfList a) where
-	rnf a = a `seq` ()
+	rnf (TOL (ls, rs, as)) = rs `seq` ls `seq` ()
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) = case ls of
@@ -117,7 +117,7 @@ instance Show a => Show(RealTimePair a) where
 	show queue = show(toList queue)
 
 instance NFData (RealTimePair a) where
-	rnf a = a `seq` ()
+	rnf (RTP (d, s, fs, as, bs, cs , ds, es, length)) = fs `seq` ()
 
 f:: RealTimePair a -> RealTimePair a
 f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es , length)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es, length)
@@ -160,7 +160,7 @@ instance Show a => Show(RealTimePair2 a) where
 	show (RTP2(recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size)) = "(" ++ show recopy ++ ", " ++ show lendiff ++ ", " ++ show nrcopy ++ ", " ++ show hS ++ ", " ++ show tS ++ ", " ++ show hS' ++ ", " ++ show tS' ++ ", " ++ show hr ++ ", " ++ show size ++ ")"
 
 instance NFData (RealTimePair2 a) where
-	rnf a = a `seq` ()
+	rnf (RTP2( recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size)) = hS `seq` ()
 
 onestep :: RealTimePair2 a -> RealTimePair2 a
 onestep q

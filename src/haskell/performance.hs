@@ -9,17 +9,17 @@ main =
       min2 = 100
       max2 = 100000
 	in
-   defaultMain --[bgroup "insert-list" $ generateTest performInsertList min2 max2
+   defaultMain [bgroup "insert-list" $ generateTest performInsertList min2 max2
                --,bgroup "insert-pair" $ generateTest performInsertPair min max
-               --,bgroup "insert-triple" $ generateTest performInsertTriple min max
+               ,bgroup "insert-triple" $ generateTest performInsertTriple min2 max2
                --,bgroup "insert-const" $ generateTest performInsertConst min max
-                --,bgroup "insert-list-repeat" $ generateTestDel makeListQueue performIns min max
+               --,bgroup "insert-list-repeat" $ generateTestDel makeListQueue performIns min max
                --,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
                --,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
                --,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
                --,bgroup "delete-list" $ generateTestDel makeListQueue performDeleteAll min max]
                --,bgroup "delete-pair" $ generateTestDel performInsertPair performDeleteAll min max
-               --,bgroup "delete-triple" $ generateTestDel performInsertTriple performDeleteAll min max
+               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performDeleteAll min max]
                --,bgroup "delete-const" $ generateTestDel performInsertConst performDeleteAll min max
                --,bgroup "delete-list-repeat" $ generateTestDel makeListQueue performDel min max
                --,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
