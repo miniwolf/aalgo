@@ -17,10 +17,10 @@ main =
                ,bgroup "insert-pair-repeat" $ generateTestDel performInsertPair performIns min max
                ,bgroup "insert-triple-repeat" $ generateTestDel performInsertTriple performIns min max
                ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
-               ,bgroup "delete-list" $ generateTestDel performInsertList performPeekDel min2 max2
-               ,bgroup "delete-pair" $ generateTestDel performInsertPair performPeekDel min max
-               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performPeekDel min max
-               ,bgroup "delete-const" $ generateTestDel performInsertConst performPeekDel min max
+               ,bgroup "delete-list" $ generateTestDel performInsertList performDel min2 max2
+               ,bgroup "delete-pair" $ generateTestDel performInsertPair performDel min max
+               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performDel min max
+               ,bgroup "delete-const" $ generateTestDel performInsertConst performDel min max
                ,bgroup "delete-list-repeat" $ generateTestDel performInsertList performDel min2 max2
                ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
                ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
@@ -47,17 +47,6 @@ performInsertConst =
 
 performInsert q n =
   foldl' (\ i q-> insert q i ) q [n, n-1..1]
-
-performPeek qg n =
-  let q = qg n in
-  case peek q of Just x -> x
-                 Nothing -> 0
-
-performPeekDel qe = (\ n -> foldl' (\ q _ -> remove q) qe [n,n-1..1])
-
-performPeekDelRepeat qe = (\ _ -> remove qe )
-
-performPeekInsertRepeat qe  = (\ n ->  insert (n+1) qe)
 
 performDel qe n = 
 	remove qe
