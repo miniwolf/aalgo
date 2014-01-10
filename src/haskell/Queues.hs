@@ -2,11 +2,6 @@ module Queues where
 import System.Environment
 import Data.List hiding (insert)
 import Control.DeepSeq
--- import qualified Data.List (insert)   -- use Data.List.insert when using THAT particular insert.
--- import qualified Data.List as List
-
---main :: IO()
---main = putStrLn . show $ insert 3 $insert 1 (make [1,2,3,4,5]::PairOfList Int)
 
 emptyQueues = (empty :: ListQueue Int, empty ::PairOfList Int, empty :: TripleOfList Int, empty::RealTimePair Int)
 
@@ -33,8 +28,8 @@ newtype ListQueue a = LQ { unLQ :: ([a],Int) }
 instance Show a => Show(ListQueue a) where
 	show (LQ(xs,size)) = show $ reverse xs
 
-instance NFData (ListQueue a) where
-	rnf a = a `seq` ()
+instance NFData a => NFData (ListQueue a) where
+	rnf (LQ(xs,l)) = l `deepseq` xs `deepseq` ()
 
 instance Queue ListQueue where
 	empty = LQ ([],0)
@@ -61,8 +56,8 @@ instance Show a => Show(PairOfList a) where
 	show (POL (xs, ys, length)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where
 		brackets = (++"]") . ("["++)
 
-instance NFData (PairOfList a) where
-	rnf a = a `seq` ()
+instance NFData a => NFData (PairOfList a) where
+	rnf (POL (xs, ys, length)) = xs `seq` ys `seq` length `seq` ()
 
 instance Queue PairOfList where
 	empty = POL ([],[],0)
@@ -85,7 +80,7 @@ newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
 instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
 
-instance NFData (TripleOfList a) where
+instance NFData a => NFData (TripleOfList a) where
 	rnf a = a `seq` ()
 
 rotate :: TripleOfList a -> [a]
@@ -116,8 +111,8 @@ newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a], 
 instance Show a => Show(RealTimePair a) where
 	show queue = show(toList queue)
 
-instance NFData (RealTimePair a) where
-	rnf a = a `seq` ()
+instance NFData a => NFData (RealTimePair a) where
+	rnf (RTP (d, s, fs, as, bs, cs , ds, es, length)) = fs `seq` ()
 
 f:: RealTimePair a -> RealTimePair a
 f(RTP(d, 0, fs,     [],     bs, (x:cs), ds, es , length)) = RTP(d, 0 ,fs, [], bs, cs, x:ds, es, length)
@@ -159,7 +154,7 @@ instance Show a => Show(RealTimePair2 a) where
 	-}
 	show (RTP2(recopy, lendiff, nrcopy, hS, tS, hs, hS', tS', hr, size)) = "(" ++ show recopy ++ ", " ++ show lendiff ++ ", " ++ show nrcopy ++ ", " ++ show hS ++ ", " ++ show tS ++ ", " ++ show hS' ++ ", " ++ show tS' ++ ", " ++ show hr ++ ", " ++ show size ++ ")"
 
-instance NFData (RealTimePair2 a) where
+instance NFData a => NFData (RealTimePair2 a) where
 	rnf a = a `seq` ()
 
 onestep :: RealTimePair2 a -> RealTimePair2 a
