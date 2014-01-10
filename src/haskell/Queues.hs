@@ -62,7 +62,7 @@ instance Show a => Show(PairOfList a) where
 		brackets = (++"]") . ("["++)
 
 instance NFData a => NFData (PairOfList a) where
-	rnf (POL (xs, ys, length)) = xs `seq` ys `seq` length `seq` ()
+	rnf (POL (xs, ys, length)) = xs `seq` ()
 
 instance Queue PairOfList where
 	empty = POL ([],[],0)
@@ -86,7 +86,7 @@ instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
 
 instance NFData a => NFData (TripleOfList a) where
-	rnf (TOL (ls, rs, as)) = () -- no forced evaluation.
+	rnf (TOL (ls, rs, as)) = ls `deepseq` ()
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) = case ls of

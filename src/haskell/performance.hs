@@ -20,11 +20,11 @@ main =
                ,bgroup "insert-const-repeat" $ generateTestDel  performInsertConst performIns min max
                ,bgroup "delete-list" $ generateTestDel makeListQueue performDeleteAll min max
                ,bgroup "delete-pair" $ generateTestDel performInsertPair performDeleteAll min max
-               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performDeleteAll2 min max
+               ,bgroup "delete-triple" $ generateTestDel performInsertTriple performDeleteAll2 min max2
                ,bgroup "delete-const" $ generateTestDel performInsertConst performDeleteAll min max
                ,bgroup "delete-list-repeat" $ generateTestDel makeListQueue performDel min max
                ,bgroup "delete-pair-repeat" $ generateTestDel performInsertPair performDel min max
-               ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max
+               ,bgroup "delete-triple-repeat" $ generateTestDel performInsertTriple performDel min max2
                ,bgroup "delete-const-repeat" $ generateTestDel performInsertConst performDel min max]
 
 foldl' f z [] = z
