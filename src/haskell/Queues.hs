@@ -61,8 +61,8 @@ instance Show a => Show(PairOfList a) where
 	show (POL (xs, ys, length)) = brackets . concat . intersperse "," . map show $ xs ++ reverse ys where
 		brackets = (++"]") . ("["++)
 
-instance NFData (PairOfList a) where
-	rnf (POL (xs, ys, length)) = ys `seq` length `seq` ()
+instance NFData a => NFData (PairOfList a) where
+	rnf (POL (xs, ys, length)) = xs `seq` ys `seq` length `seq` ()
 
 instance Queue PairOfList where
 	empty = POL ([],[],0)
@@ -85,8 +85,8 @@ newtype TripleOfList a = TOL { unTOL :: ([a],[a],[a]) }
 instance Show a => Show(TripleOfList a) where
 	show queue = show(toList queue)
 
-instance NFData (TripleOfList a) where
-	rnf (TOL (ls, rs, as)) = rs `seq` ls `seq` ()
+instance NFData a => NFData (TripleOfList a) where
+	rnf (TOL (ls, rs, as)) = () -- no forced evaluation.
 
 rotate :: TripleOfList a -> [a]
 rotate (TOL (ls, rs, as)) = case ls of
@@ -116,7 +116,7 @@ newtype RealTimePair a = RTP { unRT :: (Int, Int, [a], [a], [a], [a], [a], [a], 
 instance Show a => Show(RealTimePair a) where
 	show queue = show(toList queue)
 
-instance NFData (RealTimePair a) where
+instance NFData a => NFData (RealTimePair a) where
 	rnf (RTP (d, s, fs, as, bs, cs , ds, es, length)) = fs `seq` ()
 
 f:: RealTimePair a -> RealTimePair a
